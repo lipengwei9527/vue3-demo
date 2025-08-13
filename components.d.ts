@@ -22,7 +22,6 @@ declare module 'vue' {
     ExButtonGroup: typeof import('./src/components/ExForm/components/ExButtonGroup/index.vue')['default']
     ExCalendar: typeof import('./src/components/ExCalendar/index.vue')['default']
     ExContextMenu: typeof import('./src/components/ExContextMenu/index.vue')['default']
-    ExContExtMenu: typeof import("./src/components/ExContExtMenu/index.vue")["default"]
     ExCreateForm: typeof import('./src/components/ExCreateForm/index.vue')['default']
     ExForm: typeof import('./src/components/ExForm/index.vue')['default']
     ExInput: typeof import('./src/components/ExForm/components/ExInput/index.vue')['default']
