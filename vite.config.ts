@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
+import { createNameThroughPath } from "./src/utils/path";
 // ts类型
 import type { UserConfig, ConfigEnv } from "vite";
 // 按需引入element-plus
@@ -59,14 +60,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           },
           // 自定义分包
           manualChunks(id, { getModuleInfo, getModuleIds }) {
-            if (id.includes("node_modules")) {
-              const packageName = id
-                .toString()
-                .split("node_modules/")[2]
-                .split("/")[0]
-                .toString();
-              return `vendor-${packageName}`;
-            }
+            return createNameThroughPath(id);
           },
         },
       },

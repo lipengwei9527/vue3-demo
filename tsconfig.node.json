@@ -9,5 +9,6 @@
   },
   "include": [
     "vite.config.ts",
+    "src/utils/path.ts"
   ]
 }

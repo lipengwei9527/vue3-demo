@@ -38,7 +38,9 @@ const formData = reactive(
     return pre;
   }, {} as DefaultFormData)
 );
-const emitChangeFn = (e: any) => {};
+const emitChangeFn = (e: any) => {
+  console.log(`output->change`, e);
+};
 const submitFn = () => {
   console.log(`output->提交`, formData);
 };
