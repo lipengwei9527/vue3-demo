@@ -1,0 +1,38 @@
+// 滚动条整体样式
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 0 10px;
+}
+
+// 外层轨道
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  // opacity: 1;
+  // background-color: transparent;
+}
+
+// 内嵌滑块
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  opacity: 0.3;
+  background-color: var(--el-border-color);
+}
+
+// 边角
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+// 定义右下角拖动快的样式
+::-webkit-resizer {
+}
+
+// // 鼠标悬停时显示滚动条，否则隐藏滚动条
+// :not(:hover)::-webkit-scrollbar {
+//   display: hidden;
+// }
+
+// :not(:hover)::-webkit-scrollbar-thumb {
+//   visibility: hidden;
+// }
