@@ -9,6 +9,7 @@
   },
   "include": [
     "vite.config.ts",
-    "src/utils/path.ts"
+    "src/utils/path.ts",
+    "src/utils/validate.ts"
   ]
 }

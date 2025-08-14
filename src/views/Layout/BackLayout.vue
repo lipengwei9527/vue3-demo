@@ -40,6 +40,7 @@ const selectNavFn = (key: string) => {
   appStore.setSideMenus(key);
 };
 const selectFn = (key: string) => {
+  console.log(`output->selectNavFn`, key);
   navigateTo(key);
 };
 </script>

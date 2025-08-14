@@ -1,5 +1,5 @@
 <template>
-  <div class="ts-note">
+  <div class="ts-note-page">
     ts笔记
     <div class="round round-one"></div>
     <div class="round round-two"></div>
@@ -13,7 +13,7 @@
     <Rotate />
   </div>
 </template>
-<script name="TsNote" setup lang="ts">
+<script name="TsNotePage" setup lang="ts">
 import Rotate from "./components/Rotate.vue";
 const obj = {
   key1: "value1",

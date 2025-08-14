@@ -1,9 +1,10 @@
+
+// 复制内容记得修改url路径为@/style/iconfont/
 @font-face {
-  font-family: "iconfont";
-  /* Project id 4648959 */
-  src: url('//at.alicdn.com/t/c/font_4648959_mskgydnw5zm.woff2?t=1723190828788') format('woff2'),
-    url('//at.alicdn.com/t/c/font_4648959_mskgydnw5zm.woff?t=1723190828788') format('woff'),
-    url('//at.alicdn.com/t/c/font_4648959_mskgydnw5zm.ttf?t=1723190828788') format('truetype');
+  font-family: "iconfont"; /* Project id 4648959 */
+  src: url('@/style/iconfont/iconfont.woff2?t=1755157826517') format('woff2'),
+       url('@/style/iconfont/iconfont.woff?t=1755157826517') format('woff'),
+       url('@/style/iconfont/iconfont.ttf?t=1755157826517') format('truetype');
 }
 
 .iconfont {
@@ -14,7 +15,37 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-//   
+.icon-huangpijicongjun:before {
+  content: "\e676";
+}
+
+.icon-xingbaogu:before {
+  content: "\e677";
+}
+
+.icon-niuganjun:before {
+  content: "\e678";
+}
+
+.icon-songrong:before {
+  content: "\e679";
+}
+
+.icon-chashugu:before {
+  content: "\e67a";
+}
+
+.icon-lingzhi:before {
+  content: "\e67b";
+}
+
+.icon-xianggu:before {
+  content: "\e67c";
+}
+
+.icon-shanhujun:before {
+  content: "\e67d";
+}
 
 .icon-right:before {
   content: "\e601";
@@ -99,3 +130,4 @@
 .icon-a-068_jiaocai:before {
   content: "\e772";
 }
+

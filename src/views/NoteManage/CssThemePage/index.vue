@@ -1,5 +1,5 @@
 <template>
-  <div class="css-theme">
+  <div class="css-theme-page">
     <el-select v-model="theme">
       <el-option
         :value="item.value"
@@ -9,13 +9,13 @@
     </el-select>
     <div>主题：</div>
     <div>亮色主题：yellow</div>
-    <i class="iconfont icon-a-068_baojianpin"></i>
+    <i class="iconfont icon-xingbaogu"></i>
     <div>暗色主题：blue</div>
     <img :src="login_img" alt="" />
     <el-button @click="fun1(1)">你好</el-button>
   </div>
 </template>
-<script name="CssTheme" setup lang="ts">
+<script name="CssThemePage" setup lang="ts">
 // 切换主题
 import useTheme from "@/hooks/useTheme";
 import { reactive } from "vue";

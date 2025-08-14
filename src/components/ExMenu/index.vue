@@ -42,7 +42,7 @@ const props = defineProps({
   },
   defaultOpeneds: {
     type: Array as PropType<string[]>,
-    default: () => [],
+    default: () => [] as string[],
   },
   mode: {
     type: String as PropType<"horizontal" | "vertical">,

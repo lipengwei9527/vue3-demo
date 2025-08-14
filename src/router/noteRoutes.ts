@@ -1,13 +1,16 @@
-
-export default [
+export default {
+  path: "/note",
+  name: "笔记",
+  children: [
     {
-        path: '/ts_note',
-        name: 'ts笔记',
-        component: () => import('@/views/NoteManage/TsNote/index.vue')
+      path: "/TsNotePage",
+      name: "ts笔记",
+      component: () => import("@/views/NoteManage/TsNotePage/index.vue"),
     },
     {
-        path: '/theme_change',
-        name: '主题切换',
-        component: () => import('@/views/NoteManage/CssTheme/index.vue')
-    }
-]
+      path: "/CssThemePage",
+      name: "主题切换",
+      component: () => import("@/views/NoteManage/CssThemePage/index.vue"),
+    },
+  ],
+};
