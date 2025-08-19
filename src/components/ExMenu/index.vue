@@ -10,15 +10,13 @@
       @open="openFn"
       @close="closeFn"
     >
-      <template v-for="item in data">
+      <template v-for="item in data" :key="item.index + item.title">
         <ExSubMenu
           v-if="item.children && item.children.length != 0"
           :data="item"
         >
         </ExSubMenu>
-        <ExMenuItem v-else :index="item.index">
-          {{ item.title }}
-        </ExMenuItem>
+        <el-menu-item v-else :index="item.index">{{ item.title }}</el-menu-item>
       </template>
     </el-menu>
   </div>
@@ -26,7 +24,6 @@
 <script name="ExMenu" setup lang="ts">
 import { PropType } from "vue";
 import ExSubMenu from "./components/ExSubMenu.vue";
-import ExMenuItem from "./components/ExMenuItem.vue";
 import type { ExMenuItemType } from "@/types/store";
 defineProps({
   data: {

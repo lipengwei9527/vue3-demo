@@ -37,12 +37,10 @@ const { navigateTo } = CreateCustomRouter();
 // navigateTo(sideMenus.value.activeIndex);
 
 const selectTopFn = (index: string, indexPaths: string[]) => {
-  console.log(`output->index: string, indexPaths: string[]`, index, indexPaths);
   appStore.setTopActiveIndex(index);
   appStore.setSideMenus(index);
 };
 const selectSideFn = (index: string, indexPaths: string[]) => {
-  console.log(`output->index: string, indexPaths: string[]`, index, indexPaths);
   appStore.setSideActiveIndex(index);
   navigateTo(index);
 };

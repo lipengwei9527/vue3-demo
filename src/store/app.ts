@@ -6,7 +6,7 @@ import router from "@/router";
 const routes = router.options.routes as CustomRouteRecordRaw[];
 const allMenus = getAllMenus(routes[0].children || []);
 const topMenus = getTopMenus(allMenus);
-const sideMenus = getSIdeMenus(allMenus, topMenus[0].index);
+const sideMenus = getSIdeMenus(allMenus, topMenus[0]?.index);
 export const useAppStore = defineStore("app", {
   state: (): AppState => ({
     num: {
@@ -15,13 +15,13 @@ export const useAppStore = defineStore("app", {
     allMenus,
     currentMenu: {},
     topMenus: {
-      activeIndex: topMenus[0].index,
+      activeIndex: topMenus[0]?.index,
       openedMenus: [],
       menus: topMenus,
     },
     sideMenus: {
-      activeIndex: sideMenus[0].index,
-      openedMenus: [sideMenus[0].index],
+      activeIndex: sideMenus[0]?.index,
+      openedMenus: [sideMenus[0]?.index],
       menus: sideMenus,
     },
   }),
@@ -34,7 +34,7 @@ export const useAppStore = defineStore("app", {
     },
     setSideMenus(index: string) {
       const sideMenus = getSIdeMenus(allMenus, index);
-      this.sideMenus.openedMenus = [sideMenus[0].index];
+      this.sideMenus.openedMenus = [sideMenus[0]?.index];
       this.sideMenus.menus = sideMenus;
     },
   },

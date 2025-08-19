@@ -35,14 +35,12 @@ const compRoutes: CustomRouteRecordRaw = {
       labelName: "表单页",
       component: () => import("@/views/ComponentManage/FormPage/index.vue"),
     },
-    // {
-    //   name: "CreateFormPage",
-    //   path: "/CreateFormPage",
-    //   labelName: "创建表单页",
-    //   isHidden: true, // 隐藏在菜单中
-    //   component: () =>
-    //     import("@/views/ComponentManage/CreateFormPage/index.vue"),
-    // },
+    {
+      name: "testPage",
+      path: "/testPage",
+      labelName: "测试页面",
+      component: () => import("@/views/ComponentManage/testPage/index.vue"),
+    },
   ],
 };
 export default compRoutes;

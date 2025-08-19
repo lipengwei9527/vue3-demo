@@ -6,7 +6,7 @@ export function getAllMenus(list: CustomRouteRecordRaw[]) {
     return {
       index: item.name as string,
       title: item.labelName,
-      isHidden: item.isHidden,
+      isHidden: item.isHidden || false,
       children: item.children ? getAllMenus(item.children) : [],
     };
   });
@@ -19,7 +19,7 @@ export function getTopMenus(list: ExMenuItemType[]): ExMenuItemType[] {
       return {
         index: item.index,
         title: item.title,
-        isHidden: item.isHidden || false,
+        isHidden: item.isHidden,
         // children: item.children ? getTopMenus(item.children) : [],
       };
     });
@@ -33,14 +33,15 @@ export function getSIdeMenus(
     obj = list.find((item) => item.index === activeIndex);
     list = obj?.children || [];
   }
-  return list
+  const sideMenus = list
     .filter((item) => !item.isHidden)
     .map((item) => {
       return {
         index: item.index,
         title: item.title,
-        isHidden: item.isHidden || false,
+        isHidden: item.isHidden,
         children: item.children ? getSIdeMenus(item.children) : [],
       };
     });
+  return sideMenus;
 }

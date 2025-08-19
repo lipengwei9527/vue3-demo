@@ -6,7 +6,7 @@ type CustomRouter = {
 };
 export function CreateCustomRouter(): CustomRouter {
   const router = useRouter();
-  console.log(`output->router`, router);
+  // console.log(`output->router`, router);
   const navigateTo = (to: RouteLocationRaw) => {
     router.push(to);
   };

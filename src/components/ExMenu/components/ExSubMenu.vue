@@ -1,8 +1,8 @@
 <template>
   <div class="ex-sub-menu">
-    <el-sub-menu :index="data.index" v-if="Object.keys(data).length != 0">
+    <el-sub-menu :index="data.index">
       <template #title>{{ data.title }}</template>
-      <template v-for="item in data.children">
+      <template v-for="item in data.children" :key="item.index + item.title">
         <ExSubMenu
           v-if="
             item.children &&
@@ -12,20 +12,17 @@
           :data="item"
         >
         </ExSubMenu>
-        <ExMenuItem v-else :index="item.index">
-          <template #title> {{ item.title }} </template>
-        </ExMenuItem>
+        <el-menu-item v-else :index="item.index">{{ item.title }}</el-menu-item>
       </template>
     </el-sub-menu>
   </div>
 </template>
 <script name="ExSubMenu" setup lang="ts">
 import { PropType } from "vue";
-import ExMenuItem from "@/components/ExMenu/components/ExMenuItem.vue";
 import type { ExMenuItemType } from "@/types/store";
 defineProps({
   data: {
-    type: Object as PropType<any>,
+    type: Object as PropType<ExMenuItemType>,
     default: () => ({}),
   },
 });
