@@ -1,41 +1,48 @@
-export default {
+import { CustomRouteRecordRaw } from "@/types/router";
+const compRoutes: CustomRouteRecordRaw = {
   path: "/comp",
-  name: "组件",
+  name: "comp",
+  labelName: "组件管理",
   children: [
     {
       path: "/ContextMenuPage",
-      name: "左键菜单",
+      name: "ContextMenuPage",
+      labelName: "左键菜单页",
       component: () =>
         import("@/views/ComponentManage/ContextMenuPage/index.vue"),
     },
     {
+      name: "CalendarPage",
       path: "/CalendarPage",
-      name: "日历",
+      labelName: "日历页",
       component: () => import("@/views/ComponentManage/CalendarPage/index.vue"),
     },
     {
+      name: "TablePage",
       path: "/TablePage",
-      name: "表格组件",
+      labelName: "表格页",
       component: () => import("@/views/ComponentManage/TablePage/index.vue"),
     },
     {
+      name: "FilePage",
       path: "/FilePage",
-      name: "文件上传",
+      labelName: "文件页",
       component: () => import("@/views/ComponentManage/FilePage/index.vue"),
     },
     {
+      name: "FormPage",
       path: "/FormPage",
-      name: "表单",
+      labelName: "表单页",
       component: () => import("@/views/ComponentManage/FormPage/index.vue"),
     },
-    {
-      path: "/CreateFormPage",
-      name: "创建表单",
-      component: () =>
-        import("@/views/ComponentManage/CreateFormPage/index.vue"),
-      meta: {
-        disabled: true,
-      },
-    },
+    // {
+    //   name: "CreateFormPage",
+    //   path: "/CreateFormPage",
+    //   labelName: "创建表单页",
+    //   isHidden: true, // 隐藏在菜单中
+    //   component: () =>
+    //     import("@/views/ComponentManage/CreateFormPage/index.vue"),
+    // },
   ],
 };
+export default compRoutes;

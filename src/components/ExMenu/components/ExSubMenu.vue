@@ -22,6 +22,7 @@
 <script name="ExSubMenu" setup lang="ts">
 import { PropType } from "vue";
 import ExMenuItem from "@/components/ExMenu/components/ExMenuItem.vue";
+import type { ExMenuItemType } from "@/types/store";
 defineProps({
   data: {
     type: Object as PropType<any>,

@@ -33,12 +33,14 @@
     "noFallthroughCasesInSwitch": true,
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
+    // "src/**/*.ts",
+    // "src/**/*.tsx",
+    // "src/**/*.vue",
+    "src",
+    "types"
   ],
   "exclude": [
-    "src/utils/*"
+    // "src/utils/*"
   ],
   "references": [
     {

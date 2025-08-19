@@ -13,7 +13,8 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { visualizer } from "rollup-plugin-visualizer";
 //setup语法糖写name命名组件名称
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
-const proxyConfig = require("./config/proxy").default;
+// const proxyConfig = require("./config/proxy").default;
+import proxyConfig from "./config/proxy";
 // 相对路径配置
 const pathResolve = (dir: string): string => {
   return resolve(__dirname, ".", dir);

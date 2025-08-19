@@ -3,7 +3,6 @@
 //   "dyn_type": 8
 
 // },
-import { ObjType } from "@/utils/types";
 const data = [
   {
     dyn_id: "981118307352444930",
@@ -165,7 +164,7 @@ export declare interface TableConfig {
   showOverflowTooltip: boolean;
   colSlots: string[];
   columns: { prop: string; label: string }[];
-  query: ObjType;
+  query: object;
   tableData: any[];
   total: number;
   background: boolean;

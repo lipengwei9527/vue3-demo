@@ -5,17 +5,14 @@
       :default-active="defaultActive"
       :collapse="collapse"
       :mode="mode"
+      :unique-opened="true"
       @select="selectFn"
       @open="openFn"
       @close="closeFn"
     >
       <template v-for="item in data">
         <ExSubMenu
-          v-if="
-            item.children &&
-            Array.isArray(item.children) &&
-            item.children.length != 0
-          "
+          v-if="item.children && item.children.length != 0"
           :data="item"
         >
         </ExSubMenu>
@@ -30,10 +27,11 @@
 import { PropType } from "vue";
 import ExSubMenu from "./components/ExSubMenu.vue";
 import ExMenuItem from "./components/ExMenuItem.vue";
-import { useAppStore } from "@/store/app";
-const props = defineProps({
+import type { ExMenuItemType } from "@/types/store";
+defineProps({
   data: {
-    type: Array as PropType<any>,
+    type: Array as PropType<ExMenuItemType[]>,
+    required: true,
     default: () => [],
   },
   defaultActive: {
@@ -47,25 +45,24 @@ const props = defineProps({
   mode: {
     type: String as PropType<"horizontal" | "vertical">,
   },
-  type: {
-    type: String as PropType<MenuType>,
-  },
   collapse: {
     type: Boolean,
     default: false,
   },
 });
-const emit = defineEmits(["select"]);
-const appStore = useAppStore();
+const emit = defineEmits<{
+  select: [index: string, indexPaths: string[]];
+  open: [index: string, indexPaths: string[]];
+  close: [index: string, indexPaths: string[]];
+}>();
 const selectFn = (index: string, indexPaths: string[]) => {
-  if (props.type) appStore.setActive(props.type, index);
   emit("select", index, indexPaths);
 };
-const openFn = (index: string) => {
-  if (props.type) appStore.addOpeneds(props.type, index);
+const openFn = (index: string, indexPaths: string[]) => {
+  emit("open", index, indexPaths);
 };
-const closeFn = (index: string) => {
-  if (props.type) appStore.removeOpeneds(props.type, index);
+const closeFn = (index: string, indexPaths: string[]) => {
+  emit("close", index, indexPaths);
 };
 </script>
 <style lang="scss" scoped>

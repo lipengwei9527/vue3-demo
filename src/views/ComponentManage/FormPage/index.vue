@@ -5,10 +5,13 @@
   </div>
 </template>
 <script name="FormPage" setup lang="ts">
-// import { getEgg } from "@/axios/egg";
-import { openTab } from "@/utils/page";
+import { CreateCustomRouter, CreateTab } from "@/utils/dealRoute";
+// router.push()
+const { navigateTo } = CreateCustomRouter();
+const { openTab } = CreateTab();
 const handleClick = () => {
-  openTab("/form/CreateFormPage");
+  // navigateTo("/form/CreateFormPage");c
+  openTab("CreateFormPage");
 };
 </script>
 <style lang="scss" scoped></style>

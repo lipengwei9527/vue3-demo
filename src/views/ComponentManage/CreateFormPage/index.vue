@@ -1,6 +1,6 @@
 <template>
   <div class="create-form-page">
-    <el-button type="primary" @click="handleClick">新增</el-button>
+    <el-button type="primary" @click="handleClick">新增表单</el-button>
     <!-- <ExCreateForm></ExCreateForm>
     <ExForm></ExForm> -->
   </div>
