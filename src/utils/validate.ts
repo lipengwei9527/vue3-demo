@@ -25,3 +25,15 @@ export function isThousand(value: string) {
   const reg = /^-?(\d{1,3}(,\d{3})*|\d+)(\.\d+)?|^-?0(\.0*[1-9]\d*)?$/;
   return reg.test(value);
 }
+/**
+ * 截取两个指定字符串之间的字符
+ * @param {string} str
+ * @param {string} start
+ * @param {string} end
+ * @returns {string|null}
+ */
+export function getBetween(str: string, start: string, end: string): string {
+  const reg = new RegExp(`${start}(.*?)${end}`);
+  const match = str.match(reg);
+  return match ? match[1] : "";
+}

@@ -1,9 +1,14 @@
-import { useRouter } from "vue-router";
-
-export function useCustomRouter() {
+import { useRouter, RouteLocationRaw } from "vue-router";
+type CustomRouter = {
+  navigateTo: (to: RouteLocationRaw) => void;
+  goBack: () => void;
+  refresh: () => void;
+};
+export function CreateCustomRouter(): CustomRouter {
   const router = useRouter();
-  const navigateTo = (path: string) => {
-    router.push(path);
+  // console.log(`output->router`, router);
+  const navigateTo = (to: RouteLocationRaw) => {
+    router.push(to);
   };
 
   const goBack = () => {
@@ -15,4 +20,20 @@ export function useCustomRouter() {
     goBack,
     refresh,
   };
+}
+type Tab<T> = {
+  name: string;
+  path: string;
+  params?: {
+    [P in keyof T]: T[P];
+  };
+};
+// 打开一个标签页
+export function CreateTab() {
+  // const { navigateTo } = CreateCustomRouter();
+  const openTab = <T>(to: Tab<T>) => {
+    window.open(to.path, to.name);
+  };
+  return { openTab };
+  // navigateTo();
 }

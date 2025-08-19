@@ -1,20 +1,24 @@
-import { nanoid } from "nanoid";
+import { getBetween } from "./validate";
 export function createNameThroughPath(path: string): string {
   let chunkName = "";
+  // 依赖包分包
   if (path.includes("node_modules")) {
     chunkName =
       path.toString().split("node_modules/")[2].split("/")[0].toString() +
-      `vendor-${chunkName}`;
+      `${chunkName}`;
     return `vendor-${chunkName}`;
   }
-  // if (chunkName.includes("src/views")) {
-  //   // 提取页面目录名作为 chunk 名
-  //   console.log(`output->目录名`, chunkName);
-  //   // const match = chunkName.match(/src[\/\\]views[\/\\]([^\/\\]+)/);
-  //   // if (match) {
-  //   //   return `views-${match[1]}`;
-  //   // }
-  //   return `views-${nanoid(6)}`;
-  // }
+  // src下views页面分包
+  if (path.includes("src/views/")) {
+    chunkName = path.split("/")[6];
+    if (chunkName.includes("index")) {
+      chunkName = path.split("/")[5];
+    }
+    return `views-${chunkName}`;
+  }
+  // src下除views之外的目录分包
+  if (path.includes("src/")) {
+    return getBetween(path, "src/", "/");
+  }
   return chunkName;
 }

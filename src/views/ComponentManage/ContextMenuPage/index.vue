@@ -1,31 +1,31 @@
 <template>
-  <div class="us-context-menu">
-    <ex-context-menu
+  <div class="context-menu-page">
+    <ExContextMenu
       :menu="[{ label: '菜单1' }, { label: '菜单2' }]"
       @select="select"
     >
       <div class="item box1">111</div>
-    </ex-context-menu>
-    <ex-context-menu
+    </ExContextMenu>
+    <ExContextMenu
       @select="select"
       :menu="[{ label: '菜单3' }, { label: '菜单4' }]"
     >
       <div class="item box2">222</div>
-    </ex-context-menu>
-    <ex-context-menu
+    </ExContextMenu>
+    <ExContextMenu
       @select="select"
       :menu="[{ label: '菜单5' }, { label: '菜单6' }, { label: '菜单7' }]"
     >
       <div class="item box3">
         333
-        <ex-context-menu
+        <ExContextMenu
           @select="select"
           :menu="[{ label: '菜单8' }, { label: '菜单9' }, { label: '菜单10' }]"
         >
           <div class="box4">444</div>
-        </ex-context-menu>
+        </ExContextMenu>
       </div>
-    </ex-context-menu>
+    </ExContextMenu>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ function select<T>(item: T) {
 </script>
 
 <style lang="scss" scoped>
-.us-context-menu {
+.context-menu-page {
   display: flex;
   justify-content: space-between;
   height: 100%;

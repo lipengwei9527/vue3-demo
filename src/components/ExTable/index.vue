@@ -2,7 +2,7 @@
   <div class="ex-table" v-loading="model.loading">
     <!-- 搜索 -->
     <div class="search-comps">
-      <el-input v-model="model.query.form"></el-input>
+      <el-input v-model="model.query"></el-input>
     </div>
     <div class="search-btn">
       <el-button type="primary" @click="searchFn">搜索</el-button>

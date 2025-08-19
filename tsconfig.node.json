@@ -8,7 +8,9 @@
     "strict": true
   },
   "include": [
-    "vite.config.ts",
-    "src/utils/path.ts"
+    // "vite.config.ts",
+    // "src/utils/path.ts",
+    // "src/utils/validate.ts",
+    "config/proxy"
   ]
 }

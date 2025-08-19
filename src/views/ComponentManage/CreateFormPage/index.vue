@@ -1,15 +1,14 @@
 <template>
   <div class="create-form-page">
-    <el-button @click="handleCreateForm" type="primary">创建表单</el-button>
-    <!-- <ex-create-form></ex-create-form> -->
+    <el-button type="primary" @click="handleClick">新增表单</el-button>
+    <!-- <ExCreateForm></ExCreateForm>
+    <ExForm></ExForm> -->
   </div>
 </template>
 <script name="CreateFormPage" setup lang="ts">
-2;
-import { useCustomRouter } from "@/utils/dealRoute";
-const { goBack } = useCustomRouter();
-const handleCreateForm = () => {
-  goBack();
+const handleClick = () => {
+  console.log("新增按钮被点击");
+  // 这里可以添加逻辑，比如打开一个新页面或弹出一个表单
 };
 </script>
 <style lang="scss" scoped></style>
