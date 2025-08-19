@@ -36,11 +36,11 @@ const sideMenus = computed(() => appStore.sideMenus);
 const { navigateTo } = CreateCustomRouter();
 // navigateTo(sideMenus.value.activeIndex);
 
-const selectTopFn = (index: string, indexPaths: string[]) => {
+const selectTopFn = (index: string) => {
   appStore.setTopActiveIndex(index);
   appStore.setSideMenus(index);
 };
-const selectSideFn = (index: string, indexPaths: string[]) => {
+const selectSideFn = (index: string) => {
   appStore.setSideActiveIndex(index);
   navigateTo(index);
 };

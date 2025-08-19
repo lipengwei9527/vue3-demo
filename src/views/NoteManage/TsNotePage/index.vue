@@ -15,12 +15,12 @@
   </div>
 </template>
 <script name="TsNotePage" setup lang="ts">
-import Rotate from "./components/Rotate.vue";
-const obj = {
-  key1: "value1",
-  key2: "value2",
-};
-const arr = ["a", "b"];
+// import Rotate from "./components/Rotate.vue";
+// const obj = {
+//   key1: "value1",
+//   key2: "value2",
+// };
+// const arr = ["a", "b"];
 </script>
 <style lang="scss" scoped>
 .round {

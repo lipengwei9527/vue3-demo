@@ -5,13 +5,14 @@
   </div>
 </template>
 <script name="FormPage" setup lang="ts">
-import { CreateCustomRouter, CreateTab } from "@/utils/dealRoute";
-// router.push()
-const { navigateTo } = CreateCustomRouter();
+import { CreateTab } from "@/utils/dealRoute";
 const { openTab } = CreateTab();
 const handleClick = () => {
-  // navigateTo("/form/CreateFormPage");c
-  openTab("CreateFormPage");
+  openTab({
+    name: "CreateFormPage",
+    path: "/form/CreateFormPage",
+    params: { a: 1342 },
+  });
 };
 </script>
 <style lang="scss" scoped></style>
