@@ -1,23 +1,21 @@
-import {
-  useRouter,
-  Router,
-  useRoute,
-  RouteLocationNormalizedLoadedGeneric,
-  RouteLocationRaw,
-} from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+const routeModel = import.meta.env.VITE_ROUTER_MODEL;
+const routerPrefix = routeModel == "hash" ? "/#" : "";
+type NavigateTo = ParamsUnion<ReturnType<typeof useRouter>["push"]>;
 /***************************************************************************************************/
 /**
  * @class
  * @description 创建一个路由管理器
  */
 export class CreateRouterManager {
-  router: Router;
-  route: RouteLocationNormalizedLoadedGeneric;
+  router: ReturnType<typeof useRouter>;
+  route: ReturnType<typeof useRoute>;
+
   constructor() {
     this.router = useRouter();
     this.route = useRoute();
   }
-  navigateTo(to: RouteLocationRaw) {
+  navigateTo(to: NavigateTo) {
     this.router.push(to);
   }
   goBack() {
@@ -25,13 +23,10 @@ export class CreateRouterManager {
   }
   refresh() {}
 }
-
-type Tab<T extends object> = {
-  url: string; //跳转的url
-  fullUrl?: string; //带参数的url
-  //参数
+type Tab = {
+  path: string; //跳转的url
   params?: {
-    [P in keyof T]: T[P];
+    [P: string]: any;
   };
 };
 /***************************************************************************************************/
@@ -41,25 +36,22 @@ type Tab<T extends object> = {
  */
 export class CreateTabPage {
   readonly tabName: string;
-  route: RouteLocationNormalizedLoadedGeneric;
+  route: ReturnType<typeof useRoute>;
   constructor(tabName: string) {
     this.tabName = tabName;
     this.route = useRoute();
   }
-  openTab<T extends object>(to: Tab<T>) {
+  openTab(to: Tab) {
     // 将params中的参数都拼接到url上
-    to.url = to.url + objTOPath(to.params || {});
+    to.path = to.path + objTOPath(to.params || {});
+    // 路由模式为hash则拼接/#/字符串，否则拼接空字符串
+    to.path = routerPrefix + to.path;
     // 打开一个tabName频道的标签页
-    window.open(to.url, this.tabName);
+    window.open(to.path, this.tabName);
   }
   getParams() {
     console.log("window.location,csRouter", window.location, this.route);
     const params = Object.assign(this.route.params, this.route.query);
-    // const res: Record<string, string> = {};
-    // const params = new URLSearchParams(window.location.search);
-    // for (const [key, value] of params.entries()) {
-    //   res[key] = value;
-    // }
     return params;
   }
   closeTab() {

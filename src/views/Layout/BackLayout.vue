@@ -33,8 +33,7 @@ const topMenus = computed(() => appStore.topMenus);
 const sideMenus = computed(() => appStore.sideMenus);
 
 // 跳转路由
-const { navigateTo } = new CreateRouterManager();
-// navigateTo(sideMenus.value.activeIndex);
+const routerManager = new CreateRouterManager();
 
 const selectTopFn = (index: string) => {
   appStore.setTopActiveIndex(index);
@@ -42,7 +41,7 @@ const selectTopFn = (index: string) => {
 };
 const selectSideFn = (index: string) => {
   appStore.setSideActiveIndex(index);
-  navigateTo(index);
+  routerManager.navigateTo(index);
 };
 </script>
 

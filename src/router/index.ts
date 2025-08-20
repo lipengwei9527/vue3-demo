@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  // createWebHistory,
+  createWebHashHistory,
+} from "vue-router";
 import compRoutes from "./compRoutes";
 import noteRoutes from "./noteRoutes";
 import formRoutes from "./formRoutes";
@@ -20,7 +24,8 @@ const routes: CustomRouteRecordRaw[] = [
 ];
 const env = import.meta.env;
 const router = createRouter({
-  history: createWebHistory(env.VITE_BASE_PATH),
+  // history: createWebHistory(env.VITE_BASE_PATH),
+  history: createWebHashHistory(env.VITE_BASE_PATH),
   routes: routes,
 });
 // router.beforeEach((to, from, next) => {

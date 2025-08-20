@@ -5,18 +5,19 @@ const compRoutes: CustomRouteRecordRaw = {
   labelName: "组件管理",
   children: [
     {
+      name: "CalendarPage",
+      path: "/CalendarPage",
+      labelName: "日历页",
+      component: () => import("@/views/ComponentManage/CalendarPage/index.vue"),
+    },
+    {
       path: "/ContextMenuPage",
       name: "ContextMenuPage",
       labelName: "左键菜单页",
       component: () =>
         import("@/views/ComponentManage/ContextMenuPage/index.vue"),
     },
-    {
-      name: "CalendarPage",
-      path: "/CalendarPage",
-      labelName: "日历页",
-      component: () => import("@/views/ComponentManage/CalendarPage/index.vue"),
-    },
+
     {
       name: "TablePage",
       path: "/TablePage",

@@ -37,7 +37,8 @@
     // "src/**/*.tsx",
     // "src/**/*.vue",
     "src",
-    "types"
+    "types",
+    "env.d.ts"
   ],
   "exclude": [
     // "src/utils/*"

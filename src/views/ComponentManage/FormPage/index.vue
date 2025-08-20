@@ -9,7 +9,7 @@ import { CreateTabPage } from "@/utils/dealRoute";
 const tabPage = new CreateTabPage("formConfig");
 const handleClick = () => {
   tabPage.openTab({
-    url: "/CreateFormPage/123",
+    path: "/CreateFormPage/123",
     params: { a: 1, b: 2 },
   });
 };
