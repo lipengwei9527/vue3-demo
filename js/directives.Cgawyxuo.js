@@ -1,1 +1,2 @@
 const i=new WeakMap,o=new ResizeObserver(e=>{for(const t of e){const s=i.get(t.target);if(s){const{inlineSize:n,blockSize:c}=t.borderBoxSize[0];s({width:n,height:c})}}}),r={mounted(e,t){o.observe(e),i.set(e,t.value)},unmounted(e){o.unobserve(e)}},b={mounted(e,t){}};function d(e){const t=Object.assign({"./sizeOb/index.ts":r,"./testDir/index.ts":b});Object.keys(t).map(s=>{const n=s.split("/")[1];e.directive(n,t[s])})}export{d as s};
+//# sourceMappingURL=directives.Cgawyxuo.js.map
