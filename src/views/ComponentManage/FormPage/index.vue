@@ -5,13 +5,12 @@
   </div>
 </template>
 <script name="FormPage" setup lang="ts">
-import { CreateTab } from "@/utils/dealRoute";
-const { openTab } = CreateTab();
+import { CreateTabPage } from "@/utils/dealRoute";
+const tabPage = new CreateTabPage("formConfig");
 const handleClick = () => {
-  openTab({
-    name: "CreateFormPage",
-    path: "/form/CreateFormPage",
-    params: { a: 1342 },
+  tabPage.openTab({
+    url: "/CreateFormPage/123",
+    params: { a: 1, b: 2 },
   });
 };
 </script>

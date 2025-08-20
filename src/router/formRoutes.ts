@@ -6,7 +6,7 @@ const formRoutes: CustomRouteRecordRaw = {
   children: [
     {
       name: "CreateFormPage",
-      path: "/CreateFormPage",
+      path: "/CreateFormPage/:id",
       labelName: "创建表单",
       meta: {},
       component: () =>

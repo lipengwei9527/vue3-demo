@@ -1,0 +1,28 @@
+.create-form-layout {
+  height: 100vh;
+  background-color: var(--ex-layout-bgc);
+  color: var(--ex-color-text);
+  display: grid;
+  grid-template-areas:
+    "nav-bar nav-bar"
+    "side-bar main"
+    "side-bar footer";
+  grid-template-columns: minmax(180px, var(--side-bar-width)) 1fr;
+  grid-template-rows: auto 1fr auto;
+  .nav-bar {
+    grid-area: nav-bar;
+  }
+  .side-bar {
+    grid-area: side-bar;
+  }
+  .main {
+    grid-area: main;
+    padding: 10px;
+    background-color: var(--ex-main-bg-color);
+    border-radius: 5px;
+    overflow: auto;
+  }
+  .footer {
+    grid-area: footer;
+  }
+}
