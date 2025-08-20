@@ -24,7 +24,7 @@
 </template>
 
 <script setup name="BackLayout" lang="ts">
-import { CreateCustomRouter } from "@/utils/dealRoute";
+import { CreateRouterManager } from "@/utils/dealRoute";
 import { useAppStore } from "@/store/app";
 import { computed } from "vue";
 
@@ -33,7 +33,7 @@ const topMenus = computed(() => appStore.topMenus);
 const sideMenus = computed(() => appStore.sideMenus);
 
 // 跳转路由
-const { navigateTo } = CreateCustomRouter();
+const { navigateTo } = new CreateRouterManager();
 // navigateTo(sideMenus.value.activeIndex);
 
 const selectTopFn = (index: string) => {
