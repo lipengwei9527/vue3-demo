@@ -9,8 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
-    ElForm: typeof import('element-plus/es')['ElForm']
-    ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMenu: typeof import('element-plus/es')['ElMenu']
@@ -23,7 +21,6 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ExButtonGroup: typeof import('./src/components/ExForm/components/ExButtonGroup/index.vue')['default']
-    ExCalendar: typeof import('./src/components/ExCalendar/index.vue')['default']
     ExContextMenu: typeof import('./src/components/ExContextMenu/index.vue')['default']
     ExCreateForm: typeof import('./src/components/ExCreateForm/index.vue')['default']
     ExForm: typeof import('./src/components/ExForm/index.vue')['default']

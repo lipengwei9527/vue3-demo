@@ -52,22 +52,6 @@ const containerRef = ref();
 // x-鼠标点击位置距离视口左边的距离,y-鼠标点击位置距离视口顶部的距离,showMenu-是否显示菜单
 const { x, y, showMenu } = useContextMenu(containerRef);
 const emit = defineEmits(["select"]);
-// 或者
-// true-类型验证通过，false-类型验证失败
-// const emit = defineEmits({
-//   "select": (item: object) => {
-//     if (Object.prototype.toString.call(item) === '[object Object]') {
-//       return true
-//     }
-//     return false
-//   }
-// });
-// 或者 有返回值
-// const emit = defineEmits<{
-//   (item: object): void
-// }>();
-// 或者 无返回值
-// const emit = defineEmits<{ (item: object): void }>();
 
 // 菜单的宽和高
 const w = ref(0);

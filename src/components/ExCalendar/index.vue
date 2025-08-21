@@ -125,7 +125,8 @@ const isSelectedFn = (data: DayInfo): boolean => {
 };
 // 选择点击的日期
 const selectDayFn = (data: DayInfo) => {
-  if (data.disabled) return;
+  console.log(`output-selectDayFn>`);
+  if (!data || data.disabled) return;
   if (selected.length != 0 && selected.find((item) => item.date == data.date)) {
     selected.length = 0;
     return;

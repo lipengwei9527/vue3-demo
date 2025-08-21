@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "sourceMap": true, // 必须开启，确保 TS 生成自身的 Source Map
+    "inlineSourceMap": false, // 避免使用内联映射（可能与 Vite 冲突）
     // 路径配置
     "baseUrl": "./",
     "paths": {
@@ -37,7 +39,8 @@
     // "src/**/*.tsx",
     // "src/**/*.vue",
     "src",
-    "types"
+    "types",
+    "env.d.ts"
   ],
   "exclude": [
     // "src/utils/*"

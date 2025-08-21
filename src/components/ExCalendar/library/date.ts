@@ -1,5 +1,5 @@
 import moment from "moment";
-const showDayNum = 42; // 显示的天数
+const showDayNum = 42; // 显示的天数，日历中的格子数
 /**
  * @description: 获取指定时间的当月天数和星期，默认获取当月的天数和星期
  * @param {Date} date 
