@@ -7,7 +7,7 @@
     "dev": "vite --mode development --host",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist -r https://github.com/lipengwei9527/vue3-demo.git -b gh-pages"
+    "deploy": "vue-tsc && vite build && gh-pages -d dist -r https://github.com/lipengwei9527/vue3-demo.git -b gh-pages"
   },
   "dependencies": {
     "@types/node": "^20.12.7",

@@ -1,14 +1,15 @@
 <template>
   <div class="calendar-page">
-    <ExCalendar v-model="value" @select="selectFn"> </ExCalendar>
+    <!-- <ExCalendar v-model="value" @select="selectFn"> </ExCalendar> -->
+    日历组件使用页
   </div>
 </template>
 <script name="CalendarPage" setup lang="ts">
-import { ref } from "vue";
-let value = ref<Date>(new Date());
-function selectFn(data: DayInfo[]) {
-  console.log(`output->data`, data);
-}
+// import { useTemplateRef } from "vue";
+// let value = useTemplateRef(new Date());
+// function selectFn(data: DayInfo[]) {
+//   console.log(`output->data`, data);
+// }
 </script>
 <style lang="scss" scoped>
 .calendar-page {

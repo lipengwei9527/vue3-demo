@@ -14,9 +14,9 @@ const routes: CustomRouteRecordRaw[] = [
     name: "layout",
     labelName: "布局",
     component: () => import("@/views/Layout/index.vue"),
-    redirect: compRoutes.children
-      ? compRoutes.children[0].path
-      : "/ContextMenuPage",
+    // redirect: compRoutes.children
+    //   ? compRoutes.children[0].path
+    //   : "/ContextMenuPage",
 
     children: [compRoutes, noteRoutes],
   },
