@@ -34,7 +34,7 @@ const config = {
 };
 console.log(`
   ------------------------------------------------
-    config/proxy/index.ts 
+  config/proxy/index.ts 
     env:${env}
   ------------------------------------------------`);
 export default config[env as keyof typeof config];
