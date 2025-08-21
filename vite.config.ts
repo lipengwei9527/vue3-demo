@@ -68,12 +68,12 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           },
         },
       },
-      terserOptions: {
-        // compress: {
-        //   drop_debugger: env.VITE_DROP_DEBUGGER === "true",
-        //   drop_console: env.VITE_DROP_CONSOLE === "true",
-        // },
-      },
+      // terserOptions: {
+      //   // compress: {
+      //   //   drop_debugger: env.VITE_DROP_DEBUGGER === "true",
+      //   //   drop_console: env.VITE_DROP_CONSOLE === "true",
+      //   // },
+      // },
     },
     resolve: {
       alias,

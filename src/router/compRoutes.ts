@@ -11,6 +11,13 @@ const compRoutes: CustomRouteRecordRaw = {
     //   component: () => import("@/views/ComponentManage/CalendarPage/index.vue"),
     // },
     {
+      path: "/",
+      name: "",
+      labelName: "左键菜单页",
+      isHidden: true,
+      redirect: "ContextMenuPage",
+    },
+    {
       path: "/ContextMenuPage",
       name: "ContextMenuPage",
       labelName: "左键菜单页",
