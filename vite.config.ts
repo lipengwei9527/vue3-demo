@@ -41,7 +41,14 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         resolvers: [ElementPlusResolver()],
       }),
       Components({
+        // exclude不生效，include会忽略resolvers配置
+        // 使用globs配置来确定注册哪些自定义组件
+        globs: [
+          "!src/components/**/components/*.vue", //排除src/components目录下所有深层components目录下的组件
+          "src/components/**/*.vue", //注册所有组件
+        ],
         resolvers: [ElementPlusResolver()],
+        // debug: true,
       }),
       visualizer(),
       vueSetupExtend(),

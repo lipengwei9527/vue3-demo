@@ -8,6 +8,7 @@ export function setGlobalComponents(app: App<Element>) {
   Object.keys(comps).map((key) => {
     const paths = key.split("/");
     const compName = paths[paths.length - 2];
+    console.log("key", key);
     app.component(compName, comps[key]);
   });
 }

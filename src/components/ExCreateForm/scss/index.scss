@@ -1,11 +1,11 @@
-.create-form-layout {
+.ex-create-form {
   height: 100vh;
   background-color: var(--ex-layout-bgc);
   color: var(--ex-color-text);
   display: grid;
   grid-template-areas:
-    "nav-bar nav-bar"
-    "side-bar main"
+    "top-container top-container"
+    "side-bar main-form"
     "side-bar footer";
   grid-template-columns: minmax(180px, var(--side-bar-width)) 1fr;
   grid-template-rows: auto 1fr auto;
@@ -15,7 +15,7 @@
   .side-bar {
     grid-area: side-bar;
   }
-  .main {
+  .main-form {
     grid-area: main;
     padding: 10px;
     background-color: var(--ex-main-bg-color);

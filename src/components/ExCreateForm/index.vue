@@ -1,11 +1,14 @@
 <template>
   <div class="ex-create-form">
-    <el-button @click="getParams">获取参数</el-button>
-    <el-button @click="closeFn">关闭页面</el-button>
+    <div class="top-container"></div>
+    <ExSideBar></ExSideBar>
+    <div class="main"></div>
+    <div class="foot"></div>
   </div>
 </template>
 <script name="ExCreateForm" setup lang="ts">
 import { CreateTabPage } from "@/utils/dealRoute";
+import ExSideBar from "./components/ExSideBar.vue";
 const tabPage = new CreateTabPage("formConfig");
 const params = tabPage.getParams();
 console.log(`output->params`, params);
@@ -18,5 +21,5 @@ const closeFn = () => {
 };
 </script>
 <style lang="scss" scoped>
-@use "./scss";
+@use "./scss/index.scss";
 </style>

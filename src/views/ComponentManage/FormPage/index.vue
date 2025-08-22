@@ -1,10 +1,11 @@
 <template>
   <div class="form-page">
     <el-button type="primary" @click="handleClick">新增</el-button>
-    <!-- <ExForm></ExForm> -->
+    <ExSideBar></ExSideBar>
   </div>
 </template>
 <script name="FormPage" setup lang="ts">
+import ExSideBar from "@/components/ExCreateForm/components/ExSideBar.vue";
 import { CreateTabPage } from "@/utils/dealRoute";
 const tabPage = new CreateTabPage("formConfig");
 const handleClick = () => {
