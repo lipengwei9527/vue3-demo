@@ -1,3 +1,8 @@
+/***************************************************************************************************/
+/**
+ * @description appStore中定义的类型定义，用于在项目中引用和扩展。
+ */
+import type { BaseCompCtrls } from "./components";
 type MenuType = "navMenus" | "sideMenus";
 type ExMenus = {
   activeIndex: string; // 当前激活的菜单项
@@ -18,4 +23,12 @@ export type AppState = {
   currentMenu: {};
   topMenus: ExMenus;
   sideMenus: ExMenus;
+};
+/***************************************************************************************************/
+/**
+ * @description useExCreateFormStore
+ */
+export type ExCreateFormState = {
+  formData: object;
+  compList: BaseCompCtrls[];
 };

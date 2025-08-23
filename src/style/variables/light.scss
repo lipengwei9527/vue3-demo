@@ -1,0 +1,12 @@
+html[data-theme="light"],
+:root {
+  --ex-main-bg-color: #ffffff;
+  --ex-layout-bgc: #f4f4f5; // 主题背景色
+  --ex-color-text: black; // 文字颜色
+  --ex-menu-border-color: #dcdfe6; //菜单边框颜色
+  --ex-border-color: var(--ex-menu-border-color); //边框颜色
+  // 侧边栏变量
+  --ex-side-bar-width: 16rem; // 侧边栏宽度
+  --ex-side-bar-bg-color: #ffffff; // 侧边栏背景色
+  --ex-nav-bar-height: 3.6rem; // 导航栏高度
+}

@@ -7,14 +7,13 @@
 // revert：还原到浏览器内置样式
 // all：代指所有css属性
 // 样式变量
-@use "./theme/custom";
-@use "./theme/element";
-@use "./iconfont";
-
 // 全局滚动条样式
+@use "./variables";
 @use "scrollbar.scss";
 // 整体布局样式
 @use "./layout";
+@use "./iconfont";
+@use "./exCreateForm";
 * {
   margin: 0;
   padding: 0;

@@ -153,6 +153,9 @@ const data = [
     dyn_type: 8,
   },
 ];
+type queryType = {
+  [key in string]: any;
+};
 export declare interface TableConfig {
   showIndex: boolean;
   showSelection: boolean;
@@ -164,7 +167,7 @@ export declare interface TableConfig {
   showOverflowTooltip: boolean;
   colSlots: string[];
   columns: { prop: string; label: string }[];
-  query: object;
+  query: queryType;
   tableData: any[];
   total: number;
   background: boolean;

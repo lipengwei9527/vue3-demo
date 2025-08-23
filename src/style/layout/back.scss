@@ -7,13 +7,17 @@
     "nav-bar nav-bar"
     "side-bar main"
     "side-bar footer";
-  grid-template-columns: minmax(180px, var(--side-bar-width)) 1fr;
+  grid-template-columns: minmax(180px, var(--ex-side-bar-width)) 1fr;
   grid-template-rows: auto 1fr auto;
   .nav-bar {
     grid-area: nav-bar;
   }
   .side-bar {
     grid-area: side-bar;
+    border-right: 1px solid var(--ex-menu-border-color);
+    .el-menu {
+      border-right: none;
+    }
   }
   .main {
     grid-area: main;

@@ -1,0 +1,11 @@
+.form-main {
+  padding: 10px;
+  background-color: var(--ex-main-bg-color);
+  border-radius: 5px;
+  overflow: auto;
+}
+.main-comp {
+  display: grid;
+  grid-template-columns: 2 1fr;
+  
+}

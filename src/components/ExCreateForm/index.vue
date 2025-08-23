@@ -1,25 +1,21 @@
 <template>
   <div class="ex-create-form">
-    <div class="top-container"></div>
-    <ExSideBar></ExSideBar>
-    <div class="main"></div>
-    <div class="foot"></div>
+    <FormTopBar></FormTopBar>
+    <FormSideBar></FormSideBar>
+    <FormMain></FormMain>
+    <FormFooter></FormFooter>
   </div>
 </template>
 <script name="ExCreateForm" setup lang="ts">
-import { CreateTabPage } from "@/utils/dealRoute";
-import ExSideBar from "./components/ExSideBar.vue";
-const tabPage = new CreateTabPage("formConfig");
-const params = tabPage.getParams();
-console.log(`output->params`, params);
-const getParams = () => {
-  const p = tabPage.getParams();
-  console.log(`output->p`, p);
-};
-const closeFn = () => {
-  tabPage.closeTab();
-};
+// import { CreateTabPage } from "@/utils/dealRoute";
+import FormSideBar from "./FormSideBar.vue";
+import FormTopBar from "./FormTopBar.vue";
+import FormMain from "./FormMain.vue";
+import FormFooter from "./FormFooter.vue";
+import useFormStore from "@/store/exCreateForm";
+import { compList } from "./data";
+const formStore = useFormStore();
+formStore.updateCompList(compList);
+// const compList =
 </script>
-<style lang="scss" scoped>
-@use "./scss/index.scss";
-</style>
+<style lang="scss" scoped></style>
