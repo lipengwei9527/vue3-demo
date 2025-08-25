@@ -1,0 +1,29 @@
+.ex-form {
+  --col-gap: 2; //表单列数，只能为偶数
+
+  --half-call: calc(var(--col-gap) / 2 + 1); //表单一半的列数
+
+  .form-container {
+    .form-item-container {
+      display: grid;
+      grid-template-columns: repeat(var(--col-gap), 1fr);
+      grid-column-gap: 15px;
+      user-select: none;
+      border: 1px solid red;
+      .diy-container {
+        user-select: none;
+        grid-column: 1 / -1;
+        margin-bottom: 10px;
+      }
+      .ex-form-item {
+        .ex-form-comp {
+          width: 100%;
+          user-select: none;
+        }
+      }
+    }
+  }
+  .full-line {
+    grid-column: 1 / span var(--half-call);
+  }
+}

@@ -9,10 +9,7 @@
         @select="handleSelect"
         @close="handleClose"
       >
-        <el-menu-item index="4">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
+        <el-menu-item index="4"> </el-menu-item>
       </el-menu>
     </el-col>
   </el-row>

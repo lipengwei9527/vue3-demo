@@ -6,6 +6,10 @@
 }
 .main-comp {
   display: grid;
+  border: 1px solid red;
   grid-template-columns: 2 1fr;
-  
+  height: 100%;
+  .base-form-item {
+    margin: 10px 5px;
+  }
 }

@@ -1,43 +1,68 @@
-export default {
-  formName: "exampleForm",
-  id: "123",
-  schema: "create", //create,edit,read
-  formConfig: [
+import { ExFormConfigType, DiyConfigType } from "@/types/components";
+const configData: DiyConfigType[] = [
+  {
+    id: 1,
+    type: "DiyInput",
+    label: "姓名",
+    field: "name",
+    value: "li",
+    isFullLine: true,
+    disabled: false,
+    rules: [],
+  },
+  {
+    id: 2,
+    type: "DiyInput",
+    label: "年龄",
+    field: "age",
+    value: 18,
+    isFullLine: false,
+    disabled: false,
+    rules: [],
+  },
+  {
+    id: 3,
+    type: "DiyInput",
+    label: "年龄",
+    field: "age",
+    value: 18,
+    isFullLine: true,
+    disabled: false,
+    rules: [],
+  },
+  // {
+  //   id: "3",
+  //   type: "DiySelect",
+  //   label: "职位",
+  //   field: "job",
+  //   value: "1",
+  //   isFullLine: true,
+  //   options: [
+  //     { label: "员工1", value: "1", disabled: true },
+  //     { label: "员工2", value: "2", disabled: true },
+  //     { label: "员工3", value: "3", disabled: true },
+  //   ],
+  //   disabled: false,
+  //   rules: [],
+  // },
+];
+const formConfig: ExFormConfigType = {
+  name: "exampleForm",
+  id: 123,
+  model: "create", //create,edit,read
+  config: [
     {
       id: "1",
-      name: "ex-input",
-      type: "input",
-      label: "姓名",
-      field: "name",
-      defaultValue: "li",
-      disabled: false,
-      rules: [],
+      type: "DiyContainer",
+      title: "标题1",
+      config: configData,
     },
     {
-      idL: "2",
-      name: "ex-input",
-      type: "input",
-      label: "年龄",
-      field: "age",
-      defaultValue: 18,
-      disabled: false,
-      rules: [],
-    },
-    {
-      id: "3",
-      name: "ex-select",
-      type: "select",
-      label: "职位",
-      field: "job",
-      defaultValue: "1",
-      fullLine: true,
-      options: [
-        { label: "员工1", value: "1", disabled: true },
-        { label: "员工2", value: "2" },
-        { label: "员工3", value: "3" },
-      ],
-      disabled: false,
-      rules: [],
+      id: "1",
+      type: "DiyContainer",
+      title: "标题2",
+      // config: configData,
     },
   ],
 };
+export default formConfig;

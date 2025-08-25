@@ -4,6 +4,6 @@
   </div>
 </template>
 <script name="FormSideBar" setup lang="ts">
-import BaseComp from "./components/BaseComp.vue";
+import BaseComp from "./BaseComp.vue";
 </script>
 <style lang="scss" scoped></style>

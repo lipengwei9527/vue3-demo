@@ -33,7 +33,12 @@ watch(ctrls, () => {
 });
 useDraggable(`.${containerName}`, ctrls, {
   animation: 200,
-  // handle: ".label-item",
+  group: {
+    name: "ai",
+    pull: "clone",
+    put: false,
+  },
+  sort: false,
   onStart() {
     console.log("start");
   },

@@ -1,4 +1,4 @@
-import { BaseCompCtrls, Container } from "@/types/components";
+import { BaseCompCtrls, DiyContainerType } from "@/types/components";
 export const compList: BaseCompCtrls[] = [
   {
     title: "容器1",
@@ -22,7 +22,7 @@ export const compList: BaseCompCtrls[] = [
   },
 ];
 
-export const formCtrls: Container[] = [
-  { type: "container", title: "容器1" },
-  { type: "container", title: "容器2" },
+export const formCtrls: DiyContainerType[] = [
+  { id: 1, title: "容器1", type: "DiyContainer" },
+  { id: 2, title: "容器2", type: "DiyContainer" },
 ];

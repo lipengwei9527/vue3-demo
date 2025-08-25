@@ -13,9 +13,15 @@ const compRoutes: CustomRouteRecordRaw = {
     {
       path: "/",
       name: "",
-      labelName: "左键菜单页",
+      labelName: "表单页",
       isHidden: true,
-      redirect: "ContextMenuPage",
+      redirect: "FormPage",
+    },
+    {
+      name: "FormPage",
+      path: "/FormPage",
+      labelName: "表单页",
+      component: () => import("@/views/ComponentManage/FormPage/index.vue"),
     },
     {
       path: "/ContextMenuPage",
@@ -37,12 +43,7 @@ const compRoutes: CustomRouteRecordRaw = {
       labelName: "文件页",
       component: () => import("@/views/ComponentManage/FilePage/index.vue"),
     },
-    {
-      name: "FormPage",
-      path: "/FormPage",
-      labelName: "表单页",
-      component: () => import("@/views/ComponentManage/FormPage/index.vue"),
-    },
+
     {
       name: "testPage",
       path: "/testPage",

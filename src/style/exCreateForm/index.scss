@@ -30,3 +30,12 @@
     grid-area: form-footer;
   }
 }
+.ghost {
+  background-color: #eff1f3;
+}
+.drag {
+  background-color: #def1f9;
+}
+.base-form-item {
+  border: 2px solid var(--ex-menu-border-color);
+}

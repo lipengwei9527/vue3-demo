@@ -29,10 +29,11 @@
 </template>
 <script name="ExCalendar" setup lang="ts">
 import { reactive, useSlots, PropType } from "vue";
-import { getCalendarData } from "./library/date";
 import { useVModel } from "@vueuse/core";
 import { formateDate } from "@/utils/date";
 import moment from "moment";
+import { getCalendarData } from "./library/date";
+import { DayInfo } from "@/types/components";
 // 父组件中使用插槽即使是注释也会返回一个包含default属性的对象
 // 不使用插槽时要保证父组件插槽位置不能有任何东西（注释也不行）
 const slots = useSlots();

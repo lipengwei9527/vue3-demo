@@ -21,12 +21,41 @@ export type BaseCompCtrls = {
 
 /***************************************************************************************************/
 
-export type BaseFormCtrlFiled = {
-  type: string;
+// 除了容器控件之外的表单控件类型
+export type CtrlType = "DiyInput" | "DiySelect" | "ExDatePicker";
+
+// 除了容器控件，所有控件都有的基础类型
+export interface DiyCtrlType {
+  id: number | string;
+  type: CtrlType;
+  field: string;
   label: string;
-};
-export interface Container extends Omit<BaseFormCtrlFiled, "label"> {
-  title: string;
-  type: "container";
+  value: any;
+  disabled: boolean;
+  isFullLine: boolean;
+  rules: Array;
 }
-export type FormCtrl = Container;
+export interface ExInputType extends DiyCtrlType {}
+export interface DiySelectType extends DiyCtrlType {
+  options?: {
+    label: string;
+    value: string | number;
+    disabled?: boolean;
+  }[];
+}
+// 容器类型
+export interface DiyContainerType {
+  id: number | string;
+  title: string;
+  type: "DiyContainer";
+  config?: DiyConfigType[];
+}
+// 表单配置中的每一项的类型
+export type DiyConfigType = ExInputType | DiySelectType;
+// 表单配置类型
+export interface ExFormConfigType {
+  id: number;
+  name: string; //表单配置名称
+  model: "create" | "edit" | "read";
+  config: DiyContainerType[];
+}
