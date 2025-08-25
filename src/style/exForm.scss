@@ -12,6 +12,7 @@
       border: 1px solid red;
       .diy-container {
         user-select: none;
+        cursor: move;
         grid-column: 1 / -1;
         margin-bottom: 10px;
       }

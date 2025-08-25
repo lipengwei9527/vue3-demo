@@ -12,7 +12,7 @@
 @use "scrollbar.scss";
 // 整体布局样式
 @use "./layout";
-@use "./iconfont";
+@use "./iconfont/iconfont.css";
 @use "./exCreateForm";
 @use "./exForm.scss";
 * {

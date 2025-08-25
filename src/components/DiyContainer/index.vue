@@ -1,6 +1,8 @@
 <template>
   <div class="diy-container">
-    <h3>{{ config?.title }}</h3>
+    <h3>
+      {{ config?.title }}
+    </h3>
   </div>
 </template>
 <script name="ExContainer" setup lang="ts">
@@ -12,4 +14,8 @@ const props = defineProps({
   },
 });
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.drag-handler {
+  cursor: move;
+}
+</style>

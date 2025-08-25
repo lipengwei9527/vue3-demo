@@ -23,8 +23,8 @@ const configData: DiyConfigType[] = [
   {
     id: 3,
     type: "DiyInput",
-    label: "年龄",
-    field: "age",
+    label: "地址",
+    field: "address",
     value: 18,
     isFullLine: true,
     disabled: false,
@@ -52,16 +52,22 @@ const formConfig: ExFormConfigType = {
   model: "create", //create,edit,read
   config: [
     {
-      id: "1",
+      id: 1,
       type: "DiyContainer",
       title: "标题1",
-      config: configData,
+      // config: JSON.parse(JSON.stringify(configData)),
     },
     {
-      id: "1",
+      id: 2,
       type: "DiyContainer",
       title: "标题2",
-      // config: configData,
+      // config: JSON.parse(JSON.stringify(configData)),
+    },
+    {
+      id: 3,
+      type: "DiyContainer",
+      title: "标题3",
+      // config: JSON.parse(JSON.stringify(configData)),
     },
   ],
 };
