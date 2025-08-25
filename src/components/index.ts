@@ -2,12 +2,16 @@ import { App } from "vue";
 // 注册全局组件
 export function setGlobalComponents(app: App<Element>) {
   // 默认只注册src/components文件夹下第二层级中的所有组件组件，第一层级和更深层级的组件不在注册
-  const comps: Record<string, object> = import.meta.glob("./**/*.vue", {
+  const comps: Record<string, object> = import.meta.glob("./**/**/*.vue", {
     import: "default",
     eager: true,
   });
   Object.keys(comps).map((key) => {
     const paths = key.split("/");
+    // 判断组件是否在components文件夹中，是就不注册该组件
+    const has = paths.find((item) => item === "components");
+    if (has) return;
+
     // console.log("compPath", paths);
     let compName = "";
     let len = paths.length;

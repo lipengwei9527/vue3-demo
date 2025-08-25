@@ -56,6 +56,20 @@ const formConfig: ExFormConfigType = {
       type: "DiyContainer",
       title: "标题1",
       // config: JSON.parse(JSON.stringify(configData)),
+      config: [
+        {
+          id: 4,
+          type: "DiyContainer",
+          title: "标题4",
+          // config: JSON.parse(JSON.stringify(configData)),
+        },
+        {
+          id: 5,
+          type: "DiyContainer",
+          title: "标题5",
+          // config: JSON.parse(JSON.stringify(configData)),
+        },
+      ],
     },
     {
       id: 2,

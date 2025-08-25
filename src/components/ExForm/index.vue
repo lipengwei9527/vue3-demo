@@ -7,12 +7,13 @@
       scroll-to-error
       @submit.prevent="submitFn"
     >
-      <div class="form-item-container" v-for="(item, index) in formConfig">
-        <DiyContainer
+      <DiyContainer v-model:config="formConfig"></DiyContainer>
+      <!-- <div class="form-item-container" v-for="(item, index) in formConfig"> -->
+      <!-- <DiyContainer
           v-if="item.type == 'DiyContainer'"
-          :config="item"
-        ></DiyContainer>
-        <div :class="['drag-form-item-' + (index + 1)]">
+          v-model:config="item"
+        ></DiyContainer> -->
+      <!-- <div :class="['drag-form-item-' + (index + 1)]">
           <el-form-item
             v-for="formItem in item.config"
             class="ex-form-item"
@@ -27,8 +28,8 @@
               @change="emitChangeFn($event)"
             ></component>
           </el-form-item>
-        </div>
-      </div>
+        </div> -->
+      <!-- </div> -->
     </el-form>
     <!-- <div class="ex-form-btn">
       <el-button @click="submitFn" type="primary">提交</el-button>
@@ -43,27 +44,27 @@ import type { DiyConfigType, DiyContainerType } from "@/types/components";
 type FormData = Record<string, any>;
 import cfg from "./config";
 const formConfig = ref<DiyContainerType[]>(cfg.config);
-const formContainer = ref(null);
+// const formContainer = ref(null);
 // 容器拖拽功能
-useDraggable(formContainer, formConfig, {
-  animation: 200,
-  handle: ".diy-container",
-});
+// useDraggable(formContainer, formConfig, {
+//   animation: 200,
+//   handle: ".diy-container",
+// });
 // 容器中的表单项相互之间的拖拽，不同容器之间也可以拖拽
-for (let index = 0; index < formConfig.value.length; index++) {
-  useDraggable(
-    `.drag-form-item-${index + 1}`,
-    ref(formConfig.value[index].config),
-    {
-      animation: 200,
-      group: "form-item",
-      // 拖拽结束时触发的事件
-      onEnd: (ev) => {
-        console.log(`拖拽结束`, ev);
-      },
-    }
-  );
-}
+// for (let index = 0; index < formConfig.value.length; index++) {
+//   useDraggable(
+//     `.drag-form-item-${index + 1}`,
+//     ref(formConfig.value[index].config),
+//     {
+//       animation: 200,
+//       group: "form-item",
+//       // 拖拽结束时触发的事件
+//       onEnd: (ev) => {
+//         console.log(`拖拽结束`, ev);
+//       },
+//     }
+//   );
+// }
 // const
 // useDraggable(`.form-container`, formConfig.value[0].config, {
 //   animation: 200,

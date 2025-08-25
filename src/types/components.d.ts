@@ -48,7 +48,7 @@ export interface DiyContainerType {
   id: number | string;
   title: string;
   type: "DiyContainer";
-  config?: DiyConfigType[];
+  config?: (DiyContainerType | DiyConfigType)[];
 }
 // 表单配置中的每一项的类型
 export type DiyConfigType = ExInputType | DiySelectType;
