@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 export const useExFormStore = defineStore("exForm", {
   state: () => ({
     formData: {}, //
-    compList: [],
+    baseCtrls: [],
   }),
 });
 export default useExFormStore;

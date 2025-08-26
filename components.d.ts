@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     BaseComp: typeof import('./src/components/ExCreateForm/components/BaseComp.vue')['default']
     BaseCompItem: typeof import('./src/components/ExCreateForm/components/BaseCompItem.vue')['default']
+    BaseCtrls: typeof import('./src/components/ExCreateForm/components/BaseCtrls.vue')['default']
     BaseFormItem: typeof import('./src/components/ExCreateForm/components/BaseFormItem.vue')['default']
     DiyContainer: typeof import('./src/components/ExForm/DiyContainer.vue')['default']
     DiyFormItem: typeof import('./src/components/ExForm/DiyFormItem.vue')['default']

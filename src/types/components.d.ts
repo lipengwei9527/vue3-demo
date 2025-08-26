@@ -19,9 +19,10 @@ declare interface DayInfo {
 /**
  * @description 侧边栏控件类型
  */
-export type BaseCompCtrl = {
+export type CtrlsType = {
+  id: string | number;
   label: string;
-  type: string;
+  type: CtrlType;
   value?: string;
   disabled?: boolean;
   required?: boolean;
@@ -29,10 +30,11 @@ export type BaseCompCtrl = {
 /**
  * @description 侧边栏一级标题及其包含的控件类型
  */
-export type BaseCompCtrls = {
+export type BaseCtrlsType = {
+  id: string | number;
   title: string;
-  type: string;
-  ctrls: BaseCompCtrl[];
+  type: "ctrlContainer";
+  ctrls: CtrlsType[];
 };
 
 /***************************************************************************************************/
