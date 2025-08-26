@@ -1,5 +1,9 @@
-import { ExFormConfigType, DiyConfigType } from "@/types/components";
-const configData: DiyConfigType[] = [
+import {
+  ExFormConfigType,
+  DiyFormItemType,
+  CompCfgType,
+} from "@/types/components";
+const configData: CompCfgType[] = [
   {
     id: 1,
     type: "DiyInput",
@@ -49,38 +53,65 @@ const configData: DiyConfigType[] = [
 const formConfig: ExFormConfigType = {
   name: "exampleForm",
   id: 123,
-  model: "create", //create,edit,read
-  config: [
+  mode: "create", //create,edit,read
+  // (DiyContainerType | DiyFormItemType)[]
+  labelWidth: "",
+  // containerConfig
+  containerCfg: [
     {
       id: 1,
       type: "DiyContainer",
       title: "标题1",
       // config: JSON.parse(JSON.stringify(configData)),
+      // DiyFormItemType
       config: [
-        {
-          id: 4,
-          type: "DiyContainer",
-          title: "标题4",
-          // config: JSON.parse(JSON.stringify(configData)),
-        },
+        // {
+        //   id: 2,
+        //   type: "DiyFormItem",
+        //   label: "姓名",
+        //   compCfg: {
+        //     id: "1-1",
+        //     type: "DiyInput",
+        //     field: "name",
+        //     value: "",
+        //     disabled: false,
+        //   },
+        //   config: [],
+        // },
+        // {
+        //   id: 3,
+        //   type: "DiyFormItem",
+        //   label: "年龄",
+        //   compCfg: {
+        //     id: "1-2",
+        //     type: "DiyInput",
+        //     field: "age",
+        //     value: "",
+        //     disabled: false,
+        //   },
+        //   config: [],
+        // },
         {
           id: 5,
           type: "DiyContainer",
           title: "标题5",
+          config: [],
           // config: JSON.parse(JSON.stringify(configData)),
         },
       ],
     },
     {
-      id: 2,
+      id: 6,
       type: "DiyContainer",
-      title: "标题2",
+      title: "标题6",
+      config: [],
       // config: JSON.parse(JSON.stringify(configData)),
     },
     {
-      id: 3,
+      id: 7,
       type: "DiyContainer",
-      title: "标题3",
+      title: "标题7",
+      config: [],
       // config: JSON.parse(JSON.stringify(configData)),
     },
   ],
