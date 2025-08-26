@@ -65,32 +65,32 @@ const formConfig: ExFormConfigType = {
       // config: JSON.parse(JSON.stringify(configData)),
       // DiyFormItemType
       config: [
-        // {
-        //   id: 2,
-        //   type: "DiyFormItem",
-        //   label: "姓名",
-        //   compCfg: {
-        //     id: "1-1",
-        //     type: "DiyInput",
-        //     field: "name",
-        //     value: "",
-        //     disabled: false,
-        //   },
-        //   config: [],
-        // },
-        // {
-        //   id: 3,
-        //   type: "DiyFormItem",
-        //   label: "年龄",
-        //   compCfg: {
-        //     id: "1-2",
-        //     type: "DiyInput",
-        //     field: "age",
-        //     value: "",
-        //     disabled: false,
-        //   },
-        //   config: [],
-        // },
+        {
+          id: 2,
+          type: "DiyFormItem",
+          label: "姓名",
+          compCfg: {
+            id: "1-1",
+            type: "DiyInput",
+            field: "name",
+            value: "",
+            disabled: false,
+          },
+          // config: [],
+        },
+        {
+          id: 3,
+          type: "DiyFormItem",
+          label: "年龄",
+          compCfg: {
+            id: "1-2",
+            type: "DiyInput",
+            field: "age",
+            value: "",
+            disabled: false,
+          },
+          // config: [],
+        },
         {
           id: 5,
           type: "DiyContainer",

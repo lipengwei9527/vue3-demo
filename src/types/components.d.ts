@@ -83,9 +83,9 @@ export interface DiyContainerType {
   id: number | string;
   title: string;
   type: "DiyContainer";
-  // config必须要有，没有数值也要返回一个空数组,否则拖拽会报错
-  config: DiyContainerType[];
-  // config: (DiyContainerType | DiyFormItemType)[];
+  // config必须要有，没有数值也要返回一个空数组，否则不能往该容器内拖拽内容
+  // config: DiyContainerType[];
+  config: (DiyContainerType | DiyFormItemType)[];
 }
 /**
  * @description 表单配置的全部类型
