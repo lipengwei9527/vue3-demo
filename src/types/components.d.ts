@@ -19,10 +19,11 @@ declare interface DayInfo {
 /**
  * @description 侧边栏控件类型
  */
-export type CtrlsType = {
+// export type CtrlType = DiyContainerType | DiyFormItemType;
+export type CtrlType = {
   id: string | number;
   label: string;
-  type: CtrlType;
+  type: UnionCtrlType;
   value?: string;
   disabled?: boolean;
   required?: boolean;
@@ -34,7 +35,7 @@ export type BaseCtrlsType = {
   id: string | number;
   title: string;
   type: "ctrlContainer";
-  ctrls: CtrlsType[];
+  ctrls: CtrlType[];
 };
 
 /***************************************************************************************************/
@@ -42,14 +43,19 @@ export type BaseCtrlsType = {
 /**
  * @description 控件类型，除了容器控件之外的表单控件类型
  */
-export type CtrlType = "DiyInput" | "DiySelect" | "ExDatePicker";
+export type UnContainerCtrlType = Exclude<UnionCtrlType, "DiyContainer">;
+export type UnionCtrlType =
+  | "DiyContainer"
+  | "DiyInput"
+  | "DiySelect"
+  | "DiyDatePicker";
 
 /**
  * @description 除了容器控件，所有表单控件都有的基础类型
  */
 export interface DiyCtrlType {
   id: number | string;
-  type: CtrlType;
+  type: UnContainerCtrlType;
   field: string;
   label: string;
   value: any;
@@ -57,7 +63,7 @@ export interface DiyCtrlType {
   isFullLine?: boolean;
   rules?: Array;
 }
-export type DiyInputType = ReadonlyToPartial<InputProps> & {};
+export type DiyInputType = ReadonlyToPartial<InputProps>;
 export interface DiySelectType extends DiyCtrlType {
   options?: {
     label: string;
@@ -95,7 +101,7 @@ export interface DiyContainerType {
 export type ExFormConfigType = ReadonlyToPartial<FormProps> & {
   id: number;
   name: string; //表单配置名称
-  mode: "create" | "edit" | "read";
+  mode: FormModeType;
   containerCfg: DiyContainerType[];
 };
 // 创建工具类型：将只读属性转为可选属性
@@ -103,3 +109,4 @@ type ReadonlyToPartial<T> = {
   // 移除 readonly 修饰符，并添加 ? 使其变为可选
   -readonly [P in keyof T]?: T[P];
 };
+export type FormModeType = "create" | "edit" | "read";

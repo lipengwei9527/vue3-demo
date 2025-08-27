@@ -18,54 +18,12 @@ import type {
   DiyContainerType,
   ExFormConfigType,
 } from "@/types/components";
-// import { setExFormItemClass, addSelf } from "./util";
+import { getInitCompData } from "../ExCreateForm/compsData";
 type FormData = Record<string, any>;
 import cfg from "./config";
-const containerCfg = ref<DiyContainerType[]>(cfg.containerCfg);
+const conCfg = getInitCompData("DiyContainer");
+const containerCfg = ref<DiyContainerType[]>([conCfg as DiyContainerType]);
 
-// const formContainer = ref(null);
-// 容器拖拽功能
-// useDraggable(formContainer, formConfig, {
-//   animation: 200,
-//   handle: ".diy-container",
-// });
-// 容器中的表单项相互之间的拖拽，不同容器之间也可以拖拽
-// for (let index = 0; index < formConfig.value.length; index++) {
-//   useDraggable(
-//     `.drag-form-item-${index + 1}`,
-//     ref(formConfig.value[index].config),
-//     {
-//       animation: 200,
-//       group: "form-item",
-//       // 拖拽结束时触发的事件
-//       onEnd: (ev) => {
-//         console.log(`拖拽结束`, ev);
-//       },
-//     }
-//   );
-// }
-// const
-// useDraggable(`.form-container`, formConfig.value[0].config, {
-//   animation: 200,
-// });
-
-// 获取表单配置项中的formDate及其默认值
-// const configToFormData = (
-//   configData: (DiyContainerType | DiyFormItemType)[]
-// ): FormData => {
-//   let obj: FormData = {};
-//   configData.forEach((item) => {
-//     if (item.type != "DiyContainer") {
-//       obj[item.field] = item.value;
-//     } else if (item.config) {
-//       obj = Object.assign(obj, configToFormData(item.config));
-//     } else {
-//       return obj;
-//     }
-//   });
-//   return obj;
-// };
-// const formData = reactive(configToFormData(cfg.config));
 const emitChangeFn = (e: any) => {
   console.log(`output->change`, e);
 };

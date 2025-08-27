@@ -7,7 +7,7 @@
         :label="item.label"
         :prop="item.prop"
       >
-        <component :is="item.compCfg.type"></component>
+        <component :is="item.compCfg.type" :config="item.compCfg"></component>
       </el-form-item>
       <DiyContainer
         v-if="item.type == 'DiyContainer'"
@@ -37,7 +37,7 @@ const conCfg = useVModel(props, "config", emits);
 const diyContainer = ref();
 useDraggable(diyContainer, conCfg, {
   animation: 200,
-  group: "diyContainerGroup",
+  group: "main",
   // handle: ".title",
   onStart(value) {
     // console.log("diyContainer:start", value);
@@ -46,14 +46,6 @@ useDraggable(diyContainer, conCfg, {
     // console.log("diyContainer:end", value);
   },
 });
-// useDraggable(diyContainer, conCfg, {
-//   animation: 200,
-//   group: "formItemGroup",
-//   handle: ".diy-form-item",
-//   onEnd(value) {
-//     console.log("formItemGroup", value);
-//   },
-// });
 </script>
 <style lang="scss" scoped>
 .diy-container {

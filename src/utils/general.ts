@@ -124,3 +124,19 @@ export function toCamelCase(str: string): string {
   // 确保整个字符串的第一个字母为小写，拼接剩余部分
   return processed.charAt(0).toLowerCase() + processed.slice(1);
 }
+
+export class AutoId {
+  cur: number;
+  len: number;
+  str: string;
+  constructor(cur: number = 0, len: number = 5, str: string = "0") {
+    this.cur = cur;
+    this.len = len;
+    this.str = str;
+  }
+  next() {
+    let cur = ++this.cur;
+    let len = this.len - this.cur.toString().length;
+    return cur.toString().padStart(len, this.str);
+  }
+}
