@@ -1,33 +1,33 @@
 <template>
   <div class="ctrls" ref="ctrlsRef">
     <div class="ctrl-item" v-for="item in ctrls" :key="item.id">
-      {{ item.label }}
+      {{ item.typeName }}
+      <slot></slot>
     </div>
   </div>
 </template>
 <script name="BaseCtrls" setup lang="ts">
-import { defineProps, defineEmits, PropType, ref } from "vue";
+import { defineProps, defineEmits, defineSlots, PropType, ref } from "vue";
 import { useVModel } from "@vueuse/core";
 import { useDraggable } from "vue-draggable-plus";
-import {
-  BaseCtrlsType,
+import type {
   CtrlType,
   DiyContainerType,
   DiyFormItemType,
 } from "@/types/components";
-import { getInitCompData, CompsCfg } from "../compsData";
-
+import { getInitCompData } from "../compsData";
+// const slots = defineSlots();
+// console.log("slots", Object.keys(slots));
 const props = defineProps({
   ctrls: {
-    type: Array as PropType<CtrlType[]>,
+    type: Array as PropType<(DiyContainerType | DiyFormItemType)[]>,
   },
 });
 const emits = defineEmits<{
-  (e: "update:ctrls", value: CtrlType[]): void;
+  (e: "update:ctrls", value: (DiyContainerType | DiyFormItemType)[]): void;
 }>();
 const list = useVModel(props, "ctrls", emits);
 const ctrlsRef = ref(null);
-const allInitCompData = getInitCompData() as CompsCfg;
 useDraggable(ctrlsRef, list, {
   animation: 200,
   group: {
@@ -38,7 +38,7 @@ useDraggable(ctrlsRef, list, {
   sort: false,
   clone(ctrl) {
     const type = ctrl.type;
-    return allInitCompData[type]() as unknown as CtrlType;
+    return getInitCompData(type);
   },
 });
 </script>

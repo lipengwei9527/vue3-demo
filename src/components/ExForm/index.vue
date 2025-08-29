@@ -3,7 +3,7 @@
     <!-- :model="formData" -->
     <el-form class="form-container" ref="formContainer">
       <!-- @submit.prevent="submitFn" -->
-      <DiyContainer v-model:config="containerCfg"></DiyContainer>
+      <DiyContainer v-model:config="formCfg"></DiyContainer>
     </el-form>
     <!-- <div class="ex-form-btn">
       <el-button @click="submitFn" type="primary">提交</el-button>
@@ -11,18 +11,23 @@
   </div>
 </template>
 <script name="ExForm" setup lang="ts">
-import { reactive, ref } from "vue";
-import { useDraggable } from "vue-draggable-plus";
-import type {
-  DiyFormItemType,
-  DiyContainerType,
-  ExFormConfigType,
-} from "@/types/components";
-import { getInitCompData } from "../ExCreateForm/compsData";
+import { reactive, ref, defineProps, PropType } from "vue";
+import type { DiyContainerType } from "@/types/components";
+import { useVModel } from "@vueuse/core";
+const isShowContext = false;
+const contextList = [
+  { label: "菜单1", value: "1" },
+  { label: "菜单2", value: "2" },
+];
+const props = defineProps({
+  formConfig: Object as PropType<DiyContainerType[]>,
+  default: () => [{ config: [] }],
+});
+const emits = defineEmits<{
+  (e: "update:formConfig"): void;
+}>();
+const formCfg = useVModel(props, "formConfig", emits);
 type FormData = Record<string, any>;
-import cfg from "./config";
-const conCfg = getInitCompData("DiyContainer");
-const containerCfg = ref<DiyContainerType[]>([conCfg as DiyContainerType]);
 
 const emitChangeFn = (e: any) => {
   console.log(`output->change`, e);

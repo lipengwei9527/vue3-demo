@@ -8,7 +8,6 @@ import type { UserConfig, ConfigEnv } from "vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
-
 // 检查打包文件大小
 import { visualizer } from "rollup-plugin-visualizer";
 //setup语法糖写name命名组件名称

@@ -1,35 +1,38 @@
 <template>
   <div class="context-menu-page">
-    <ExContextMenu
-      :menu="[{ label: '菜单1' }, { label: '菜单2' }]"
-      @select="select"
-    >
-      <div class="item box1">111</div>
+    <ExContextMenu :list="list[0]" v-model:isShow="isShow[0]">
+      <div class="box box1"></div>
     </ExContextMenu>
-    <ExContextMenu
-      @select="select"
-      :menu="[{ label: '菜单3' }, { label: '菜单4' }]"
-    >
-      <div class="item box2">222</div>
+    <ExContextMenu :list="list[1]" v-model:isShow="isShow[1]">
+      <div class="box box2"></div>
     </ExContextMenu>
-    <ExContextMenu
-      @select="select"
-      :menu="[{ label: '菜单5' }, { label: '菜单6' }, { label: '菜单7' }]"
-    >
-      <div class="item box3">
-        333
-        <ExContextMenu
-          @select="select"
-          :menu="[{ label: '菜单8' }, { label: '菜单9' }, { label: '菜单10' }]"
-        >
-          <div class="box4">444</div>
-        </ExContextMenu>
-      </div>
+    <ExContextMenu :list="list[2]" v-model:isShow="isShow[2]">
+      <div class="box box3"></div>
     </ExContextMenu>
   </div>
 </template>
 
-<script setup name="ContextMenu" lang="ts">
+<script setup name="ContextMenuPage" lang="ts">
+import { ref } from "vue";
+const isShow = ref([false, false, false]);
+const selectFn = (item: any) => {
+  menu.value = item;
+  console.log("选择了菜单", item);
+};
+type Value = { label: string; value: string };
+let list: Value[][] = [];
+let menu = ref([]);
+for (let key = 0; key < 3; key++) {
+  list[key] = [];
+  for (let i = 0; i < 10; i++) {
+    // list[key][i] = {};
+    list[key][i] = {
+      label: "菜单" + (String(key) + i),
+      value: String(key) + i,
+    };
+  }
+}
+
 function select<T>(item: T) {
   console.log(item);
 }
@@ -38,33 +41,20 @@ function select<T>(item: T) {
 <style lang="scss" scoped>
 .context-menu-page {
   display: flex;
-  justify-content: space-between;
-  height: 100%;
-
-  .ex-context-menu {
-    flex: 1;
-  }
-
-  .item {
-    height: 100%;
-  }
-
-  .box1 {
-    background-color: red;
-  }
-
-  .box2 {
-    background-color: green;
-  }
-
-  .box3 {
-    background-color: blue;
-  }
-
-  .box4 {
-    width: 50px;
-    height: 50px;
-    background-color: yellow;
-  }
+  justify-content: flex-end;
+}
+.box {
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+}
+.box1 {
+  background-color: rgb(random(255), random(255), random(255));
+}
+.box2 {
+  background-color: rgb(random(255), random(255), random(255));
+}
+.box3 {
+  background-color: rgb(random(255), random(255), random(255));
 }
 </style>

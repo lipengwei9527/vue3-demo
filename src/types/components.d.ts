@@ -49,28 +49,18 @@ export type UnionCtrlType =
   | "DiyInput"
   | "DiySelect"
   | "DiyDatePicker";
+export type UnContainerCtrlEnum = Exclude<AllCtrlType, "DiyContainer">;
 
 /**
  * @description 除了容器控件，所有表单控件都有的基础类型
  */
 export interface DiyCtrlType {
-  id: number | string;
-  type: UnContainerCtrlType;
-  field: string;
-  label: string;
   value: any;
-  disabled?: boolean;
-  isFullLine?: boolean;
-  rules?: Array;
+  // disabled?: boolean;
 }
-export type DiyInputType = ReadonlyToPartial<InputProps>;
-export interface DiySelectType extends DiyCtrlType {
-  options?: {
-    label: string;
-    value: string | number;
-    disabled?: boolean;
-  }[];
-}
+// export type DiyInputType = ReadonlyToPartial<InputProps>;
+export type DiyInputType = DiyCtrlType;
+export type DiySelectType = DiyCtrlType;
 
 /**
  *  @description 表单中自定义组件的类型
@@ -79,18 +69,24 @@ export type CompCfgType = DiyInputType | DiySelectType;
 /**
  * @description 表单项的类型，表单项中包含控件类型信息
  */
-export type DiyFormItemType = ReadonlyToPartial<FormItemProps> & {
+export type DiyFormItemType = {
   id: number | string;
-  type: "DiyFormItem";
-  compCfg: CompCfgType;
+  type: UnContainerCtrlType;
+  typeName: string; // 类型中文名
+  prop: string; //绑定的字段
+  label: string; //绑定的字段要显示的中文名
+  rules?: Array;
+  isFullLine?: boolean; //是否占满一行
+  compCfg: CompCfgType; //
 };
 /**
  * @description 容器控件类型
  */
 export interface DiyContainerType {
   id: number | string;
-  title: string;
+  label: string;
   type: "DiyContainer";
+  typeName: "容器";
   // config必须要有，没有数值也要返回一个空数组，否则不能往该容器内拖拽内容
   // config: DiyContainerType[];
   config: (DiyContainerType | DiyFormItemType)[];
@@ -102,7 +98,7 @@ export type ExFormConfigType = ReadonlyToPartial<FormProps> & {
   id: number;
   name: string; //表单配置名称
   mode: FormModeType;
-  containerCfg: DiyContainerType[];
+  containerCfg?: DiyContainerType[];
 };
 // 创建工具类型：将只读属性转为可选属性
 type ReadonlyToPartial<T> = {
