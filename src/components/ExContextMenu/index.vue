@@ -34,12 +34,10 @@ import {
   ref,
   computed,
   onBeforeUnmount,
-  useAttrs,
   onMounted,
 } from "vue";
 import useViewPort from "@/hooks/useViewPort";
 import { useVModel } from "@vueuse/core";
-import { DialogBeforeCloseFn } from "element-plus";
 import { DoneFn } from "@/types/elementPlus";
 import { hasEvent } from "@/utils/guard";
 type List = ({ label: string; value: any } & Record<string, any>)[];

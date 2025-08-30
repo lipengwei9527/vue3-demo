@@ -7,14 +7,10 @@
   </div>
 </template>
 <script name="BaseCtrls" setup lang="ts">
-import { defineProps, defineEmits, defineSlots, PropType, ref } from "vue";
+import { defineProps, defineEmits, PropType, ref } from "vue";
 import { useVModel } from "@vueuse/core";
 import { useDraggable } from "vue-draggable-plus";
-import type {
-  CtrlType,
-  DiyContainerType,
-  DiyFormItemType,
-} from "@/types/components";
+import type { DiyContainerType, DiyFormItemType } from "@/types/components";
 import { getInitCompData } from "../compsData";
 // const slots = defineSlots();
 // console.log("slots", Object.keys(slots));

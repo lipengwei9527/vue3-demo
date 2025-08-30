@@ -7,16 +7,12 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    BaseComp: typeof import('./src/components/ExCreateForm/components/BaseComp.vue')['default']
-    BaseCompItem: typeof import('./src/components/ExCreateForm/components/BaseCompItem.vue')['default']
     BaseCtrls: typeof import('./src/components/ExCreateForm/components/BaseCtrls.vue')['default']
-    BaseFormItem: typeof import('./src/components/ExCreateForm/components/BaseFormItem.vue')['default']
-    copy: typeof import('./src/components/ExContextMenu/index copy.vue')['default']
     DiyContainer: typeof import('./src/components/ExForm/DiyContainer.vue')['default']
-    DiyFormItem: typeof import('./src/components/ExForm/DiyFormItem.vue')['default']
     DiyInput: typeof import('./src/components/ExForm/DiyInput/index.vue')['default']
     DiySelect: typeof import('./src/components/ExForm/DiySelect/index.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCol: typeof import('element-plus/es')['ElCol']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElForm: typeof import('element-plus/es')['ElForm']
@@ -24,7 +20,10 @@ declare module 'vue' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
+    ElOption: typeof import('element-plus/es')['ElOption']
     ElPagination: typeof import('element-plus/es')['ElPagination']
+    ElRow: typeof import('element-plus/es')['ElRow']
+    ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
@@ -44,8 +43,6 @@ declare module 'vue' {
     FormSideBar: typeof import('./src/components/ExCreateForm/components/FormSideBar.vue')['default']
     FormTopBar: typeof import('./src/components/ExCreateForm/components/FormTopBar.vue')['default']
     'Index copy': typeof import('./src/components/ExContextMenu/index copy.vue')['default']
-    MainComp: typeof import('./src/components/ExCreateForm/components/MainComp.vue')['default']
-    MainCompItem: typeof import('./src/components/ExCreateForm/components/MainCompItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

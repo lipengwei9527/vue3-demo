@@ -1,3 +1,4 @@
+import { DayInfo } from "@/types/components";
 import moment from "moment";
 const showDayNum = 42; // 显示的天数，日历中的格子数
 /**

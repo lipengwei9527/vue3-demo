@@ -1,9 +1,7 @@
 import {
   UnionCtrlType,
   DiyContainerType,
-  DiyInputType,
   DiyFormItemType,
-  DiySelectType,
 } from "@/types/components";
 import { AutoId } from "@/utils/general";
 export const autoId = new AutoId();

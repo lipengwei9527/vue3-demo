@@ -11,14 +11,10 @@
   </div>
 </template>
 <script name="ExForm" setup lang="ts">
-import { reactive, ref, defineProps, PropType } from "vue";
+import { defineProps, PropType } from "vue";
 import type { DiyContainerType } from "@/types/components";
 import { useVModel } from "@vueuse/core";
-const isShowContext = false;
-const contextList = [
-  { label: "菜单1", value: "1" },
-  { label: "菜单2", value: "2" },
-];
+
 const props = defineProps({
   formConfig: Object as PropType<DiyContainerType[]>,
   default: () => [{ config: [] }],
@@ -27,11 +23,11 @@ const emits = defineEmits<{
   (e: "update:formConfig"): void;
 }>();
 const formCfg = useVModel(props, "formConfig", emits);
-type FormData = Record<string, any>;
+// type FormData = Record<string, any>;
 
-const emitChangeFn = (e: any) => {
-  console.log(`output->change`, e);
-};
+// const emitChangeFn = (e: any) => {
+//   console.log(`output->change`, e);
+// };
 // const submitFn = () => {
 //   console.log(`output->提交`, formData);
 // };

@@ -23,11 +23,10 @@
   </div>
 </template>
 <script name="DiyContainer" setup lang="ts">
-import { defineProps, computed, defineEmits, PropType, ref } from "vue";
-import { useVModel, useVModels } from "@vueuse/core";
+import { defineProps, defineEmits, PropType, ref } from "vue";
+import { useVModel } from "@vueuse/core";
 import { useDraggable } from "vue-draggable-plus";
 import { DiyContainerType, DiyFormItemType } from "@/types/components";
-let isShowContext = ref(false);
 const contextList = [
   { label: "菜单1", value: "1" },
   { label: "菜单2", value: "2" },
@@ -54,10 +53,10 @@ useDraggable(diyContainer, conCfg, {
   animation: 200,
   group: "main",
   onStart(value) {
-    // console.log("diyContainer:start", value);
+    console.log("diyContainer:start", value);
   },
   onEnd(value) {
-    // console.log("diyContainer:end", value);
+    console.log("diyContainer:end", value);
   },
 });
 </script>

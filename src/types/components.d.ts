@@ -8,7 +8,7 @@ import type {
 /**
  * @description 日期组件类型信息
  */
-declare interface DayInfo {
+export interface DayInfo {
   day: number; //几号:1-1号...
   date: string; //日期:例:2024/03/04
   type: string; //pre-上月,cur-当月,next-下月

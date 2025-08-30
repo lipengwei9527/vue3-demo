@@ -18,7 +18,6 @@ import { DiyContainerType } from "@/types/components";
 const ctrls = ref<Ctrls>(allCtrls);
 autoId.cur = 0;
 const cfg = [getInitCompData("DiyContainer") as DiyContainerType];
-const formConfig = ref(cfg);
 </script>
 
 <style lang="scss" scoped></style>

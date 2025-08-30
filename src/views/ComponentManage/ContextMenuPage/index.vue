@@ -46,10 +46,6 @@ for (let key = 0; key < 3; key++) {
     };
   }
 }
-
-function select<T>(item: T) {
-  console.log(item);
-}
 </script>
 
 <style lang="scss" scoped>

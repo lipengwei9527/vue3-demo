@@ -6,7 +6,6 @@
 <script name="FormMain" setup lang="ts">
 import { defineProps, PropType, ref } from "vue";
 import { DiyContainerType } from "@/types/components";
-import { useVModel } from "@vueuse/core";
 const props = defineProps({
   formConfig: {
     type: Array as PropType<DiyContainerType[]>,
