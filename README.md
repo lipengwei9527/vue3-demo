@@ -19,6 +19,14 @@
 
 官方文档：https://vue-draggable-plus.pages.dev/guide/
 
+**madge**
+
+检查项目是否存在循环依赖
+
+```
+madge --circular src/
+```
+
 
 
 ### 默认事项

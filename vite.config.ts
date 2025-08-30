@@ -14,6 +14,8 @@ import { visualizer } from "rollup-plugin-visualizer";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 // const proxyConfig = require("./config/proxy").default;
 import proxyConfig from "./config/proxy";
+// 生产中用到的包名
+import pack from "./config/package";
 // 相对路径配置
 const pathResolve = (dir: string): string => {
   return resolve(__dirname, ".", dir);
@@ -71,11 +73,21 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           },
           // 静态资源文件名
           assetFileNames(assentInfo) {
+            if (
+              assentInfo.name?.endsWith("ttf") ||
+              assentInfo.name?.endsWith("woff") ||
+              assentInfo.name?.endsWith("woff2")
+            ) {
+              return "css/[name].[hash].[ext]";
+            }
             return "[ext]/[name].[hash].[ext]";
           },
           // 自定义分包
           manualChunks(id, { getModuleInfo, getModuleIds }) {
-            return createNameThroughPath(id);
+            if (id.includes("node_modules")) {
+              return id.split("/")[5].split("@")[0];
+            }
+            //   // return createNameThroughPath(id);
           },
         },
       },
