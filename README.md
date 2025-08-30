@@ -6,7 +6,12 @@
 
 运行pnpm run build之后打开自动生成的stats.html文件
 
+### 发布到github的pages
 
+1. 先运行 pnpm build打包
+2. 在运行pnpm dep发布
+
+或者运行pnpm deploy命令同时打包在发布
 
 ### 依赖库
 
