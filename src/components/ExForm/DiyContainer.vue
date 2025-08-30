@@ -1,32 +1,24 @@
 <template>
   <div class="diy-container" ref="diyContainer">
-    <div
-      class="container-item"
-      @contextmenu="showContextMenu($event)"
-      v-for="(item, _index) in config"
-      :key="item.id"
-    >
-      <h3 v-if="item.type == 'DiyContainer'" class="title full-line">
-        {{ item.label }}
-      </h3>
-      <el-form-item
-        :class="{ 'full-line': item.isFullLine }"
-        v-if="item.type != 'DiyContainer'"
-        :label="item.label"
-        :prop="item.prop"
-      >
-        <component :is="item.type" :config="item.compCfg"></component>
-      </el-form-item>
-      <DiyContainer
-        v-if="item.type == 'DiyContainer'"
-        v-model:config="item.config"
-      >
-      </DiyContainer>
-      <ExContextMenu
-        v-model="isShowContext"
-        @select="selectContext"
-        :list="contextList"
-      ></ExContextMenu>
+    <div class="container-item" v-for="(item, _index) in config" :key="item.id">
+      <ExContextMenu @select="selectContext" :list="contextList">
+        <h3 v-if="item.type == 'DiyContainer'" class="title full-line">
+          {{ item.label }}
+        </h3>
+        <el-form-item
+          :class="{ 'full-line': item.isFullLine }"
+          v-if="item.type != 'DiyContainer'"
+          :label="item.label"
+          :prop="item.prop"
+        >
+          <component :is="item.type" :config="item.compCfg"></component>
+        </el-form-item>
+        <DiyContainer
+          v-if="item.type == 'DiyContainer'"
+          v-model:config="item.config"
+        >
+        </DiyContainer>
+      </ExContextMenu>
     </div>
   </div>
 </template>
@@ -43,12 +35,6 @@ const contextList = [
 /**
  * 左键点击容器或表单组件
  */
-const showContextMenu = (e: MouseEvent) => {
-  e.preventDefault();
-  console.log("点击容器");
-  isShowContext.value = !isShowContext.value;
-  // isShowContext = ref(!isShowContext);
-};
 const selectContext = (item: any) => {
   console.log("带年纪", item);
 };

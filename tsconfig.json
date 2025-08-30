@@ -37,8 +37,10 @@
     "noFallthroughCasesInSwitch": true,
   },
   "include": [
-    "src",
-    "types",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
     "env.d.ts",
     "components.d.ts"
   ],

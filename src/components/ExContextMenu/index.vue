@@ -11,7 +11,7 @@
       >
         <div
           v-size-ob="handleSizeChange"
-          v-if="isShow"
+          v-if="modelShow"
           class="menu"
           :style="{
             width: pos.width,
@@ -19,7 +19,7 @@
             top: pos.posY,
           }"
         >
-          <div class="item" v-for="item in list" @click="select(item)">
+          <div class="item" v-for="item in list" @click="selectFn(item)">
             {{ item.label }}
           </div>
         </div>
@@ -34,11 +34,14 @@ import {
   ref,
   computed,
   onBeforeUnmount,
-  Ref,
+  useAttrs,
   onMounted,
 } from "vue";
 import useViewPort from "@/hooks/useViewPort";
 import { useVModel } from "@vueuse/core";
+import { DialogBeforeCloseFn } from "element-plus";
+import { DoneFn } from "@/types/elementPlus";
+import { hasEvent } from "@/utils/guard";
 type List = ({ label: string; value: any } & Record<string, any>)[];
 const props = defineProps({
   isShow: {
@@ -52,23 +55,78 @@ const props = defineProps({
     type: Number,
     default: 200,
   },
+  // beforeClose: {
+  //   type: Function as PropType<DialogBeforeCloseFn>,
+  // },
+  // select: {
+  //   type: Function as PropType<(item: List[number]) => void>,
+  // },
 });
 const emits = defineEmits<{
   (e: "update:isShow", value: boolean): void;
-  (e: "select", value: List[0]): void;
+  (e: "select", value: List[number]): void;
   (e: "close", value: boolean): void;
+  (e: "beforeClose", item: List[number], value: DoneFn): void;
 }>();
-const modelShow = useVModel(props, "isShow", emits);
-const select = (item: List[0]) => {
+const modelShow = props.isShow ? useVModel(props, "isShow", emits) : ref(false);
+
+const eventRes = hasEvent(["onBeforeClose", "onSelect"]);
+// 触发一次beforeClose事件flag置为true，调用一次beforeFn置为false
+let isHidden = ref<boolean | undefined>(false);
+/**
+ * @description beforeClose事件传递的函数
+ * @param cancel
+ */
+const beforeFn = (hidden?: boolean) => {
+  isHidden.value = hidden;
+  closeFn();
+};
+/**
+ * @description 被菜单项、window的click和contextMenu事件监听
+ */
+const selectFn = (item: List[number]) => {
+  // 点击左键菜单外的其他部分
+  if (!item) {
+    closeFn();
+    return;
+  }
+  // 是否有关闭前的其他操作
+  if (eventRes.find((item) => item.name == "onBeforeClose")?.result) {
+    isHidden.value = true;
+    emits("beforeClose", item, beforeFn);
+    return;
+  }
   emits("select", item);
+  closeFn();
+  // 选中菜单并立即关闭
+  // if (eventRes.find((item) => item.name == "onSelect")) {
+  //   emits("select", item);
+  //   closeFn();
+  //   return;
+  // }
+};
+/**
+ * 关闭菜单
+ */
+const closeFn = () => {
+  if (isHidden.value) return;
+  removeEventListener("click", closeFn, true);
+  removeEventListener("contextmenu", closeFn, true);
+  modelShow.value = false;
 };
 let mouseX = ref(0);
 let mouseY = ref(0);
+/**
+ * @description 打开菜单
+ * @param
+ */
 const openContextMenu = (e: PointerEvent) => {
   e.preventDefault();
-  // e.stopPropagation();
-  // console.log("e", e);
-  // return;
+  e.stopPropagation();
+  // 同步监听全局click和contextMenu事件
+  // 除本身外的其他菜单全部关闭
+  addEventListener("click", closeFn);
+  addEventListener("contextmenu", closeFn, true);
   mouseX.value = e.clientX;
   mouseY.value = e.clientY;
   modelShow.value = true;
@@ -76,7 +134,9 @@ const openContextMenu = (e: PointerEvent) => {
 
 // 浏览器可视区域的宽和高
 let { vw, vh } = useViewPort();
-
+/**
+ *@description 确定菜单在可视区域的什么位置渲染
+ */
 const pos = computed(() => {
   // 菜单左上角所处位置
   let posX = mouseX.value;
@@ -99,19 +159,14 @@ const pos = computed(() => {
   };
 });
 const targetRef = ref();
-const close = () => {
-  modelShow.value = false;
-};
+
 onMounted(() => {
   targetRef.value.addEventListener("contextmenu", openContextMenu);
-  addEventListener("click", close, true);
-  addEventListener("contextmenu", close, true);
 });
 
 onBeforeUnmount(() => {
   targetRef.value.removeEventListener("contextmenu", openContextMenu);
-  removeEventListener("click", close, true);
-  removeEventListener("contextmenu", close, true);
+  closeFn();
 });
 // 菜单高度
 let h = ref(0);
@@ -144,9 +199,6 @@ function handleAfterEnter(el: any) {
 }
 </script>
 <style lang="scss" scoped>
-.context-container {
-  padding: 20px;
-}
 .menu {
   position: fixed;
   z-index: 100;
