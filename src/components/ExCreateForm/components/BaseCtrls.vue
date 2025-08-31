@@ -7,7 +7,7 @@
   </div>
 </template>
 <script name="BaseCtrls" setup lang="ts">
-import { defineProps, defineEmits, PropType, ref } from "vue";
+import { PropType, ref } from "vue";
 import { useVModel } from "@vueuse/core";
 import { useDraggable } from "vue-draggable-plus";
 import type { DiyContainerType, DiyFormItemType } from "@/types/components";
@@ -45,12 +45,12 @@ useDraggable(ctrlsRef, list, {
   grid-template-columns: repeat(2, 1fr);
   gap: 7px;
   .ctrl-item {
-    // grid-column: 1 / -1;
     cursor: move;
     user-select: none;
     text-align: center;
     padding: 3px;
-    border: 1px solid red;
+    border: 1px solid var(--ex-border-color);
+    box-shadow: 1px 1px 2px -2px rgb(163, 164, 167);
   }
 }
 </style>

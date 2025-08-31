@@ -11,7 +11,7 @@
   </div>
 </template>
 <script name="ExForm" setup lang="ts">
-import { defineProps, PropType } from "vue";
+import { PropType } from "vue";
 import type { DiyContainerType } from "@/types/components";
 import { useVModel } from "@vueuse/core";
 

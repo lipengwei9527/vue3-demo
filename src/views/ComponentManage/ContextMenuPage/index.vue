@@ -1,14 +1,12 @@
 <template>
   <div class="context-menu-page">
-    <!--  v-model:isShow="isShow[0]" -->
-    <ExContextMenu :list="list[0]">
-      <div class="box box1"></div>
+    <ExContextMenu :list="list[0]" @select="selectFn">
+      <div class="box box1">
+        <ExContextMenu @select="selectFn" :list="list[1]">
+          <div class="box box2"></div>
+        </ExContextMenu>
+      </div>
     </ExContextMenu>
-    <!--  v-model:isShow="isShow[1]" -->
-    <ExContextMenu @select="selectFn" :list="list[1]">
-      <div class="box box2"></div>
-    </ExContextMenu>
-    <!-- v-model:isShow="isShow[2]" -->
     <ExContextMenu @beforeClose="beforeCloseFn" :list="list[2]">
       <div class="box box3"></div>
     </ExContextMenu>
@@ -59,6 +57,8 @@ for (let key = 0; key < 3; key++) {
   margin: 10px;
 }
 .box1 {
+  width: 400px;
+  height: 400px;
   background-color: rgb(random(255), random(255), random(255));
 }
 .box2 {

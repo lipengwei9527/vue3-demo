@@ -90,7 +90,7 @@ function getSelectCfg(): DiyFormItemType {
   return {
     ...fromItem,
     type: "DiySelect",
-    typeName: "选择器",
+    typeName: "下拉列表",
     compCfg: {
       value: "",
     },
@@ -101,7 +101,7 @@ function getDiyDatePickerCfg(): DiyFormItemType {
   return {
     ...fromItem,
     type: "DiyDatePicker",
-    typeName: "日期选择器",
+    typeName: "日期",
     compCfg: {
       value: "",
     },

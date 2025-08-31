@@ -197,6 +197,9 @@ function handleAfterEnter(el: any) {
 }
 </script>
 <style lang="scss" scoped>
+.context-container {
+  display: inline-block;
+}
 .menu {
   position: fixed;
   z-index: 100;

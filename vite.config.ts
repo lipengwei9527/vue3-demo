@@ -14,15 +14,6 @@ import { visualizer } from "rollup-plugin-visualizer";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 // const proxyConfig = require("./config/proxy").default;
 import proxyConfig from "./config/proxy";
-// 生产中用到的包名
-import pack from "./config/package";
-// 相对路径配置
-const pathResolve = (dir: string): string => {
-  return resolve(__dirname, ".", dir);
-};
-const alias: Record<string, string> = {
-  "@": pathResolve("src"),
-};
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   // 加载的.env文件中的变量
@@ -59,6 +50,13 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       visualizer(),
       vueSetupExtend(),
     ],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import "@/style/variables/index.scss";`,
+        },
+      },
+    },
     build: {
       sourcemap: true,
       rollupOptions: {
@@ -99,7 +97,9 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       // },
     },
     resolve: {
-      alias,
+      alias: {
+        "@": resolve(__dirname, "src"),
+      },
     },
     server: {
       proxy: proxyConfig,

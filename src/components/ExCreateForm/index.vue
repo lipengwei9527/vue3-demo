@@ -20,4 +20,40 @@ autoId.cur = 0;
 const cfg = [getInitCompData("DiyContainer") as DiyContainerType];
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.ex-create-form {
+  height: 100vh;
+  background-color: var(--ex-layout-bgc);
+  color: var(--ex-color-text);
+  display: grid;
+  grid-template-areas:
+    "form-top-bar form-top-bar"
+    "form-side-bar form-main"
+    "form-side-bar form-footer";
+  grid-template-columns: minmax(180px, var(--ex-side-bar-width)) 1fr;
+  grid-template-rows: auto 1fr auto;
+  .form-top-bar {
+    grid-area: form-top-bar;
+  }
+  .form-side-bar {
+    grid-area: form-side-bar;
+    border-right: 1px solid var(--ex-menu-border-color);
+    background-color: var(--ex-side-bar-bg-color);
+  }
+  .form-main {
+    grid-area: form-main;
+  }
+  .form-footer {
+    grid-area: form-footer;
+  }
+}
+.ghost {
+  background-color: #eff1f3;
+}
+.drag {
+  background-color: #def1f9;
+}
+.base-form-item {
+  border: 2px solid var(--ex-menu-border-color);
+}
+</style>

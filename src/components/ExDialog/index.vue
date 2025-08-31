@@ -21,7 +21,6 @@
 <script name="ExDialog" setup lang="ts">
 import { DoneFn } from "@/types/elementPlus";
 import { useVModel } from "@vueuse/core";
-import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   visiable: {
     type: Boolean,

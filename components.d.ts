@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BaseCtrls: typeof import('./src/components/ExCreateForm/components/BaseCtrls.vue')['default']
+    copy: typeof import('./src/components/ExContextMenu/index copy.vue')['default']
     DiyContainer: typeof import('./src/components/ExForm/DiyContainer.vue')['default']
     DiyInput: typeof import('./src/components/ExForm/DiyInput/index.vue')['default']
     DiySelect: typeof import('./src/components/ExForm/DiySelect/index.vue')['default']
@@ -42,7 +43,6 @@ declare module 'vue' {
     FormMain: typeof import('./src/components/ExCreateForm/components/FormMain.vue')['default']
     FormSideBar: typeof import('./src/components/ExCreateForm/components/FormSideBar.vue')['default']
     FormTopBar: typeof import('./src/components/ExCreateForm/components/FormTopBar.vue')['default']
-    'Index copy': typeof import('./src/components/ExContextMenu/index copy.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

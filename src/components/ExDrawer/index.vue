@@ -5,7 +5,7 @@
 </template>
 <script name="ExDrawer" setup lang="ts">
 import { useVModel } from "@vueuse/core";
-import { defineProps, PropType } from "vue";
+import { PropType } from "vue";
 const props = defineProps({
   modelValue: {
     type: Boolean,
