@@ -1,12 +1,24 @@
 <template>
   <div class="ex-table" v-loading="model.loading">
     <!-- 搜索 -->
-    <div class="search-comps">
-      <el-input v-model="model.query.form"></el-input>
-    </div>
-    <div class="search-btn">
-      <el-button type="primary" @click="searchFn">搜索</el-button>
-    </div>
+    <el-form :model="model.query" @submit.prevent="submitFn">
+      <div class="query-comps">
+        <template v-for="(item, index) in model.queryConfig">
+          <el-form-item>
+            <component
+              class="query-context"
+              :is="item.compsName"
+              v-model="model.query[item.label]"
+              :config="{ index, ...item }"
+              @update="updateQueryCfgFn"
+            ></component>
+          </el-form-item>
+        </template>
+      </div>
+      <div class="query-btns">
+        <el-button type="primary" @click="submitFn">搜索</el-button>
+      </div>
+    </el-form>
     <!-- 表格 -->
     <div
       class="table-container"
@@ -15,10 +27,12 @@
     >
       <el-table :data="model.tableData" ref="table" :height="model.height">
         <!-- 表格选择列 -->
-        <el-table-column type="selection"></el-table-column>
+        <el-table-column
+          :type="model.showSelection ? 'selection' : ''"
+        ></el-table-column>
         <!-- 表格序列 -->
         <el-table-column
-          type="index"
+          :type="model.showIndex ? 'index' : ''"
           label="序号"
           width="60"
           :index="indexMethod"
@@ -51,7 +65,7 @@
         ref="pagination"
         :total="model.total"
         :background="model.background"
-        :layout="model.layout"
+        :layout="model.layout.join(',')"
         :current-page="model.currentPage"
         v-model:page-size="model.pageSize"
         @update:current-page="currentPageChange"
@@ -62,9 +76,12 @@
   </div>
 </template>
 <script name="ExTable" setup lang="ts">
-import { onMounted, PropType, useTemplateRef } from "vue";
+import { onMounted, PropType, useTemplateRef, watch } from "vue";
 // import { getData } from "@/axios/test";
-import { tableConfig, setTableConfig } from "./tableConfig";
+import {
+  createTableConfig,
+  TableConfig,
+} from "@/components/ExTable/tableConfig";
 import { useVModel } from "@vueuse/core";
 const table = useTemplateRef("table");
 const pagination = useTemplateRef("pagination");
@@ -76,8 +93,8 @@ defineExpose({
 const emits = defineEmits(["update:modelValue"]);
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<typeof tableConfig>,
-    default: () => setTableConfig(),
+    type: Object as PropType<TableConfig>,
+    default: () => createTableConfig(),
   },
 });
 const model = useVModel(props, "modelValue", emits);
@@ -86,8 +103,9 @@ onMounted(() => {});
 const tableSizeChange = (rect: { width: number; height: number }) => {
   model.value.height = rect.height;
 };
-const searchFn = () => {
-  getTableData(1);
+const submitFn = () => {
+  console.log("搜素");
+  // getTableData(1);
 };
 const getTableData = async (currentPage?: number, pageSize?: number) => {
   console.log(`output->获取表格数据`);
@@ -112,6 +130,23 @@ const pageSizeChange = (value: number) => {
 const indexMethod = (index: number) => {
   return index + 1 + (model.value.currentPage - 1) * model.value.pageSize;
 };
+// 根据搜索列表的配置更新搜索的参数
+watch(
+  model.value.queryConfig,
+  (newVal, _oldVal) => {
+    console.log("newVal", newVal);
+    let query: Record<string, any> = {};
+    newVal.forEach((item) => {
+      query[item.label] = item.value;
+    });
+    model.value.query = query;
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+const updateQueryCfgFn = () => {};
 </script>
 
 <style lang="scss" scoped>
@@ -119,14 +154,26 @@ const indexMethod = (index: number) => {
   height: 100%;
   display: grid;
   grid-template-areas:
-    "search-comps search-btn"
+    "el-form el-form"
     "table-container table-container"
     "pagination-container pagination-container";
   grid-template-columns: 10fr 1fr;
   grid-template-rows: auto 1fr auto;
   gap: 10px;
-  .search-container {
-    grid-area: search-container;
+  .el-form {
+    grid-area: el-form;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    .query-comps {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding-right: 10px;
+      gap: 10px;
+    }
   }
   .table-container {
     grid-area: table-container;

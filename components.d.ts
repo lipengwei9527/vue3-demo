@@ -38,6 +38,7 @@ declare module 'vue' {
     ExDialog: typeof import('./src/components/ExDialog/index.vue')['default']
     ExDrawer: typeof import('./src/components/ExDrawer/index.vue')['default']
     ExForm: typeof import('./src/components/ExForm/index.vue')['default']
+    ExInput: typeof import('./src/components/ExInput/index.vue')['default']
     ExMenu: typeof import('./src/components/ExMenu/index.vue')['default']
     ExSubMenu: typeof import('./src/components/ExMenu/components/ExSubMenu.vue')['default']
     ExTable: typeof import('./src/components/ExTable/index.vue')['default']

@@ -156,27 +156,36 @@ const data = [
 type queryType = {
   [key in string]: any;
 };
+import.meta.env;
+export type QueryConfigType = {
+  [key: string]: any;
+  label: string;
+  value: any;
+  compsName: "ExInput" | "ExSelect";
+};
 export declare interface TableConfig {
-  showIndex: boolean;
-  showSelection: boolean;
-  currentPage: number;
-  pageSize: number;
-  height?: number;
-  api: string;
-  loading: boolean;
-  showOverflowTooltip: boolean;
-  colSlots: string[];
-  columns: { prop: string; label: string }[];
-  query: queryType;
-  tableData: any[];
-  total: number;
-  background: boolean;
-  pageSizes: number[];
-  layout: string;
+  query: queryType; //点击搜索按钮返回的参数
+  queryConfig: QueryConfigType[]; //搜索组件配置的参数
+  tableData: any[]; //表格展示的数据
+  showIndex: boolean; // 是否显示列的行号
+  showSelection: boolean; //是否显示复选框
+  currentPage: number; //当前是第几页,从1开始
+  pageSize: number; //表格默认显示几行
+  height?: number; //表格默认高度
+  api: string; //获取表格数据的api
+  loading: boolean; //是否显示遮罩层
+  showOverflowTooltip: boolean; //是否显示单元格提示信息
+  colSlots: string[]; //自定义哪些插槽
+  columns: { prop: string; label: string }[]; // 接口中哪些字段显示和显示的中文名称
+  total: number; //数据总数有多少
+  background: boolean; //是否为分页按钮添加背景
+  pageSizes: number[]; //分页时一页显示的数据量
+  layout: ("prev" | "pager" | "next" | "jumper" | "total")[]; // 分页组件配置
 }
-export const tableConfig: TableConfig = {
+const tableConfig: TableConfig = {
   // 表格配置
   query: {},
+  queryConfig: [],
   tableData: data,
   showIndex: true,
   showSelection: true,
@@ -186,25 +195,16 @@ export const tableConfig: TableConfig = {
   api: "",
   loading: false,
   showOverflowTooltip: true,
-  colSlots: ["dyn_id"],
-  columns: [
-    { prop: "dyn_id", label: "a表头" },
-    { prop: "dyn_type", label: "b表头" },
-  ],
+  colSlots: [],
+  columns: [],
   // 分页配置
   total: 1000,
   background: true,
   pageSizes: [10, 20, 30, 40, 50, 100],
-  layout: "total,prev, pager, next,layout,sizes",
+  layout: ["prev", "pager", "next", "jumper", "total"],
 };
-export const setTableConfig = (cfg?: object) => {
-  return {
-    ...tableConfig,
-    ...cfg,
-  };
-};
-export const getTableConfig = () => {
-  return {
-    ...tableConfig,
-  };
+export const createTableConfig = (
+  config: Partial<TableConfig> = {}
+): TableConfig => {
+  return JSON.parse(JSON.stringify(Object.assign(tableConfig, config)));
 };
