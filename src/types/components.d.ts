@@ -49,7 +49,6 @@ export type UnionCtrlType =
   | "DiyInput"
   | "DiySelect"
   | "DiyDatePicker";
-export type UnContainerCtrlEnum = Exclude<AllCtrlType, "DiyContainer">;
 
 /**
  * @description 除了容器控件，所有表单控件都有的基础类型
@@ -97,6 +96,7 @@ export interface DiyContainerType {
 export type ExFormConfigType = ReadonlyToPartial<FormProps> & {
   id: number;
   name: string; //表单配置名称
+  type:'DiyForm',
   mode: FormModeType;
   containerCfg?: DiyContainerType[];
 };

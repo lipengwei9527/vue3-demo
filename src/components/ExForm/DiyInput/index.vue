@@ -15,7 +15,5 @@ const props = defineProps({
     type: Object as PropType<DiyInputType>,
   },
 });
-// const emits = defineEmits<(e: "update:value") => void>();
-// const modelValue = useVModel(props, "value", emits);
 </script>
 <style lang="scss" scoped></style>

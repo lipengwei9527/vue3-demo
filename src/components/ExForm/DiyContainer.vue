@@ -1,47 +1,56 @@
 <template>
-  <ExContextMenu @select="selectContext" :list="contextList">
-    <div class="diy-container" ref="diyContainer">
-      <div
-        class="container-item"
-        v-for="(item, _index) in config"
-        :key="item.id"
+  <div class="diy-container" ref="diyContainer">
+    <div
+      class="container-item"
+      v-for="(item, _index) in config"
+      :key="item.id"
+      @click.stop="clickContainerFn(item)"
+    >
+      <ExContextMenu
+        class="full-line"
+        @select="selectContextFn(item)"
+        :list="[{ label: item.typeName + item.id, value: item.type }]"
       >
-        <ExContextMenu @select="selectContext" :list="contextList">
-          <h3 v-if="item.type == 'DiyContainer'" class="title full-line">
-            {{ item.label }}
-          </h3>
+        <template v-if="item.type == 'DiyContainer'">
+          <h3 class="title">{{ item.label }}</h3>
+        </template>
+        <template v-if="item.type != 'DiyContainer'">
           <el-form-item
             :class="{ 'full-line': item.isFullLine }"
-            v-if="item.type != 'DiyContainer'"
             :label="item.label"
             :prop="item.prop"
           >
             <component :is="item.type" :config="item.compCfg"></component>
           </el-form-item>
+        </template>
+        <template v-if="item.type == 'DiyContainer'">
           <DiyContainer
-            v-if="item.type == 'DiyContainer'"
             v-model:config="item.config"
+            @click="clickContainerFn"
+            @select="selectContextFn"
           >
           </DiyContainer>
-        </ExContextMenu>
-      </div>
+        </template>
+      </ExContextMenu>
     </div>
-  </ExContextMenu>
+  </div>
 </template>
 <script name="DiyContainer" setup lang="ts">
 import { PropType, ref } from "vue";
 import { useVModel } from "@vueuse/core";
 import { useDraggable } from "vue-draggable-plus";
 import { DiyContainerType, DiyFormItemType } from "@/types/components";
-const contextList = [
-  { label: "菜单1", value: "1" },
-  { label: "菜单2", value: "2" },
-];
+/**
+ * @description 点击一个容器或者表单项
+ */
+const clickContainerFn = (item: DiyContainerType | DiyFormItemType) => {
+  emits("click", item);
+};
 /**
  * 左键点击容器或表单组件
  */
-const selectContext = (item: any) => {
-  console.log("带年纪", item);
+const selectContextFn = (item: DiyContainerType | DiyFormItemType) => {
+  emits("select", item);
 };
 const props = defineProps({
   config: {
@@ -52,34 +61,39 @@ const props = defineProps({
 });
 const emits = defineEmits<{
   (e: "update:config", value: DiyContainerType[]): void;
+  (e: "click", value: DiyContainerType | DiyFormItemType): void;
+  (e: "select", value: DiyContainerType | DiyFormItemType): void;
 }>();
 const conCfg = useVModel(props, "config", emits);
 const diyContainer = ref();
 useDraggable(diyContainer, conCfg, {
   animation: 200,
   group: "main",
-  onStart(value) {
-    console.log("diyContainer:start", value);
-  },
-  onEnd(value) {
-    console.log("diyContainer:end", value);
-  },
 });
 </script>
 <style lang="scss" scoped>
+.ex-context-menu {
+  display: block;
+}
 .diy-container {
   //容器交换需要鼠标在容器上，padding扩大容器让鼠标能够放到容器上
   // padding: 20px 0; //必须的属性
   padding-bottom: 20px;
-  // border: 1px dashed red;
   grid-column: 1 / -1;
-  margin: 10px;
+
   .container-item {
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column: 1 / -1;
     border: 1px dashed blue;
-    // margin: 10px;
+    :deep(.el-form-item) {
+      .el-form-item__content {
+        * {
+          width: 100%;
+        }
+      }
+    }
   }
   .title {
     user-select: none;

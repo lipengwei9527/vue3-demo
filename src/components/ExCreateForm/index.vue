@@ -1,9 +1,9 @@
 <template>
   <div class="ex-create-form">
-    <FormTopBar></FormTopBar>
+    <FormTopBar @click="clickFn" v-model:form="form"></FormTopBar>
     <FormSideBar :ctrls="ctrls"></FormSideBar>
-    <!-- <FormMain></FormMain> -->
-    <FormMain :formConfig="cfg"></FormMain>
+    <FormMain :formConfig="cfg" @click="clickFn" @select="selectFn"></FormMain>
+    <FormConfig v-model:compConfig="compConfig"></FormConfig>
     <FormFooter></FormFooter>
   </div>
 </template>
@@ -13,11 +13,34 @@ import FormSideBar from "./components/FormSideBar.vue";
 import FormTopBar from "./components/FormTopBar.vue";
 import FormMain from "./components/FormMain.vue";
 import FormFooter from "./components/FormFooter.vue";
+import FormConfig from "./components/FormConfig.vue";
 import { Ctrls, allCtrls, getInitCompData, autoId } from "./compsData";
-import { DiyContainerType } from "@/types/components";
+import {
+  ExFormConfigType,
+  DiyContainerType,
+  DiyFormItemType,
+} from "@/types/components";
 const ctrls = ref<Ctrls>(allCtrls);
+// 侧边栏中控件初始化时使用了id，将id重置为0
 autoId.cur = 0;
+// 获取的表单全部信息
+const form = ref<ExFormConfigType>({
+  id: autoId.cur,
+  name: "表单名称" + autoId.cur,
+  type: "DiyForm",
+  mode: "create",
+  containerCfg: [], //表单的全部配置结果:cfg
+});
+// 表单的全部配置结果
 const cfg = [getInitCompData("DiyContainer") as DiyContainerType];
+// 默认显示的配置项
+const compConfig = ref<DiyContainerType | DiyFormItemType>(cfg[0]);
+const clickFn = (item: DiyContainerType | DiyFormItemType) => {
+  compConfig.value = item;
+};
+const selectFn = (item: DiyContainerType | DiyFormItemType) => {
+  console.log("selectFn:item", item);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -27,33 +50,19 @@ const cfg = [getInitCompData("DiyContainer") as DiyContainerType];
   color: var(--ex-color-text);
   display: grid;
   grid-template-areas:
-    "form-top-bar form-top-bar"
-    "form-side-bar form-main"
-    "form-side-bar form-footer";
-  grid-template-columns: minmax(180px, var(--ex-side-bar-width)) 1fr;
+    "form-top-bar  form-top-bar form-top-bar"
+    "form-side-bar form-main    form-config"
+    "form-footer   form-footer  form-footer";
+  grid-template-columns:
+    minmax(250px, 2fr)
+    minmax(300px, 7fr)
+    minmax(300px, 2fr);
   grid-template-rows: auto 1fr auto;
-  .form-top-bar {
-    grid-area: form-top-bar;
-  }
-  .form-side-bar {
-    grid-area: form-side-bar;
-    border-right: 1px solid var(--ex-menu-border-color);
-    background-color: var(--ex-side-bar-bg-color);
-  }
-  .form-main {
-    grid-area: form-main;
-  }
-  .form-footer {
-    grid-area: form-footer;
-  }
 }
 .ghost {
   background-color: #eff1f3;
 }
 .drag {
   background-color: #def1f9;
-}
-.base-form-item {
-  border: 2px solid var(--ex-menu-border-color);
 }
 </style>

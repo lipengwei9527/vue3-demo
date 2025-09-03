@@ -3,6 +3,8 @@ html[data-theme="light"],
   --ex-main-bg-color: #ffffff;
   --ex-layout-bgc: #f4f4f5; // 主题背景色
   --ex-color-text: black; // 文字颜色
+
+  --ex-bgc-un-allow: #dfe4ea; //不允许选择的背景色
   --ex-menu-border-color: #dcdfe6; //菜单边框颜色
   --ex-border-color: var(--ex-menu-border-color); //边框颜色
   // 侧边栏变量

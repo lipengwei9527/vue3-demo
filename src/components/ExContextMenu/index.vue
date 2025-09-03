@@ -1,5 +1,5 @@
 <template>
-  <div class="context-container" ref="targetRef">
+  <div class="ex-context-menu" ref="targetRef">
     <slot></slot>
     <Teleport to="body">
       <Transition
@@ -39,7 +39,7 @@ import {
 import useViewPort from "@/hooks/useViewPort";
 import { useVModel } from "@vueuse/core";
 import { DoneFn } from "@/types/elementPlus";
-import { hasEvent } from "@/utils/guard";
+import { allProps } from "@/utils/guard";
 type List = ({ label: string; value: any } & Record<string, any>)[];
 const props = defineProps({
   isShow: {
@@ -53,12 +53,6 @@ const props = defineProps({
     type: Number,
     default: 200,
   },
-  // beforeClose: {
-  //   type: Function as PropType<DialogBeforeCloseFn>,
-  // },
-  // select: {
-  //   type: Function as PropType<(item: List[number]) => void>,
-  // },
 });
 const emits = defineEmits<{
   (e: "update:isShow", value: boolean): void;
@@ -68,7 +62,7 @@ const emits = defineEmits<{
 }>();
 const modelShow = props.isShow ? useVModel(props, "isShow", emits) : ref(false);
 
-const eventRes = hasEvent(["onBeforeClose", "onSelect"]);
+const eventRes = allProps(["onBeforeClose", "onSelect"]);
 // 触发一次beforeClose事件flag置为true，调用一次beforeFn置为false
 let isHidden = ref<boolean | undefined>(false);
 /**
@@ -159,11 +153,11 @@ const pos = computed(() => {
 const targetRef = ref();
 
 onMounted(() => {
-  targetRef.value.addEventListener("contextmenu", openContextMenu);
+  targetRef.value?.addEventListener("contextmenu", openContextMenu);
 });
 
 onBeforeUnmount(() => {
-  targetRef.value.removeEventListener("contextmenu", openContextMenu);
+  targetRef.value?.removeEventListener("contextmenu", openContextMenu);
   closeFn();
 });
 // 菜单高度
@@ -197,7 +191,7 @@ function handleAfterEnter(el: any) {
 }
 </script>
 <style lang="scss" scoped>
-.context-container {
+.ex-context-menu {
   display: inline-block;
 }
 .menu {

@@ -19,28 +19,12 @@ defineProps({
 </script>
 <style lang="scss" scoped>
 .form-side-bar {
+  grid-area: form-side-bar;
+  border-right: 1px solid var(--ex-menu-border-color);
+  background-color: var(--ex-side-bar-bg-color);
   padding: 10px;
   .title {
     margin: 10px;
   }
 }
-// .base-comp-item {
-//   user-select: none;
-//   h4 {
-//     margin: 10px 0;
-//   }
-//   .label-box {
-//     display: grid;
-//     grid-template-columns: repeat(2, 1fr);
-//     grid-auto-rows: min-content;
-//     gap: 5px;
-//     padding: 0 5px;
-//     .label-item {
-//       border: 1px solid var(--ex-border-color);
-//       text-align: center;
-//       cursor: move;
-//       padding: 3px 5px;
-//     }
-//   }
-// }
 </style>

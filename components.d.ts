@@ -8,10 +8,13 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BaseCtrls: typeof import('./src/components/ExCreateForm/components/BaseCtrls.vue')['default']
-    copy: typeof import('./src/components/ExContextMenu/index copy.vue')['default']
     DiyContainer: typeof import('./src/components/ExForm/DiyContainer.vue')['default']
+    DiyContainerCfg: typeof import('./src/components/ExCreateForm/components/DiyContainerCfg.vue')['default']
+    DiyDatePickerCfg: typeof import('./src/components/ExCreateForm/components/DiyDatePickerCfg.vue')['default']
     DiyInput: typeof import('./src/components/ExForm/DiyInput/index.vue')['default']
+    DiyInputCfg: typeof import('./src/components/ExCreateForm/components/DiyInputCfg.vue')['default']
     DiySelect: typeof import('./src/components/ExForm/DiySelect/index.vue')['default']
+    DiySelectCfg: typeof import('./src/components/ExCreateForm/components/DiySelectCfg.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDialog: typeof import('element-plus/es')['ElDialog']
@@ -38,6 +41,7 @@ declare module 'vue' {
     ExMenu: typeof import('./src/components/ExMenu/index.vue')['default']
     ExSubMenu: typeof import('./src/components/ExMenu/components/ExSubMenu.vue')['default']
     ExTable: typeof import('./src/components/ExTable/index.vue')['default']
+    FormConfig: typeof import('./src/components/ExCreateForm/components/FormConfig.vue')['default']
     FormContext: typeof import('./src/components/ExContextMenu/components/FormContext.vue')['default']
     FormFooter: typeof import('./src/components/ExCreateForm/components/FormFooter.vue')['default']
     FormMain: typeof import('./src/components/ExCreateForm/components/FormMain.vue')['default']
