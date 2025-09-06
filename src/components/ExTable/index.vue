@@ -2,6 +2,7 @@
   <div class="ex-table" v-loading="model.loading">
     <!-- 搜索 -->
     <el-form
+      v-size-ob="querySizeChange"
       v-if="model.queryConfig.length"
       :model="model.query"
       @submit.prevent="submitFn"
@@ -23,12 +24,8 @@
       </div>
     </el-form>
     <!-- 表格 -->
-    <div
-      class="table-container"
-      ref="tableContainer"
-      v-size-ob="tableSizeChange"
-    >
-      <el-table :data="model.tableData" ref="table" :height="model.height">
+    <div class="table-container" ref="tableContainer">
+      <el-table :data="model.tableData" ref="table" :height="tableHeight">
         <!-- 表格选择列 -->
         <el-table-column
           v-if="model.showSelection"
@@ -81,7 +78,7 @@
   </div>
 </template>
 <script name="ExTable" setup lang="ts">
-import { onMounted, PropType, useTemplateRef, watch } from "vue";
+import { onMounted, PropType, useTemplateRef, watch, ref, computed } from "vue";
 import xhr from "@/axios";
 import {
   createTableConfig,
@@ -117,8 +114,14 @@ const setQueryCol = () => {
 onMounted(() => {
   setQueryCol();
 });
-const tableSizeChange = (rect: { width: number; height: number }) => {
-  model.value.height = rect.height;
+const queryHeight = ref(0);
+const tableHeight = computed(() => {
+  // 分页高度32px
+  return model.value.height - queryHeight.value - 32;
+});
+const querySizeChange = (rect: { width: number; height: number }) => {
+  console.log("hegith");
+  queryHeight.value = rect.height;
 };
 /**
  * @description 点击搜索按钮
@@ -214,7 +217,7 @@ watch(
 
 <style lang="scss" scoped>
 .ex-table {
-  height: 100%;
+  // height: 100%;
   display: grid;
   grid-template-areas:
     "el-form el-form"

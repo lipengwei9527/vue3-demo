@@ -28,7 +28,7 @@
 ::-webkit-resizer {
 }
 
-// // 鼠标悬停时显示滚动条，否则隐藏滚动条
+// 鼠标悬停时显示滚动条，否则隐藏滚动条
 // :not(:hover)::-webkit-scrollbar {
 //   display: hidden;
 // }
@@ -36,3 +36,10 @@
 // :not(:hover)::-webkit-scrollbar-thumb {
 //   visibility: hidden;
 // }
+.hidden-scrollbar::-webkit-scrollbar {
+  display: hidden;
+}
+
+.hidden-scrollbar::-webkit-scrollbar-thumb {
+  visibility: hidden;
+}

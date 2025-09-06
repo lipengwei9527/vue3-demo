@@ -8,23 +8,22 @@
 // all：代指所有css属性
 // 样式变量
 @import "./variables";
-// 整体布局样式
-@import "./layout/index.scss";
 // 全局滚动条样式
 @import "scrollbar.scss";
 @import "./iconfont/iconfont.css";
+// 整体布局样式
+@import "./layout/index.scss";
 
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  // box-sizing: border-box;
 }
 
 html,
 body,
 #app {
   width: 100%;
-  // min-height: 100vh;
 }
 
 $deviceList: (

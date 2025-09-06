@@ -21,10 +21,21 @@
   }
   .main {
     grid-area: main;
-    padding: 10px;
+    padding: 20px;
     background-color: var(--ex-main-bg-color);
     border-radius: 5px;
     overflow: auto;
+    .page {
+      height: 100%;
+      overflow: auto;
+    }
+    .page::-webkit-scrollbar {
+      display: hidden;
+    }
+
+    .page::-webkit-scrollbar-thumb {
+      visibility: hidden;
+    }
   }
   .footer {
     grid-area: footer;

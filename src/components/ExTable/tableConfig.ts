@@ -1,3 +1,4 @@
+import { ref, Ref } from "vue";
 // {
 //   "dyn_id": "981118307352444930",
 //   "dyn_type": 8
@@ -25,7 +26,7 @@ export declare interface TableConfig {
   showSelection: boolean; //是否显示复选框
   currentPage: number; //当前是第几页,从1开始
   pageSize: number; //表格默认显示几行
-  height: number; //表格当前高度
+  height: number; //exTable组件的高度
   tableApi: string; //获取表格数据的api
   dictApi: string; //字典枚举值api
   loading: boolean; //是否显示遮罩层
@@ -49,7 +50,7 @@ const tableConfig: TableConfig = {
   showSelection: true,
   currentPage: 1,
   pageSize: 10,
-  height: 200,
+  height: 600,
   tableApi: "",
   dictApi: "",
   loading: false,
@@ -64,6 +65,7 @@ const tableConfig: TableConfig = {
 };
 export const createTableConfig = (
   config: Partial<TableConfig> = {}
-): TableConfig => {
-  return JSON.parse(JSON.stringify(Object.assign(tableConfig, config)));
+): Ref<TableConfig> => {
+  let tableCfg = JSON.parse(JSON.stringify(tableConfig));
+  return ref(Object.assign(tableCfg, config));
 };
