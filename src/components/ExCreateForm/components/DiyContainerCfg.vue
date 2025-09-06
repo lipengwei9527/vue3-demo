@@ -9,7 +9,7 @@
 <script name="DiyContainerCfg" setup lang="ts">
 import { PropType } from "vue";
 import { useVModel } from "@vueuse/core";
-import { DiyContainerType, DiyFormItemType } from "@/types/components";
+import { DiyContainerType } from "@/types/components";
 const props = defineProps({
   compConfig: {
     type: Object as PropType<DiyContainerType>,

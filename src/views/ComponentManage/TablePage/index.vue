@@ -20,11 +20,10 @@ const tableCfg = ref(
       { label: "label3", value: "value3", compsName: "ExInput" },
       { label: "label4", value: "value4", compsName: "ExInput" },
       { label: "label5", value: "value5", compsName: "ExInput" },
-      { label: "label6", value: "value6", compsName: "ExInput" },
     ],
     columns: [
-      { prop: "dyn_id", label: "a表头" },
-      { prop: "dyn_type", label: "b表头" },
+      { prop: "name", label: "姓名" },
+      { prop: "age", label: "年龄" },
     ],
   })
 );

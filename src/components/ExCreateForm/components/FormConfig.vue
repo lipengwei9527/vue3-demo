@@ -19,7 +19,7 @@
 </template>
 <script name="FormConfig" setup lang="ts">
 import { PropType } from "vue";
-import { useVModel } from "@vueuse/core";
+// import { useVModel } from "@vueuse/core";
 import DiyContainerCfg from "./DiyContainerCfg.vue";
 import DiyInputCfg from "./DiyInputCfg.vue";
 import DiySelectCfg from "./DiySelectCfg.vue";
@@ -36,7 +36,7 @@ const comps: { [P in UnionCtrlType]: any } = {
   DiyDatePicker: DiyDatePickerCfg,
 };
 
-const props = defineProps({
+defineProps({
   compConfig: {
     type: Object as PropType<DiyContainerType | DiyFormItemType>,
     default: () => ({}),

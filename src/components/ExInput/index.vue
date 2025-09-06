@@ -1,6 +1,6 @@
 <template>
   <div class="ex-input">
-    <el-input v-model="model"></el-input>
+    <el-input v-model="model" v-bind="cfg"></el-input>
   </div>
 </template>
 <script name="ExInput" setup lang="ts">

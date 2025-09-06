@@ -1,12 +1,5 @@
 import { DiyContainerType, DiyFormItemType } from "@/types/components";
-export function getCompConfig(
-  configList: DiyContainerType[],
-  id: string | number
-) {
-  const config = configList.find((item) => {
-    // if(item.type=='DiyContainer')
-  });
-}
+
 // 所有组件的通用菜单
 const baseMenu = [
   {

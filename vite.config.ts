@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { resolve } from "path";
+import path, { resolve } from "path";
 import { createNameThroughPath } from "./src/utils/path";
 // ts类型
 import type { UserConfig, ConfigEnv } from "vite";
@@ -12,9 +12,9 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { visualizer } from "rollup-plugin-visualizer";
 //setup语法糖写name命名组件名称
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
-// const proxyConfig = require("./config/proxy").default;
 import proxyConfig from "./config/proxy";
-// https://vitejs.dev/config/
+// 把后缀为以下后缀的文件放到css文件夹里
+const cssExts = ["ttf", "woff", "woff2"];
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   // 加载的.env文件中的变量
   const env = loadEnv(mode, process.cwd());
@@ -71,11 +71,8 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           },
           // 静态资源文件名
           assetFileNames(assentInfo) {
-            if (
-              assentInfo.name?.endsWith("ttf") ||
-              assentInfo.name?.endsWith("woff") ||
-              assentInfo.name?.endsWith("woff2")
-            ) {
+            let paths = assentInfo.name?.split(".");
+            if (paths && cssExts.includes(paths[paths.length - 1])) {
               return "css/[name].[hash].[ext]";
             }
             return "[ext]/[name].[hash].[ext]";
