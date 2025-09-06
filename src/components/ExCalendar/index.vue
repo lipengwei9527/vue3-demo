@@ -1,5 +1,5 @@
 <template>
-  <div class="ex-calendar">
+  <div class="ex-calendar" ref="calendar">
     <div>
       <el-button type="primary" @click="changeModelValue(1)">上月</el-button>
       <el-button type="primary" @click="changeModelValue(-1)">下月</el-button>
@@ -28,7 +28,14 @@
   </div>
 </template>
 <script name="ExCalendar" setup lang="ts">
-import { reactive, useSlots, PropType } from "vue";
+import {
+  reactive,
+  useSlots,
+  PropType,
+  useTemplateRef,
+  watch,
+  onMounted,
+} from "vue";
 import { useVModel } from "@vueuse/core";
 import { formateDate } from "@/utils/date";
 import moment from "moment";
@@ -38,10 +45,32 @@ import { DayInfo } from "@/types/components";
 // 不使用插槽时要保证父组件插槽位置不能有任何东西（注释也不行）
 const slots = useSlots();
 const props = defineProps({
-  // 要展示的月份的时间
+  // 要展示的时间
   modelValue: {
     type: [Date, String],
     default: () => new Date(),
+  },
+  // 组件整体高度
+  height: {
+    type: [Number],
+    default: () => 400,
+  },
+  // 日历单元格高度
+  cellHeight: {
+    type: [Number],
+    default: () => 400,
+  },
+  /**
+   * 显示的是一周还是一个月
+   */
+  mode: {
+    type: String as PropType<"month" | "week">,
+    default: "month",
+  },
+  // 选择的是时间段还是时间点:true-时间段，false-时间点
+  period: {
+    type: Boolean,
+    default: false,
   },
   // 禁止选择的开始时间
   startTime: {
@@ -62,21 +91,19 @@ const props = defineProps({
 
 const emits = defineEmits(["select", "update:modelValue"]);
 let modelValue = useVModel(props, "modelValue", emits);
-
+const calendarRef = useTemplateRef("calendar");
 const weeks = ["一", "二", "三", "四", "五", "六", "日"];
-const selected = reactive<DayInfo[]>([]);
+// 通过点击选中的日期
+const selData = reactive<(DayInfo | undefined)[]>([]);
 // 要渲染的日历数据
 let calendarData = reactive<DayInfo[][]>([]);
-const setCalendarItemClass = (item: DayInfo) => {
-  return {
-    "calendar-item": true,
-    "pre-month": item.type == "pre",
-    "next-month": item.type == "next",
-    allow: !isBanFn(item),
-    ban: isBanFn(item),
-    selected: isSelectedFn(item),
-  };
-};
+// 选中的月份的原始日历数据
+let orgData: DayInfo[] = [];
+
+/**
+ * @description 将平铺的日历数据转为每七个为一组的数组
+ * @param data 平铺的日历数据
+ */
 const toTreeCalendarData = (data: DayInfo[]) => {
   const tempData: DayInfo[][] = [];
   let tempItem: DayInfo[] = [];
@@ -89,6 +116,11 @@ const toTreeCalendarData = (data: DayInfo[]) => {
   });
   return tempData;
 };
+/**
+ * @description 切换日历月份
+ * @param value 当前月份的上一个月还是下一个月
+ * @param type month
+ */
 const changeModelValue = (
   value: number = 0,
   type: moment.DurationInputArg2 = "month"
@@ -99,12 +131,17 @@ const changeModelValue = (
     "YYYY-MM"
   );
   modelValue.value = date;
+  orgData.length = 0;
+  orgData.push(...getCalendarData(date));
   calendarData.length = 0;
-  calendarData.push(...toTreeCalendarData(getCalendarData(date)));
+  calendarData.push(...toTreeCalendarData(orgData));
 };
 changeModelValue();
 
-// 该日是否不可选择
+/**
+ * @description 判断该单元格是否是禁用
+ * @param data 该单元格的信息
+ */
 const isBanFn = (data: DayInfo): boolean => {
   let time = new Date(data.date).getTime();
   let start = new Date(props.startTime).getTime();
@@ -117,25 +154,94 @@ const isBanFn = (data: DayInfo): boolean => {
   return false;
 };
 
-// 判断该日期是否选中
+/**
+ * @description 判断该日期是否选中
+ * @param data 该单元格的信息
+ */
 const isSelectedFn = (data: DayInfo): boolean => {
-  if (selected.find((item) => item.date == data.date)) {
+  if (selData.find((item) => item?.date == data.date)) {
     return true;
   }
   return false;
 };
-// 选择点击的日期
-const selectDayFn = (data: DayInfo) => {
-  console.log(`output-selectDayFn>`);
-  if (!data || data.disabled) return;
-  if (selected.length != 0 && selected.find((item) => item.date == data.date)) {
-    selected.length = 0;
-    return;
-  }
-  selected.length = 0;
-  selected.push(data);
-  emits("select", selected);
+/**
+ * @description 日历单元格要设置的样式类
+ * @param item 日历单元格数据
+ */
+const setCalendarItemClass = (item: DayInfo) => {
+  return {
+    "calendar-item": true,
+    "pre-month": item.type == "pre",
+    "next-month": item.type == "next",
+    allow: !isBanFn(item),
+    ban: isBanFn(item),
+    selected: isSelectedFn(item),
+  };
 };
+/**
+ * @description  选择点击的日期
+ * @param data 该单元格的信息
+ */
+const selectDayFn = (data: DayInfo) => {
+  if (!data || data.disabled) return;
+
+  // 选择时间段
+  if (props.period) {
+    if (selData.length == 0 || selData.length >= 2) {
+      selData.length = 0;
+      selData.push(data);
+    } else if (selData.length == 1) {
+      // 如果选中的是同一天就取消选中
+      if (selData[0]?.date == data.date) return (selData.length = 0);
+      selData.push(data);
+      // 升序排序
+      selData.sort((a, b) => {
+        return (
+          new Date(a?.date || "").getTime() - new Date(b?.date || "").getTime()
+        );
+      });
+      // 筛选出在两个时间段之间,同时没有被禁止选中的元素
+      let list = orgData.filter((item) => {
+        let time = new Date(item.date).getTime();
+        let firTime = new Date(selData[0]?.date || "").getTime();
+        let secTime = new Date(selData[1]?.date || "").getTime();
+        if (time > firTime && time <= secTime && !item.disabled) {
+          return item;
+        }
+      });
+      // list中包含selData中的第二个元素，所以要删除selData的第二个元素
+      selData.length = 1;
+      selData.push(...list);
+    }
+  } else {
+    // 选择时间点
+    // 单点模式取消日期选中
+
+    if (selData[0]?.date == data.date) {
+      selData.length = 0;
+      return;
+    }
+    selData.length = 0;
+    selData.push(data);
+  }
+  emits("select", selData);
+};
+
+/**
+ * @description 设置日历组件的整体高度
+ */
+const setCalendarHeight = () => {
+  calendarRef.value?.style.setProperty("--height", `${props.height}px`);
+};
+onMounted(() => {
+  setCalendarHeight();
+});
+watch(
+  () => props.height,
+  () => {
+    setCalendarHeight();
+  }
+);
 </script>
 
 <style lang="scss" scoped>
@@ -144,16 +250,18 @@ const selectDayFn = (data: DayInfo) => {
   border-left: 1px solid var(--el-border-color);
 }
 // hover及选中的样式
-@mixin hover_and_selected() {
+@mixin hover_or_selected() {
   z-index: 10;
   background-color: #ecf5ff;
   color: #79bbff;
   border-color: #79bbff;
 }
 .ex-calendar {
+  --height: 600px;
   user-select: none;
   display: grid;
   grid-template-rows: auto auto 1fr;
+  height: var(--height);
   .ex-calendar-table {
     border-collapse: collapse;
     border: 1px solid var(--el-border-color);
@@ -171,6 +279,7 @@ const selectDayFn = (data: DayInfo) => {
         td {
           @include border();
           .calendar-item {
+            box-sizing: border-box;
             height: 100%;
             overflow: scroll;
             cursor: pointer;
@@ -187,11 +296,11 @@ const selectDayFn = (data: DayInfo) => {
           }
           // 允许选择的hover样式
           .allow:hover {
-            @include hover_and_selected();
+            @include hover_or_selected();
           }
           // 选中的样式
           .selected {
-            @include hover_and_selected();
+            @include hover_or_selected();
           }
           // 禁止选择的样式
           .ban {
