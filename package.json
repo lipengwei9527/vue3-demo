@@ -36,6 +36,7 @@
     "unplugin-vue-define-options": "^1.4.3",
     "unplugin-vue-setup-extend-plus": "^1.0.1",
     "vite": "^5.2.0",
+    "vite-plugin-html": "^3.2.2",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue-tsc": "^2.0.6"
   }

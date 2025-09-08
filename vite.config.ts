@@ -1,7 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path, { resolve } from "path";
-import { createNameThroughPath } from "./src/utils/path";
 // ts类型
 import type { UserConfig, ConfigEnv } from "vite";
 // 按需引入element-plus
@@ -12,7 +11,9 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { visualizer } from "rollup-plugin-visualizer";
 //setup语法糖写name命名组件名称
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
+import { createHtmlPlugin } from "vite-plugin-html";
 import proxyConfig from "./config/proxy";
+import { title } from "process";
 // 把后缀为以下后缀的文件放到css文件夹里
 const cssExts = ["ttf", "woff", "woff2"];
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
@@ -40,15 +41,36 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         //   // "src/components/**/*.vue", //注册排除src/components目录下第二子级下的所有组件
         // ],
 
-        resolvers: [
-          ElementPlusResolver(),
-          // (compName) => {
-          //   console.log("compName", compName);
-          // },
-        ],
+        resolvers: [ElementPlusResolver()],
       }),
       visualizer(),
       vueSetupExtend(),
+      createHtmlPlugin({
+        inject: {
+          data: {
+            title: "vite+vue3+ts项目",
+          },
+          tags: [
+            {
+              injectTo: "body",
+              tag: "script",
+              attrs: {
+                src: "/src/utils/update.ts",
+                type: "module",
+              },
+            },
+            {
+              injectTo: "head",
+              tag: "link",
+              attrs: {
+                rel: "icon",
+                type: "image/svg+xml",
+                href: "/vite.svg",
+              },
+            },
+          ],
+        },
+      }),
     ],
     css: {
       preprocessorOptions: {
@@ -60,6 +82,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     build: {
       sourcemap: true,
       rollupOptions: {
+        // input: {},
         output: {
           // 动态导入的文件名
           entryFileNames(chunkInfo) {
@@ -80,7 +103,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           // 自定义分包
           manualChunks(id, { getModuleInfo, getModuleIds }) {
             if (id.includes("node_modules")) {
-              return id.split("/")[5].split("@")[0];
+              return "vendor-" + id.split("/")[5].split("@")[0];
             }
             //   // return createNameThroughPath(id);
           },
