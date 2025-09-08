@@ -1,15 +1,11 @@
 <template>
   <div class="ex-calendar" ref="calendar">
-    <div>
-      <el-button type="primary" @click="changeModelValue(1)">上月</el-button>
-      <el-button type="primary" @click="changeModelValue(-1)">下月</el-button>
-    </div>
-    <div class="calendar-head">{{ modelValue }}</div>
+    <div class="calendar-head" ref="head">{{ modelValue }}</div>
     <table class="ex-calendar-table">
-      <thead>
+      <thead ref="thead">
         <th v-for="item in weeks" class="week-item">{{ item }}</th>
       </thead>
-      <tbody>
+      <tbody ref="tbody">
         <tr v-for="trItem in calendarData">
           <td v-for="tdItem in trItem">
             <div
@@ -35,12 +31,14 @@ import {
   useTemplateRef,
   watch,
   onMounted,
+  defineExpose,
 } from "vue";
 import { useVModel } from "@vueuse/core";
 import { formateDate } from "@/utils/date";
 import moment from "moment";
 import { getCalendarData } from "./library/date";
 import { DayInfo } from "@/types/components";
+
 // 父组件中使用插槽即使是注释也会返回一个包含default属性的对象
 // 不使用插槽时要保证父组件插槽位置不能有任何东西（注释也不行）
 const slots = useSlots();
@@ -53,7 +51,7 @@ const props = defineProps({
   // 组件整体高度
   height: {
     type: [Number],
-    default: () => 400,
+    default: () => 600,
   },
   // 日历单元格高度
   cellHeight: {
@@ -92,6 +90,9 @@ const props = defineProps({
 const emits = defineEmits(["select", "update:modelValue"]);
 let modelValue = useVModel(props, "modelValue", emits);
 const calendarRef = useTemplateRef("calendar");
+// const theadRef = useTemplateRef("head");
+// const headRef = useTemplateRef("thead");
+// const tbodyRef = useTemplateRef("tbody");
 const weeks = ["一", "二", "三", "四", "五", "六", "日"];
 // 通过点击选中的日期
 const selData = reactive<(DayInfo | undefined)[]>([]);
@@ -121,7 +122,7 @@ const toTreeCalendarData = (data: DayInfo[]) => {
  * @param value 当前月份的上一个月还是下一个月
  * @param type month
  */
-const changeModelValue = (
+const changeMonth = (
   value: number = 0,
   type: moment.DurationInputArg2 = "month"
 ) => {
@@ -136,7 +137,7 @@ const changeModelValue = (
   calendarData.length = 0;
   calendarData.push(...toTreeCalendarData(orgData));
 };
-changeModelValue();
+changeMonth();
 
 /**
  * @description 判断该单元格是否是禁用
@@ -171,6 +172,9 @@ const isSelectedFn = (data: DayInfo): boolean => {
 const setCalendarItemClass = (item: DayInfo) => {
   return {
     "calendar-item": true,
+    "cus-scroll": true,
+    "hover-scroll": true,
+    // "hidden-scroll": true,
     "pre-month": item.type == "pre",
     "next-month": item.type == "next",
     allow: !isBanFn(item),
@@ -242,6 +246,9 @@ watch(
     setCalendarHeight();
   }
 );
+defineExpose({
+  changeMonth,
+});
 </script>
 
 <style lang="scss" scoped>
@@ -260,7 +267,7 @@ watch(
   --height: 600px;
   user-select: none;
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto 1fr;
   height: var(--height);
   .ex-calendar-table {
     border-collapse: collapse;
@@ -279,16 +286,13 @@ watch(
         td {
           @include border();
           .calendar-item {
+            --tdHeight: 100px;
             box-sizing: border-box;
+            // height: --tdHeight;
             height: 100%;
             overflow: scroll;
             cursor: pointer;
             padding: 8px;
-            &::-webkit-scrollbar {
-              width: 4px;
-              height: 4px;
-              padding: 0 4px;
-            }
           }
           .pre-month,
           .next-month {
