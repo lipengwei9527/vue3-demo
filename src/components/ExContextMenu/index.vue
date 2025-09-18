@@ -19,7 +19,12 @@
             top: pos.posY,
           }"
         >
-          <div class="item" v-for="item in list" @click="selectFn(item)">
+          <div
+            class="item"
+            :class="{ ban: item.disabled }"
+            v-for="item in list"
+            @click="selectFn(item)"
+          >
             {{ item.label }}
           </div>
         </div>
@@ -37,46 +42,53 @@ import {
   onMounted,
 } from "vue";
 import useViewPort from "@/hooks/useViewPort";
-import { useVModel } from "@vueuse/core";
 import { DoneFn } from "@/types/elementPlus";
 import { allProps } from "@/utils/guard";
-type List = ({ label: string; value: any } & Record<string, any>)[];
+type ContextMenuItem = {
+  label: string;
+  value: Record<string, any> | string | number;
+  disabled?: boolean;
+};
 const props = defineProps({
-  isShow: {
+  // 是否禁用菜单
+  disabled: {
     type: Boolean,
   },
+  // 菜单数据
   list: {
-    type: Array as PropType<List>,
+    type: Array as PropType<ContextMenuItem[]>,
   },
-
+  // 菜单宽度
   width: {
     type: Number,
     default: 200,
   },
 });
 const emits = defineEmits<{
-  (e: "update:isShow", value: boolean): void;
-  (e: "select", value: List[number]): void;
+  (e: "select", value: ContextMenuItem): void;
   (e: "close", value: boolean): void;
-  (e: "beforeClose", item: List[number], value: DoneFn): void;
+  (e: "beforeClose", item: ContextMenuItem, value: DoneFn): void;
 }>();
-const modelShow = props.isShow ? useVModel(props, "isShow", emits) : ref(false);
+const modelShow = ref(false);
 
 const eventRes = allProps(["onBeforeClose", "onSelect"]);
 // 触发一次beforeClose事件flag置为true，调用一次beforeFn置为false
 let isHidden = ref<boolean | undefined>(false);
 /**
  * @description beforeClose事件传递的函数
- * @param cancel
+ * @param hidden
  */
 const beforeFn = (hidden?: boolean) => {
+  if (props.disabled) return;
   isHidden.value = hidden;
   closeFn();
 };
 /**
- * @description 被菜单项、window的click和contextMenu事件监听
+ * @description 点击菜单项
+ * @param item 菜单项数据
  */
-const selectFn = (item: List[number]) => {
+const selectFn = (item: ContextMenuItem) => {
+  if (item.disabled) return;
   // 点击左键菜单外的其他部分
   if (!item) {
     closeFn();
@@ -90,18 +102,12 @@ const selectFn = (item: List[number]) => {
   }
   emits("select", item);
   closeFn();
-  // 选中菜单并立即关闭
-  // if (eventRes.find((item) => item.name == "onSelect")) {
-  //   emits("select", item);
-  //   closeFn();
-  //   return;
-  // }
 };
 /**
- * 关闭菜单
+ * @description 关闭菜单
  */
 const closeFn = () => {
-  if (isHidden.value) return;
+  if (isHidden.value || props.disabled) return;
   removeEventListener("click", closeFn, true);
   removeEventListener("contextmenu", closeFn, true);
   modelShow.value = false;
@@ -113,6 +119,7 @@ let mouseY = ref(0);
  * @param
  */
 const openContextMenu = (e: PointerEvent) => {
+  if (props.disabled) return;
   e.preventDefault();
   e.stopPropagation();
   // 同步监听全局click和contextMenu事件
@@ -163,10 +170,10 @@ onBeforeUnmount(() => {
 // 菜单高度
 let h = ref(0);
 let w = ref(0);
-function handleSizeChange(rect: Parameters<Rect>[0]) {
-  const { width, height } = rect;
-  w.value = width;
-  h.value = height;
+function handleSizeChange(rect: Rect) {
+  const { offsetWidth, offsetHeight } = rect;
+  w.value = offsetWidth;
+  h.value = offsetHeight;
 }
 // 元素加入到页面之前
 function handleBeforeEnter(el: Element) {
@@ -209,10 +216,16 @@ function handleAfterEnter(el: any) {
     padding: 3px;
     border-radius: 3px;
     user-select: none;
+    overflow: hidden;
     &:hover {
       background-color: #c9ccd0;
       opacity: 0.8;
     }
+  }
+  .ban {
+    background-color: #c9ccd0;
+    opacity: 0.8;
+    cursor: not-allowed;
   }
 }
 </style>

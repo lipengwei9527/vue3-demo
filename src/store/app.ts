@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { getAllMenus, getTopMenus, getSIdeMenus } from "@/utils/menus";
-import type { AppState } from "@/types/store";
-import type { CustomRouteRecordRaw } from "@/types/router";
+import { AppState } from "@/types/store";
+import { CustomRouteRecordRaw } from "@/types/router";
 import router from "@/router";
 const routes = router.options.routes as CustomRouteRecordRaw[];
 const allMenus = getAllMenus(routes[0].children || []);

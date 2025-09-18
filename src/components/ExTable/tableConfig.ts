@@ -26,7 +26,7 @@ export declare interface TableConfig {
   showSelection: boolean; //是否显示复选框
   currentPage: number; //当前是第几页,从1开始
   pageSize: number; //表格默认显示几行
-  height: number; //exTable组件的高度
+  height?: number; //exTable组件的整体高度
   tableApi: string; //获取表格数据的api
   dictApi: string; //字典枚举值api
   loading: boolean; //是否显示遮罩层

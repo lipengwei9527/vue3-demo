@@ -1,6 +1,5 @@
 <template>
-  <div class="page">
-    <!-- <el-button>getInfo</el-button> -->
+  <div class="page" v-size-ob="sizeChange">
     <ExTable ref="table" v-model="tableCfg">
       <template #dyn_id="{ row }">
         {{ row.dyn_id }}
@@ -9,7 +8,6 @@
   </div>
 </template>
 <script name="TablePage" setup lang="ts">
-import { onMounted } from "vue";
 import { createTableConfig } from "@/components/ExTable/tableConfig";
 const tableCfg = createTableConfig({
   queryConfig: [
@@ -24,9 +22,8 @@ const tableCfg = createTableConfig({
     { prop: "age", label: "年龄" },
   ],
 });
-// const table = useTemplateRef("table");
-onMounted(() => {
-  // console.log(`output->table.value  `, table.value);
-});
+const sizeChange = (rect: Rect) => {
+  tableCfg.value.height = rect.height;
+};
 </script>
 <style lang="scss" scoped></style>

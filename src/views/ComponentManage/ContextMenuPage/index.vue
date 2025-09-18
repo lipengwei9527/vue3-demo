@@ -1,6 +1,9 @@
 <template>
-  <div class="context-menu-page">
-    <ExContextMenu :list="list[0]" @select="selectFn">
+  <div class="page">
+    <el-button type="primary" @click="show = !show">
+      {{ disabled ? "禁用" : "启用" }}</el-button
+    >
+    <ExContextMenu :disabled="disabled" :list="list[0]" @select="selectFn">
       <div class="box box1">
         <ExContextMenu @select="selectFn" :list="list[1]">
           <div class="box box2"></div>
@@ -10,28 +13,22 @@
     <ExContextMenu @beforeClose="beforeCloseFn" :list="list[2]">
       <div class="box box3"></div>
     </ExContextMenu>
-    <ExDialog
-      v-model:visiable="visiable"
-      @beforeClose="dialogBeforeCloseFn"
-    ></ExDialog>
   </div>
-  <el-button @click="visiable = true">打开弹窗</el-button>
-  <el-button @click="visiable = false">关闭弹窗</el-button>
 </template>
 
 <script setup name="ContextMenuPage" lang="ts">
 import { ref } from "vue";
-const visiable = ref(false);
+const show = ref(false);
+const disabled = ref(false);
 const beforeCloseFn = (item: any, fn: () => void) => {
   console.log("beforeCloseFn", item, fn);
   fn();
 };
-const dialogBeforeCloseFn = () => {};
 const selectFn = (item: any) => {
   menu.value = item;
   console.log("选择了菜单", item);
 };
-type Value = { label: string; value: string };
+type Value = { label: string; value: string; disabled?: boolean };
 let list: Value[][] = [];
 let menu = ref([]);
 for (let key = 0; key < 3; key++) {
@@ -42,12 +39,13 @@ for (let key = 0; key < 3; key++) {
       label: "菜单" + (String(key) + i),
       value: String(key) + i,
     };
+    if (i == 4) list[key][i].disabled = true;
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.context-menu-page {
+.page {
   display: flex;
   justify-content: flex-end;
 }
@@ -56,15 +54,13 @@ for (let key = 0; key < 3; key++) {
   height: 200px;
   margin: 10px;
 }
-.box1 {
-  width: 400px;
-  height: 400px;
-  background-color: rgb(random(255), random(255), random(255));
-}
-.box2 {
-  background-color: rgb(random(255), random(255), random(255));
-}
-.box3 {
-  background-color: rgb(random(255), random(255), random(255));
+@for $i from 1 through 3 {
+  .box#{$i} {
+    @if $i == 1 {
+      width: 400px;
+      height: 400px;
+    }
+    background-color: rgb(random(255), random(255), random(255));
+  }
 }
 </style>

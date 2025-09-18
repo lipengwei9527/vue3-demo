@@ -2,7 +2,7 @@
   <div class="ex-table" v-loading="model.loading">
     <!-- 搜索 -->
     <el-form
-      v-size-ob="querySizeChange"
+      v-size-ob="(rect:Rect) => sizeChange(rect, 'query')"
       v-if="model.queryConfig.length"
       :model="model.query"
       @submit.prevent="submitFn"
@@ -64,7 +64,8 @@
     <!-- 分页 -->
     <div class="pagination-container">
       <el-pagination
-        ref="pagination"
+        ref="paginationRef"
+        v-size-ob="(rect:Rect) => sizeChange(rect, 'pagination')"
         :total="model.total"
         :background="model.background"
         :layout="model.layout.join(',')"
@@ -85,14 +86,6 @@ import {
   TableConfig,
 } from "@/components/ExTable/tableConfig";
 import { useVModel } from "@vueuse/core";
-const tableRef = useTemplateRef("table");
-const paginationRef = useTemplateRef("pagination");
-const queryCompsRef = useTemplateRef<HTMLDivElement>("queryComps");
-defineExpose({
-  tableRef,
-  paginationRef,
-});
-
 const emits = defineEmits(["update:modelValue"]);
 const props = defineProps({
   modelValue: {
@@ -101,27 +94,24 @@ const props = defineProps({
   },
 });
 const model = useVModel(props, "modelValue", emits);
-/**
- * @description 搜索栏一行最多有几个组件
- */
-const setQueryCol = () => {
-  // 搜索栏一行最多有几个组件
-  let maxCol = 3;
-  let col = model.value.queryConfig.length;
-  col = col > maxCol ? maxCol : col;
-  queryCompsRef.value?.style.setProperty("--col", col.toString());
-};
-onMounted(() => {
-  setQueryCol();
+const tableRef = useTemplateRef("table");
+const queryCompsRef = useTemplateRef("queryComps");
+const paginationRef = useTemplateRef("paginationRef");
+
+const tableHeight = computed(() => {
+  let tH = model.value.height;
+  if (tH) return tH - queryHeight.value - paginationHeight.value;
+  return 600;
 });
 const queryHeight = ref(0);
-const tableHeight = computed(() => {
-  // 分页高度32px
-  return model.value.height - queryHeight.value - 32;
-});
-const querySizeChange = (rect: { width: number; height: number }) => {
-  console.log("hegith");
-  queryHeight.value = rect.height;
+const paginationHeight = ref(0);
+
+const hList = {
+  query: queryHeight,
+  pagination: paginationHeight,
+};
+const sizeChange = (rect: Rect, height: keyof typeof hList) => {
+  hList[height].value = rect.offsetHeight;
 };
 /**
  * @description 点击搜索按钮
@@ -196,6 +186,19 @@ const pageSizeChange = (value: number) => {
 const indexMethod = (index: number) => {
   return index + 1 + (model.value.currentPage - 1) * model.value.pageSize;
 };
+/**
+ * @description 搜索栏一行最多有几个组件
+ */
+const setQueryCol = () => {
+  // 搜索栏一行最多有几个组件
+  let maxCol = 3;
+  let col = model.value.queryConfig.length;
+  col = col > maxCol ? maxCol : col;
+  queryCompsRef.value?.style.setProperty("--col", col.toString());
+};
+onMounted(() => {
+  setQueryCol();
+});
 // 根据搜索列表的配置更新搜索的参数
 watch(
   model.value.queryConfig,
@@ -213,11 +216,14 @@ watch(
     deep: true,
   }
 );
+defineExpose({
+  tableRef,
+  paginationRef,
+});
 </script>
 
 <style lang="scss" scoped>
 .ex-table {
-  // height: 100%;
   display: grid;
   grid-template-areas:
     "el-form el-form"
@@ -225,7 +231,6 @@ watch(
     "pagination-container pagination-container";
   grid-template-columns: 10fr 1fr;
   grid-template-rows: auto 1fr auto;
-  gap: 10px;
   .el-form {
     grid-area: el-form;
     display: flex;

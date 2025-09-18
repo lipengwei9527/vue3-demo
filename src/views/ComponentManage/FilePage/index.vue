@@ -1,15 +1,17 @@
 <template>
-  <div class="h3">单文件上传：</div>
-  <input ref="fileInput" type="file" id="fileInput" />
-  <el-button @click="singleBtn">上传</el-button>
+  <div class="page">
+    <div class="h3">单文件上传：</div>
+    <input ref="fileInput" type="file" id="fileInput" />
+    <el-button @click="singleBtn">上传</el-button>
 
-  <div>base64上传：</div>
-  <input ref="base64FileInput" type="file" id="base64FileInput" />
-  <el-button type="primary" @click="base64Btn"> 上传 </el-button>
-  <div>二进制上传：</div>
-  <input ref="binaryFileInput" type="file" id="binaryFileInput" />
-  <el-button @click="binaryBtn">上传</el-button>
-  <FormData></FormData>
+    <div>base64上传：</div>
+    <input ref="base64FileInput" type="file" id="base64FileInput" />
+    <el-button type="primary" @click="base64Btn"> 上传 </el-button>
+    <div>二进制上传：</div>
+    <input ref="binaryFileInput" type="file" id="binaryFileInput" />
+    <el-button @click="binaryBtn">上传</el-button>
+    <FormData></FormData>
+  </div>
 </template>
 <script name="FilePage" setup lang="ts">
 import { useTemplateRef } from "vue";

@@ -51,7 +51,6 @@ const props = defineProps({
   // 组件整体高度
   height: {
     type: [Number],
-    default: () => 600,
   },
   // 日历单元格高度
   cellHeight: {
@@ -235,7 +234,8 @@ const selectDayFn = (data: DayInfo) => {
  * @description 设置日历组件的整体高度
  */
 const setCalendarHeight = () => {
-  calendarRef.value?.style.setProperty("--height", `${props.height}px`);
+  props.height &&
+    calendarRef.value?.style.setProperty("--height", `${props.height}px`);
 };
 onMounted(() => {
   setCalendarHeight();

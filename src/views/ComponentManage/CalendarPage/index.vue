@@ -3,7 +3,7 @@
     <el-button type="primary" @click="changeMonth(1)">上月</el-button>
     <el-button type="primary" @click="changeMonth(-1)">下月</el-button>
     <el-button type="primary" @click="period = !period">点/段</el-button>
-
+    <span>{{ period ? "段" : "点" }} </span>
     <ExCalendar
       ref="calendarRef"
       v-model="value"
@@ -17,16 +17,6 @@
       @select="selectFn"
     >
       <template v-slot="{ data }">
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
-        <div>{{ data.day }}</div>
         <div>{{ data.day }}</div>
       </template>
     </ExCalendar>
