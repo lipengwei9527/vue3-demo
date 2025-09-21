@@ -4,14 +4,20 @@
       {{ disabled ? "禁用" : "启用" }}</el-button
     >
     <ExContextMenu :disabled="disabled" :list="list[0]" @select="selectFn">
-      <div class="box box1">
-        <ExContextMenu @select="selectFn" :list="list[1]">
-          <div class="box box2"></div>
-        </ExContextMenu>
-      </div>
+      <template #default="{ open }">
+        <div @contextmenu="open" class="box box1">
+          <ExContextMenu @select="selectFn" :list="list[1]">
+            <template #default="{ open }">
+              <div @contextmenu="open" class="box box2"></div>
+            </template>
+          </ExContextMenu>
+        </div>
+      </template>
     </ExContextMenu>
     <ExContextMenu @beforeClose="beforeCloseFn" :list="list[2]">
-      <div class="box box3"></div>
+      <template #default="{ open }">
+        <div @contextmenu="open" class="box box3"></div>
+      </template>
     </ExContextMenu>
   </div>
 </template>

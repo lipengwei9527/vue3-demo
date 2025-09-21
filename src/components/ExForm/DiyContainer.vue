@@ -6,32 +6,26 @@
       :key="item.id"
       @click.stop="clickContainerFn(item)"
     >
-      <ExContextMenu
-        class="full-line"
-        @select="selectContextFn(item)"
-        :list="[{ label: item.typeName + item.id, value: item.type }]"
-      >
-        <template v-if="item.type == 'DiyContainer'">
-          <h3 class="title">{{ item.label }}</h3>
-        </template>
-        <template v-if="item.type != 'DiyContainer'">
-          <el-form-item
-            :class="{ 'full-line': item.isFullLine }"
-            :label="item.label"
-            :prop="item.prop"
-          >
-            <component :is="item.type" :config="item.compCfg"></component>
-          </el-form-item>
-        </template>
-        <template v-if="item.type == 'DiyContainer'">
-          <DiyContainer
-            v-model:config="item.config"
-            @click="clickContainerFn"
-            @select="selectContextFn"
-          >
-          </DiyContainer>
-        </template>
-      </ExContextMenu>
+      <template v-if="item.type == 'DiyContainer'">
+        <h3 class="title">{{ item.label }}</h3>
+      </template>
+      <template v-if="item.type != 'DiyContainer'">
+        <el-form-item
+          :class="{ 'full-line': item.isFullLine }"
+          :label="item.label"
+          :prop="item.prop"
+        >
+          <component :is="item.type" :config="item.compCfg"></component>
+        </el-form-item>
+      </template>
+      <template v-if="item.type == 'DiyContainer'">
+        <DiyContainer
+          v-model:config="item.config"
+          @click="clickContainerFn"
+          @select="selectContextFn"
+        >
+        </DiyContainer>
+      </template>
     </div>
   </div>
 </template>

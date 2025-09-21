@@ -1,36 +1,34 @@
 <template>
-  <div class="ex-context-menu" ref="targetRef">
-    <slot ref="slotRef"> </slot>
-    <Teleport to="body">
-      <Transition
-        @before-enter="handleBeforeEnter"
-        @enter="handleEnter"
-        @after-enter="handleAfterEnter"
-        name="fade"
-        mode="out-in"
+  <slot :open="openContextMenu"> </slot>
+  <Teleport to="body">
+    <Transition
+      @before-enter="handleBeforeEnter"
+      @enter="handleEnter"
+      @after-enter="handleAfterEnter"
+      name="fade"
+      mode="out-in"
+    >
+      <div
+        v-size-ob="handleSizeChange"
+        v-if="modelShow"
+        class="menu"
+        :style="{
+          width: pos.width,
+        }"
       >
-        <div
-          v-size-ob="handleSizeChange"
-          v-if="modelShow"
-          class="menu"
-          :style="{
-            width: pos.width,
-          }"
-        >
-          <div class="menu-item" v-for="item in list">
-            <div
-              class="item-content"
-              :class="{ ban: item.disabled }"
-              @click="selectFn(item)"
-            >
-              {{ item.label }}
-            </div>
-            <div :class="{ 'item-border': item.bottomBorder }"></div>
+        <div class="menu-item" v-for="item in list">
+          <div
+            class="item-content"
+            :class="{ ban: item.disabled }"
+            @click="selectFn(item)"
+          >
+            {{ item.label }}
           </div>
+          <div :class="{ 'item-border': item.bottomBorder }"></div>
         </div>
-      </Transition>
-    </Teleport>
-  </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script name="ExContentMenu" setup lang="ts">
@@ -116,7 +114,7 @@ let mouseY = ref(0);
  * @description 打开菜单
  * @param
  */
-const openContextMenu = (e: PointerEvent) => {
+const openContextMenu = (e: MouseEvent) => {
   if (props.disabled) return;
   e.preventDefault();
   e.stopPropagation();
@@ -155,13 +153,10 @@ const pos = computed(() => {
     posY: posY + "px",
   };
 });
-const targetRef = ref();
+// const targetRef = ref();
 
-onMounted(() => {
-  targetRef.value?.addEventListener("contextmenu", openContextMenu);
-});
+onMounted(() => {});
 onBeforeUnmount(() => {
-  targetRef.value?.removeEventListener("contextmenu", openContextMenu);
   closeFn();
 });
 // 菜单高度
