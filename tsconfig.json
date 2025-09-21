@@ -30,6 +30,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -37,8 +38,8 @@
     "noFallthroughCasesInSwitch": true,
   },
   "include": [
-    "src/**/*.ts",
     "src/**/*.d.ts",
+    "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "env.d.ts",

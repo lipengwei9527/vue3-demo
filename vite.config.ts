@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
-import path, { resolve } from "path";
+import vueJsx from "@vitejs/plugin-vue-jsx";
+import { resolve } from "path";
 // ts类型
 import type { UserConfig, ConfigEnv } from "vite";
 // 按需引入element-plus
@@ -34,6 +35,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     base: env.VITE_BASE_PATH,
     plugins: [
       vue(),
+      vueJsx(),
       AutoImport({
         resolvers: [ElementPlusResolver()],
       }),

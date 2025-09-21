@@ -1,6 +1,6 @@
 <template>
   <div class="ex-context-menu" ref="targetRef">
-    <slot></slot>
+    <slot ref="slotRef"> </slot>
     <Teleport to="body">
       <Transition
         @before-enter="handleBeforeEnter"
@@ -15,23 +15,24 @@
           class="menu"
           :style="{
             width: pos.width,
-            left: pos.posX,
-            top: pos.posY,
           }"
         >
-          <div
-            class="item"
-            :class="{ ban: item.disabled }"
-            v-for="item in list"
-            @click="selectFn(item)"
-          >
-            {{ item.label }}
+          <div class="menu-item" v-for="item in list">
+            <div
+              class="item-content"
+              :class="{ ban: item.disabled }"
+              @click="selectFn(item)"
+            >
+              {{ item.label }}
+            </div>
+            <div :class="{ 'item-border': item.bottomBorder }"></div>
           </div>
         </div>
       </Transition>
     </Teleport>
   </div>
 </template>
+
 <script name="ExContentMenu" setup lang="ts">
 import {
   defineProps,
@@ -44,11 +45,8 @@ import {
 import useViewPort from "@/hooks/useViewPort";
 import { DoneFn } from "@/types/elementPlus";
 import { allProps } from "@/utils/guard";
-type ContextMenuItem = {
-  label: string;
-  value: Record<string, any> | string | number;
-  disabled?: boolean;
-};
+import { ExContextMenuItem } from "@/types/components";
+
 const props = defineProps({
   // 是否禁用菜单
   disabled: {
@@ -56,7 +54,7 @@ const props = defineProps({
   },
   // 菜单数据
   list: {
-    type: Array as PropType<ContextMenuItem[]>,
+    type: Array as PropType<ExContextMenuItem[]>,
   },
   // 菜单宽度
   width: {
@@ -65,9 +63,9 @@ const props = defineProps({
   },
 });
 const emits = defineEmits<{
-  (e: "select", value: ContextMenuItem): void;
+  (e: "select", value: ExContextMenuItem): void;
   (e: "close", value: boolean): void;
-  (e: "beforeClose", item: ContextMenuItem, value: DoneFn): void;
+  (e: "beforeClose", item: ExContextMenuItem, value: DoneFn): void;
 }>();
 const modelShow = ref(false);
 
@@ -87,7 +85,7 @@ const beforeFn = (hidden?: boolean) => {
  * @description 点击菜单项
  * @param item 菜单项数据
  */
-const selectFn = (item: ContextMenuItem) => {
+const selectFn = (item: ExContextMenuItem) => {
   if (item.disabled) return;
   // 点击左键菜单外的其他部分
   if (!item) {
@@ -162,7 +160,6 @@ const targetRef = ref();
 onMounted(() => {
   targetRef.value?.addEventListener("contextmenu", openContextMenu);
 });
-
 onBeforeUnmount(() => {
   targetRef.value?.removeEventListener("contextmenu", openContextMenu);
   closeFn();
@@ -179,6 +176,7 @@ function handleSizeChange(rect: Rect) {
 function handleBeforeEnter(el: Element) {
   if (!(el instanceof HTMLElement)) return;
   el.style.height = "0";
+  // el.style.transition = "1s";
 }
 // 元素加入到页面之后
 function handleEnter(el: Element) {
@@ -186,11 +184,13 @@ function handleEnter(el: Element) {
   el.style.height = "auto";
   const height = el.clientHeight;
   h.value = height;
-  // el.style.height = "0";
-  // requestAnimationFrame(() => {
-  //   el.style.height = height + "px";
-  //   el.style.transition = "0.3s";
-  // });
+  el.style.height = "0";
+  el.style.left = pos.value.posX;
+  el.style.top = pos.value.posY;
+  requestAnimationFrame(() => {
+    el.style.height = height + "px";
+    el.style.transition = "0.3s";
+  });
 }
 // 离开之后
 function handleAfterEnter(el: any) {
@@ -198,34 +198,39 @@ function handleAfterEnter(el: any) {
 }
 </script>
 <style lang="scss" scoped>
-.ex-context-menu {
-  display: inline-block;
-}
+// .ex-context-menu {
+//   display: inline-block;
+// }
+$bgColor: #f1f1f1;
 .menu {
   position: fixed;
   z-index: 100;
   background-color: #fff;
   border: 1px solid #c9c6c6;
-  padding: 5px;
+  padding: 5px 0;
   border-radius: 7px;
   box-shadow: 1px 3px 10px -2px rgb(163, 164, 167);
   overflow: hidden;
   box-sizing: border-box;
-  .item {
+  .item-content {
     cursor: pointer;
     padding: 3px;
-    border-radius: 3px;
     user-select: none;
     overflow: hidden;
+    margin: 3px 0;
     &:hover {
-      background-color: #c9ccd0;
+      background-color: $bgColor;
       opacity: 0.8;
     }
   }
   .ban {
-    background-color: #c9ccd0;
+    background-color: $bgColor;
     opacity: 0.8;
     cursor: not-allowed;
+  }
+  .item-border {
+    margin: 5px 0;
+    border-bottom: 1px solid #74b9ff;
   }
 }
 </style>

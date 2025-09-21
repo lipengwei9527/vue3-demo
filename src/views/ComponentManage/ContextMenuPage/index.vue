@@ -17,6 +17,7 @@
 </template>
 
 <script setup name="ContextMenuPage" lang="ts">
+import { ExContextMenuItem } from "@/types/components";
 import { ref } from "vue";
 const show = ref(false);
 const disabled = ref(false);
@@ -28,8 +29,7 @@ const selectFn = (item: any) => {
   menu.value = item;
   console.log("选择了菜单", item);
 };
-type Value = { label: string; value: string; disabled?: boolean };
-let list: Value[][] = [];
+let list: ExContextMenuItem[][] = [];
 let menu = ref([]);
 for (let key = 0; key < 3; key++) {
   list[key] = [];
@@ -39,7 +39,12 @@ for (let key = 0; key < 3; key++) {
       label: "菜单" + (String(key) + i),
       value: String(key) + i,
     };
-    if (i == 4) list[key][i].disabled = true;
+    if (i == 4) {
+      list[key][i].disabled = true;
+    }
+    if (i == 5) {
+      list[key][i].bottomBorder = true;
+    }
   }
 }
 </script>

@@ -96,7 +96,7 @@ export interface DiyContainerType {
 export type ExFormConfigType = ReadonlyToPartial<FormProps> & {
   id: number;
   name: string; //表单配置名称
-  type:'DiyForm',
+  type: "DiyForm";
   mode: FormModeType;
   containerCfg?: DiyContainerType[];
 };
@@ -106,3 +106,10 @@ type ReadonlyToPartial<T> = {
   -readonly [P in keyof T]?: T[P];
 };
 export type FormModeType = "create" | "edit" | "read";
+// 左键菜单菜单项
+type ExContextMenuItem = {
+  label: string; //菜单名称
+  value: Record<string, any> | string | number;
+  disabled?: boolean; //是否禁用菜单项
+  bottomBorder?: boolean; //下边框线
+} & Record<string, any>;
