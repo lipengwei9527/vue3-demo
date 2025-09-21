@@ -1,5 +1,5 @@
 <template>
-  <div class="css-theme-page">
+  <div class="page">
     <el-select v-model="theme">
       <el-option
         :value="item.value"

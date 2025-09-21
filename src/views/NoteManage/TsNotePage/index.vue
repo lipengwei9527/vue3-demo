@@ -1,5 +1,5 @@
 <template>
-  <div class="ts-note-page">
+  <div class="page">
     ts笔记
     <!-- <div class="round round-one"></div>
     <div class="round round-two"></div>

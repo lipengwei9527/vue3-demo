@@ -12,10 +12,14 @@ import { visualizer } from "rollup-plugin-visualizer";
 //setup语法糖写name命名组件名称
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import { createHtmlPlugin } from "vite-plugin-html";
+// 自定义的vite配置项
 import proxyConfig from "./config/proxy";
-import { title } from "process";
+import { htmlPluginConfig } from "./config/viteAssist";
 // 把后缀为以下后缀的文件放到css文件夹里
-const cssExts = ["ttf", "woff", "woff2"];
+const exts = {
+  css: ["ttf", "woff", "woff2", "css"],
+  img: ["png", "jpg"],
+};
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
   // 加载的.env文件中的变量
   const env = loadEnv(mode, process.cwd());
@@ -45,32 +49,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       }),
       visualizer(),
       vueSetupExtend(),
-      createHtmlPlugin({
-        inject: {
-          data: {
-            title: "vite+vue3+ts项目",
-          },
-          tags: [
-            {
-              injectTo: "body",
-              tag: "script",
-              attrs: {
-                src: "/src/utils/update.ts",
-                type: "module",
-              },
-            },
-            {
-              injectTo: "head",
-              tag: "link",
-              attrs: {
-                rel: "icon",
-                type: "image/svg+xml",
-                href: "/vite.svg",
-              },
-            },
-          ],
-        },
-      }),
+      createHtmlPlugin(htmlPluginConfig),
     ],
     css: {
       preprocessorOptions: {
@@ -82,30 +61,63 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     build: {
       sourcemap: true,
       rollupOptions: {
-        // input: {},
         output: {
-          // 动态导入的文件名
+          // 入口chunk命名
           entryFileNames(chunkInfo) {
-            return "js/[name].[hash].js";
-          },
-          // 动态导入的文件名
-          chunkFileNames(chunkInfo) {
-            return "js/[name].[hash].js";
-          },
-          // 静态资源文件名
-          assetFileNames(assentInfo) {
-            let paths = assentInfo.name?.split(".");
-            if (paths && cssExts.includes(paths[paths.length - 1])) {
-              return "css/[name].[hash].[ext]";
+            const { name, facadeModuleId } = chunkInfo;
+            let list = facadeModuleId?.split("/");
+            const fmId = list && list[list.length - 1];
+            if (fmId == "index.html" && name == "index") {
+              return "js/entry.[hash].js";
             }
-            return "[ext]/[name].[hash].[ext]";
+            return "js/[name].[hash].js";
+          },
+          // 代码分割产生的chunk命名
+          chunkFileNames(chunkInfo) {
+            let { facadeModuleId: fmId } = chunkInfo;
+            //  如果文件名是index.vue就获取上层文件夹的名字
+            if (fmId && fmId.includes("index.vue")) {
+              let list = fmId.split("/");
+              let name = list[list.length - 2];
+              return `js/${name}.[hash].js`;
+            }
+            return "js/[name].[hash].js";
+          },
+          // 静态资源命名
+          assetFileNames(assentInfo) {
+            let { name, originalFileName } = assentInfo;
+            let ext = "";
+            let paths = name?.split(".");
+            if (paths) ext = paths[paths.length - 1];
+            name = name && name.split(".")[0];
+            const orgFName = originalFileName;
+            // 如果文件名是index就获取上层文件夹的名字
+            if (name && name == "index" && orgFName) {
+              const list = orgFName.split("/");
+              name = list[list.length - 2] || name;
+            }
+            // name: 'index.css',
+            // originalFileName: 'index.html',
+            // 该css文件不符合上述处理,单独命名
+            if (name == "index" && originalFileName == "index.html") {
+              name = "rootCss";
+            }
+            if (exts.css.includes(ext)) return `css/${name}.[hash].[ext]`;
+            if (exts.img.includes(ext)) return `img/${name}.[hash].[ext]`;
+            return "js/[name].[hash].[ext]";
           },
           // 自定义分包
           manualChunks(id, { getModuleInfo, getModuleIds }) {
             if (id.includes("node_modules")) {
-              return "vendor-" + id.split("/")[5].split("@")[0];
+              let list = id.split("/node_modules/");
+              // 包名
+              list = list[1].replace(".pnpm/", "").split("@");
+              const name = list[0] ? list[0] : list[1];
+              if (!name) {
+                console.log("list", id + "\n" + list);
+              }
+              return "vendor-" + name;
             }
-            //   // return createNameThroughPath(id);
           },
         },
       },
