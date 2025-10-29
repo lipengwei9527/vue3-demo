@@ -1,1 +1,1 @@
-console.log("updateScript");
+// console.log("updateScript");

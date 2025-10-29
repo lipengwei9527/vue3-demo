@@ -1,44 +1,34 @@
 <template>
-  <slot :open="openContextMenu"> </slot>
-  <Teleport to="body">
-    <Transition
-      @before-enter="handleBeforeEnter"
-      @enter="handleEnter"
-      @after-enter="handleAfterEnter"
-      name="fade"
-      mode="out-in"
+  <slot></slot>
+  <teleport to="body" v-if="modelShow">
+    <div
+      v-if="modelShow"
+      class="menu"
+      :style="{
+        width: pos.width,
+        top: pos.posY,
+        left: pos.posX,
+      }"
     >
-      <div
-        v-size-ob="handleSizeChange"
-        v-if="modelShow"
-        class="menu"
-        :style="{
-          width: pos.width,
-        }"
-      >
-        <div class="menu-item" v-for="item in list">
-          <div
-            class="item-content"
-            :class="{ ban: item.disabled }"
-            @click="selectFn(item)"
-          >
-            {{ item.label }}
-          </div>
-          <div :class="{ 'item-border': item.bottomBorder }"></div>
+      <div v-for="item in list">
+        <div class="menu-item" @click="selectFn(item)">
+          {{ item.label }}
         </div>
       </div>
-    </Transition>
-  </Teleport>
+    </div>
+  </teleport>
 </template>
-
-<script name="ExContentMenu" setup lang="ts">
+<script name="contextMenu" setup lang="ts">
 import { PropType, ref, computed, onBeforeUnmount, onMounted } from "vue";
 import useViewPort from "@/hooks/useViewPort";
 import { DoneFn } from "@/types/elementPlus";
 import { allProps } from "@/utils/guard";
 import { ExContextMenuItem } from "@/types/components";
-
 const props = defineProps({
+  // 挂载左键菜单的dom
+  el: {
+    type: HTMLElement as PropType<HTMLElement>,
+  },
   // 是否禁用菜单
   disabled: {
     type: Boolean,
@@ -58,11 +48,17 @@ const emits = defineEmits<{
   (e: "close", value: boolean): void;
   (e: "beforeClose", item: ExContextMenuItem, value: DoneFn): void;
 }>();
+// 原dom上绑定的左键菜单事件
+// let oldContextMenu = null;
 const modelShow = ref(false);
-
 const eventRes = allProps(["onBeforeClose", "onSelect"]);
 // 触发一次beforeClose事件flag置为true，调用一次beforeFn置为false
 let isHidden = ref<boolean | undefined>(false);
+let mouseX = ref(0);
+let mouseY = ref(0);
+// 菜单高度
+let h = ref(0);
+let w = ref(0);
 /**
  * @description beforeClose事件传递的函数
  * @param hidden
@@ -101,13 +97,14 @@ const closeFn = () => {
   removeEventListener("contextmenu", closeFn, true);
   modelShow.value = false;
 };
-let mouseX = ref(0);
-let mouseY = ref(0);
+
 /**
  * @description 打开菜单
  * @param
  */
 const openContextMenu = (e: MouseEvent) => {
+  // oldContextMenu && oldContextMenu();
+  // 禁用左键菜单
   if (props.disabled) return;
   e.preventDefault();
   e.stopPropagation();
@@ -146,49 +143,23 @@ const pos = computed(() => {
     posY: posY + "px",
   };
 });
-// const targetRef = ref();
+const targetRef = ref(props.el);
 
-onMounted(() => {});
+onMounted(() => {
+  // oldContextMenu = targetRef.value?.oncontextmenu;
+  targetRef.value?.addEventListener("contextmenu", openContextMenu);
+});
 onBeforeUnmount(() => {
   closeFn();
 });
-// 菜单高度
-let h = ref(0);
-let w = ref(0);
+
 function handleSizeChange(rect: Rect) {
   const { offsetWidth, offsetHeight } = rect;
   w.value = offsetWidth;
   h.value = offsetHeight;
 }
-// 元素加入到页面之前
-function handleBeforeEnter(el: Element) {
-  if (!(el instanceof HTMLElement)) return;
-  el.style.height = "0";
-  // el.style.transition = "1s";
-}
-// 元素加入到页面之后
-function handleEnter(el: Element) {
-  if (!(el instanceof HTMLElement)) return;
-  el.style.height = "auto";
-  const height = el.clientHeight;
-  h.value = height;
-  el.style.height = "0";
-  el.style.left = pos.value.posX;
-  el.style.top = pos.value.posY;
-  requestAnimationFrame(() => {
-    el.style.height = height + "px";
-    el.style.transition = "0.3s";
-  });
-}
-// 离开之后
-function handleAfterEnter(el: any) {
-  el.style.transition = "none";
-}
 </script>
 <style lang="scss" scoped>
-// .ex-context-menu {
-//   display: inline-block;
-// }
 $bgColor: #f1f1f1;
 .menu {
   position: fixed;
@@ -200,9 +171,9 @@ $bgColor: #f1f1f1;
   box-shadow: 1px 3px 10px -2px rgb(163, 164, 167);
   overflow: hidden;
   box-sizing: border-box;
-  .item-content {
+  .menu-item {
     cursor: pointer;
-    padding: 3px;
+    padding: 3px 5px;
     user-select: none;
     overflow: hidden;
     margin: 3px 0;

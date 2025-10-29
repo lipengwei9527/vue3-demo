@@ -5,15 +5,6 @@ import {
 } from "@/types/components";
 import { AutoId } from "@/utils/general";
 export const autoId = new AutoId();
-// export type CompsCfg = {
-//   DiyContainer: () => DiyContainerType;
-//   DiyInput: () => DiyFormItemType;
-//   DiySelect: () => DiyFormItemType;
-//   DiyDatePicker: () => DiyFormItemType;
-// };
-// type CompsCfgType = {
-//   [P in UnionCtrlType]: () => DiyContainerType | DiyFormItemType;
-// };
 /**
  * @description 获取初始化的控件信息
  * @param compName 控件名称
@@ -79,7 +70,8 @@ function getInputCfg(): DiyFormItemType {
     type: "DiyInput",
     typeName: "输入框",
     compCfg: {
-      value: "",
+      modelValue: "",
+      placeholder: "请输入内容",
     },
   };
 }
@@ -92,7 +84,7 @@ function getSelectCfg(): DiyFormItemType {
     type: "DiySelect",
     typeName: "下拉列表",
     compCfg: {
-      value: "",
+      modelValue: "",
     },
   };
 }
@@ -103,7 +95,7 @@ function getDiyDatePickerCfg(): DiyFormItemType {
     type: "DiyDatePicker",
     typeName: "日期",
     compCfg: {
-      value: "",
+      modelValue: "",
     },
   };
 }

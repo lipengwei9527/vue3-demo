@@ -1,10 +1,4 @@
-import type {
-  InputProps,
-  ElSelectV2,
-  ElSelect,
-  FormItemProps,
-  FormProps,
-} from "element-plus";
+import type { ElSelect, ElForm, ElFormItem, ElInput } from "element-plus";
 /**
  * @description 日期组件类型信息
  */
@@ -14,29 +8,6 @@ export interface DayInfo {
   type: string; //pre-上月,cur-当月,next-下月
   disabled: boolean; // 该日是否禁止选择
 }
-
-/***************************************************************************************************/
-/**
- * @description 侧边栏控件类型
- */
-// export type CtrlType = DiyContainerType | DiyFormItemType;
-export type CtrlType = {
-  id: string | number;
-  label: string;
-  type: UnionCtrlType;
-  value?: string;
-  disabled?: boolean;
-  required?: boolean;
-};
-/**
- * @description 侧边栏一级标题及其包含的控件类型
- */
-export type BaseCtrlsType = {
-  id: string | number;
-  title: string;
-  type: "ctrlContainer";
-  ctrls: CtrlType[];
-};
 
 /***************************************************************************************************/
 
@@ -50,16 +21,8 @@ export type UnionCtrlType =
   | "DiySelect"
   | "DiyDatePicker";
 
-/**
- * @description 除了容器控件，所有表单控件都有的基础类型
- */
-export interface DiyCtrlType {
-  value: any;
-  // disabled?: boolean;
-}
-// export type DiyInputType = ReadonlyToPartial<InputProps>;
-export type DiyInputType = DiyCtrlType;
-export type DiySelectType = DiyCtrlType;
+export type DiyInputType = InstanceType<typeof ElInput>["$props"];
+export type DiySelectType = InstanceType<typeof ElSelect>["$props"];
 
 /**
  *  @description 表单中自定义组件的类型
@@ -77,7 +40,7 @@ export type DiyFormItemType = {
   rules?: Array;
   isFullLine?: boolean; //是否占满一行
   compCfg: CompCfgType; //
-};
+} & InstanceType<typeof ElFormItem>["$props"];
 /**
  * @description 容器控件类型
  */
@@ -93,7 +56,7 @@ export interface DiyContainerType {
 /**
  * @description 表单配置的全部类型
  */
-export type ExFormConfigType = ReadonlyToPartial<FormProps> & {
+export type ExFormConfigType = InstanceType<typeof ElForm>["$props"] & {
   id: number;
   name: string; //表单配置名称
   type: "DiyForm";
@@ -106,6 +69,12 @@ type ReadonlyToPartial<T> = {
   -readonly [P in keyof T]?: T[P];
 };
 export type FormModeType = "create" | "edit" | "read";
+/**
+ * @description 左键菜单prop传递的属性
+ */
+type ExMenuContextProp = {
+  list: ExContextMenuItem[];
+};
 // 左键菜单菜单项
 type ExContextMenuItem = {
   label: string; //菜单名称

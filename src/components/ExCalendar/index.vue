@@ -31,7 +31,6 @@ import {
   useTemplateRef,
   watch,
   onMounted,
-  defineExpose,
 } from "vue";
 import { useVModel } from "@vueuse/core";
 import { formateDate } from "@/utils/date";
@@ -89,9 +88,6 @@ const props = defineProps({
 const emits = defineEmits(["select", "update:modelValue"]);
 let modelValue = useVModel(props, "modelValue", emits);
 const calendarRef = useTemplateRef("calendar");
-// const theadRef = useTemplateRef("head");
-// const headRef = useTemplateRef("thead");
-// const tbodyRef = useTemplateRef("tbody");
 const weeks = ["一", "二", "三", "四", "五", "六", "日"];
 // 通过点击选中的日期
 const selData = reactive<(DayInfo | undefined)[]>([]);

@@ -1,5 +1,6 @@
 import axios from "axios";
 const xhr = axios.create({
+  baseURL: "/api",
   timeout: 1000 * 10,
 });
 xhr.interceptors.request.use(

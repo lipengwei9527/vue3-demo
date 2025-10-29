@@ -83,7 +83,7 @@ export function getCache(key: string) {
  * @description 大驼峰、小驼峰转短横线命名法
  */
 export function toKebabCase(str: string) {
-  str = str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+  str = str.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
   console.log("命名", str);
   return str;
 }

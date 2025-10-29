@@ -1,5 +1,10 @@
 import { getCurrentInstance } from "vue";
 // type AllPropItem = { name: string; result: boolean };
+/**
+ * @description 判断父组件中是否写了指定的事件名
+ * @param eventName 指定的事件名
+ * @returns
+ */
 export function allProps(eventName: string | string[]) {
   if (typeof eventName == "string") eventName = [eventName];
   const ins = getCurrentInstance();

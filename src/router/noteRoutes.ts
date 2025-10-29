@@ -11,11 +11,11 @@ const noteRoutes: CustomRouteRecordRaw = {
       component: () => import("@/views/NoteManage/TsNotePage/index.vue"),
       children: [
         {
-          name: "note2",
-          path: "/note2",
-          labelName: "笔记2",
+          name: "canvas",
+          path: "/canvas",
+          labelName: "canvas",
           component: () =>
-            import("@/views/NoteManage/TsNotePage/pages/note2.vue"),
+            import("@/views/NoteManage/TsNotePage/pages/canvas.vue"),
         },
       ],
     },
