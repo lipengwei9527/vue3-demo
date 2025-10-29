@@ -18,7 +18,6 @@
 
 <script lang="ts" setup>
 import { ExContextMenuItem } from "@/types/components";
-import { ref } from "vue";
 let list: ExContextMenuItem[][] = [];
 for (let key = 0; key < 3; key++) {
   list[key] = [];

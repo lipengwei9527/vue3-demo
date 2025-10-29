@@ -4,7 +4,7 @@
     <div class="context unchange">{{ modelCfg.id }}</div>
     <div class="label">字段:</div>
     <div class="context">
-      <el-input v-model="modelCfg.compCfg.value"></el-input>
+      <!-- <el-input v-model="modelCfg.compCfg.value"></el-input> -->
     </div>
     <div class="label">标签名:</div>
     <div class="context"><el-input v-model="modelCfg.label"></el-input></div>

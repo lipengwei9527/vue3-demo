@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import type { ExCreateFormState } from "@/types/store";
+// import type { ExCreateFormState } from "@/types/store";
 export const useExCreateFormStore = defineStore("exCreateForm", {
-  state: (): ExCreateFormState => ({
+  state: () => ({
     formData: {}, //
     baseCtrls: [],
   }),

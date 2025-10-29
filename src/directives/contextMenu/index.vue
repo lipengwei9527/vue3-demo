@@ -153,11 +153,11 @@ onBeforeUnmount(() => {
   closeFn();
 });
 
-function handleSizeChange(rect: Rect) {
-  const { offsetWidth, offsetHeight } = rect;
-  w.value = offsetWidth;
-  h.value = offsetHeight;
-}
+// function handleSizeChange(rect: Rect) {
+//   const { offsetWidth, offsetHeight } = rect;
+//   w.value = offsetWidth;
+//   h.value = offsetHeight;
+// }
 </script>
 <style lang="scss" scoped>
 $bgColor: #f1f1f1;

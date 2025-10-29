@@ -7,11 +7,6 @@
 <script name="FormPage" setup lang="ts">
 import { CreateTabPage } from "@/utils/dealRoute";
 import { createTableConfig } from "@/components/ExTable/tableConfig";
-import { ElInput } from "element-plus";
-type A = InstanceType<typeof ElInput>["$props"];
-const a: A = {
-  modelValue: "",
-};
 const tabPage = new CreateTabPage("formConfig");
 const tableConfig = createTableConfig({
   height: 550,
