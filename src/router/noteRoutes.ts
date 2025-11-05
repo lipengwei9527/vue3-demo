@@ -25,6 +25,12 @@ const noteRoutes: CustomRouteRecordRaw = {
       labelName: "主题页",
       component: () => import("@/views/NoteManage/CssThemePage/index.vue"),
     },
+    {
+      name: "UpstashPage",
+      path: "/UpstashPage",
+      labelName: "数据库调用",
+      component: () => import("@/views/NoteManage/UpstashPage/index.vue"),
+    },
   ],
 };
 export default noteRoutes;

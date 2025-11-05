@@ -43,24 +43,29 @@ export function debounce<T extends Func>(
   } as T;
 }
 type FieldType =
-  | "number"
   | "string"
+  | "number"
+  | "boolean"
+  | "symbol"
   | "undefined"
   | "null"
-  | "object"
-  | "array"
   | "function"
+  | "array"
+  | "object"
   | "date"
   | "regexp"
   | "bigint"
-  | "symbol";
+  | "promise"
+  | "map"
+  | "set"
+  | "bigInt";
 /**
  * @name 变量类型
  * @description: 检测变量的类型
  * @param {any} field  要检测的类型
  * @return {FieldType}
  */
-export function varType(field: any): FieldType {
+export function varType(field: unknown): FieldType {
   return Object.prototype.toString
     .call(field)
     .slice(8, -1)

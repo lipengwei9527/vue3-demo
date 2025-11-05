@@ -1,13 +1,6 @@
 <template>
   <div class="page">
-    <!-- <ExDialog
-      v-model:visiable="visiable"
-      @beforeClose="dialogBeforeCloseFn"
-    ></ExDialog>
-    <el-button @click="visiable = true">打开弹窗</el-button>
-    <el-button @click="visiable = false">关闭弹窗</el-button> -->
-    <!-- <el-button @click="getApi(1)">测试</el-button>
-    <el-button @click="getApi(2)">测试</el-button> -->
+    <el-button @click="num++">测试</el-button>
     <div class="container">
       <div class="box box1" v-contextMenu="list[0]"></div>
       <div class="box box2" v-contextMenu="list[1]"></div>
@@ -15,14 +8,17 @@
     </div>
   </div>
 </template>
-
 <script lang="ts" setup>
+import { ref } from "vue";
+
 import { ExContextMenuItem } from "@/types/components";
+let num = ref(0);
 let list: ExContextMenuItem[][] = [];
 for (let key = 0; key < 3; key++) {
   list[key] = [];
   for (let i = 0; i < 10; i++) {
     // list[key][i] = {};
+    const a = "10";
     list[key][i] = {
       label: "菜单" + (String(key) + i),
       value: String(key) + i,

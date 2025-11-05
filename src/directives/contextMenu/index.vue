@@ -9,6 +9,7 @@
         top: pos.posY,
         left: pos.posX,
       }"
+      v-size-ob="handleSizeChange"
     >
       <div v-for="item in list">
         <div class="menu-item" @click="selectFn(item)">
@@ -24,6 +25,8 @@ import useViewPort from "@/hooks/useViewPort";
 import { DoneFn } from "@/types/elementPlus";
 import { allProps } from "@/utils/guard";
 import { ExContextMenuItem } from "@/types/components";
+// 自定义指令
+import vSizeOb from "../sizeOb";
 const props = defineProps({
   // 挂载左键菜单的dom
   el: {
@@ -32,6 +35,9 @@ const props = defineProps({
   // 是否禁用菜单
   disabled: {
     type: Boolean,
+  },
+  num: {
+    // type: Number,
   },
   // 菜单数据
   list: {
@@ -48,6 +54,8 @@ const emits = defineEmits<{
   (e: "close", value: boolean): void;
   (e: "beforeClose", item: ExContextMenuItem, value: DoneFn): void;
 }>();
+// 绑定左键菜单的dom
+const targetRef = ref(props.el);
 // 原dom上绑定的左键菜单事件
 // let oldContextMenu = null;
 const modelShow = ref(false);
@@ -56,9 +64,9 @@ const eventRes = allProps(["onBeforeClose", "onSelect"]);
 let isHidden = ref<boolean | undefined>(false);
 let mouseX = ref(0);
 let mouseY = ref(0);
-// 菜单高度
-let h = ref(0);
+// 菜单宽高
 let w = ref(0);
+let h = ref(0);
 /**
  * @description beforeClose事件传递的函数
  * @param hidden
@@ -143,7 +151,6 @@ const pos = computed(() => {
     posY: posY + "px",
   };
 });
-const targetRef = ref(props.el);
 
 onMounted(() => {
   // oldContextMenu = targetRef.value?.oncontextmenu;
@@ -153,11 +160,11 @@ onBeforeUnmount(() => {
   closeFn();
 });
 
-// function handleSizeChange(rect: Rect) {
-//   const { offsetWidth, offsetHeight } = rect;
-//   w.value = offsetWidth;
-//   h.value = offsetHeight;
-// }
+function handleSizeChange(rect: Rect) {
+  const { offsetWidth, offsetHeight } = rect;
+  w.value = offsetWidth;
+  h.value = offsetHeight;
+}
 </script>
 <style lang="scss" scoped>
 $bgColor: #f1f1f1;

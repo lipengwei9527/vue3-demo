@@ -2,18 +2,26 @@
   <div class="page">
     <el-button type="primary" @click="changeMonth(1)">上月</el-button>
     <el-button type="primary" @click="changeMonth(-1)">下月</el-button>
-    <el-button type="primary" @click="period = !period">点/段</el-button>
-    <span>{{ period ? "段" : "点" }} </span>
+    <el-button
+      type="primary"
+      @click="mode = mode == 'month' ? 'week' : 'month'"
+    >
+      {{ mode }}模式
+    </el-button>
+    <el-button type="primary" @click="period = !period">
+      时间{{ period ? "段" : "点" }}
+    </el-button>
     <ExCalendar
       ref="calendarRef"
-      v-model="value"
-      mode="month"
+      v-model="time"
+      :mode="mode"
       :period="period"
       :height="570"
-      :cellHeight="24"
-      :start-time="'2025-09-01'"
-      :ban-time="['2025-09-10']"
-      :end-time="'2025-09-20'"
+      :cellHeight="10"
+      :startTime="pointTime + '-03'"
+      :banTime="[pointTime + '-08', pointTime + '-18']"
+      :endTime="pointTime + '-20'"
+      :firstDayOfWeek="1"
       @select="selectFn"
     >
       <template v-slot="{ data }">
@@ -24,15 +32,22 @@
 </template>
 <script name="CalendarPage" setup lang="ts">
 import { DayInfo } from "@/types/components";
-import { ref, useTemplateRef } from "vue";
-let value = ref(new Date());
+import { computed, ref, useTemplateRef } from "vue";
+let time = ref(new Date());
+let mode = ref<"week" | "month">("month");
+let pointTime = computed(() => {
+  let t = new Date(time.value);
+  let year = t.getFullYear();
+  let month = t.getMonth() + 1;
+  return `${year}-${month}`;
+});
 function selectFn(data: DayInfo[]) {
   console.log(`output->data`, data);
 }
 let period = ref(true);
 const calendarRef = useTemplateRef("calendarRef");
 const changeMonth = (value: number) => {
-  calendarRef.value?.changeMonth(value);
+  calendarRef.value?.changeCalendar(value);
 };
 </script>
 <style lang="scss" scoped>

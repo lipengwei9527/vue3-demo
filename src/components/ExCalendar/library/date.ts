@@ -1,5 +1,6 @@
 import { DayInfo } from "@/types/components";
 import moment from "moment";
+export type modeType = "month" | "week";
 const showDayNum = 42; // 显示的天数，日历中的格子数
 /**
  * @description: 获取指定时间的当月天数和星期，默认获取当月的天数和星期
@@ -29,7 +30,10 @@ function getMonthInfo(
  * @param {String} time
  * @return {*}
  */
-export function getCalendarData(time: string | Date | number): DayInfo[] {
+export function getCalendarData(
+  time: string | Date | number,
+  type: modeType = "month"
+): DayInfo[] {
   let date = new Date(time || new Date());
   // 初始化月份信息
   let preMonth = getMonthInfo(date, 1);
