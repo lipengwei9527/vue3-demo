@@ -1,6 +1,9 @@
 <template>
   <div class="ex-calendar" ref="calendar">
-    <div class="calendar-head" ref="head">{{ modelValue }}</div>
+    <div class="calendar-head" ref="head">
+      <div>选中的时间:{{ modelValue }}</div>
+      <div>默认展示的时间段:{{ mDefaultTime }}</div>
+    </div>
     <table class="ex-calendar-table">
       <thead ref="thead">
         <th v-for="item in weeks" class="week-item">{{ item }}</th>
@@ -25,21 +28,18 @@
 </template>
 <script name="ExCalendar" setup lang="ts">
 import {
-  ref,
   reactive,
   useSlots,
   PropType,
   useTemplateRef,
   watch,
   onMounted,
-  computed,
+  watchEffect,
 } from "vue";
 import { useVModel } from "@vueuse/core";
-import { formateDate } from "@/utils/date";
-
-import { getCalendarData, modeType } from "./library/date";
+import { formateDate, getMonthDays } from "@/utils/date";
+import { getCalendarData, CalendarOptions, modeType } from "./library/date";
 import { DayInfo } from "@/types/components";
-import { isType } from "@/utils/isType";
 
 // 父组件中使用插槽即使是注释也会返回一个包含default属性的对象
 // 不使用插槽时要保证父组件插槽位置不能有任何东西（注释也不行）
@@ -47,21 +47,23 @@ const slots = useSlots();
 const props = defineProps({
   /**
    * @description 选中的时间
-   * 会统一格式化为yyyy-MM-dd时间格式
+   * @param {FormateDateType}
    */
   modelValue: {
-    type: [Date, String, Array] as PropType<Date | string | string[]>,
+    type: [Array] as PropType<string[]>,
     default: () => new Date(),
   },
   /**
    * @description 默认要展示的月份或周
    */
   defaultTime: {
-    type: [Date, Number, String] as PropType<Date | number | string>,
+    type: [String] as PropType<string>,
     default: () => new Date(),
   },
   /**
    * @description 绑定的值的格式
+   * @description
+   * 组件内所有时间都会统一格式化为valueFormat的类型FormateDateType时间格式
    */
   valueFormat: {
     type: String as PropType<FormateDateType>,
@@ -84,14 +86,14 @@ const props = defineProps({
    * @description 显示的是一周还是一个月
    */
   mode: {
-    type: String as PropType<modeType>,
+    type: String as PropType<CalendarOptions["mode"]>,
     default: "month",
   },
   /**
    * @description 周起始日：值为1-7,1为周一，7为周日
    */
   firstDayOfWeek: {
-    type: Number as PropType<RangeType<1, 7>>,
+    type: Number as PropType<CalendarOptions["firstDayOfWeek"]>,
     default: 1,
   },
   /**
@@ -105,7 +107,7 @@ const props = defineProps({
    * @description 可选时间段中的开始时间
    */
   startTime: {
-    type: [String, Date],
+    type: [String],
     default: "",
   },
   /**
@@ -120,43 +122,46 @@ const props = defineProps({
    *
    */
   endTime: {
-    type: [String, Date],
+    type: [String],
     default: "",
   },
 });
 
-const emits = defineEmits([
-  "select",
-  "update:modelValue",
-  "update:defaultTime",
-]);
+const emits = defineEmits<{
+  /**
+   * @description 返回选中的时间
+   */
+  (e: "select", value: DayInfo[]): void;
+  (e: "update:modelValue", value: string[]): void;
+  (e: "update:defaultTime", value: string): void;
+}>();
 let mValue = useVModel(props, "modelValue", emits);
+mValue.value = mValue.value.map((item) => {
+  return formateDate(item, props.valueFormat);
+});
 let mDefaultTime = useVModel(props, "defaultTime", emits);
-watch(
-  mValue,
-  (value) => {
-    console.log("watch");
-    const format = props.valueFormat;
-    if (isType(value, "string") || isType(value, "date")) {
-      return (mValue.value = formateDate(value, format));
-    } else if (isType(value, "array")) {
-      const list: string[] = [];
-      for (const key in value as string[]) {
-        list.push(formateDate(value[key], format));
-      }
-      mValue.value = list;
-    }
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
-);
-watch(mDefaultTime, (value) => {});
+mDefaultTime.value = formateDate(mDefaultTime.value, props.valueFormat);
+// watch(mDefaultTime, (value) => {});
 const calendarRef = useTemplateRef("calendar");
 const weeks = ["一", "二", "三", "四", "五", "六", "日"];
 // 通过点击选中的日期
-const selData = reactive<(DayInfo | undefined)[]>([]);
+const selData = reactive<DayInfo[]>(
+  mValue.value.map((item) => {
+    return {
+      day: 0,
+      date: item,
+      type: "",
+      disabled: false,
+    };
+  })
+);
+watch(selData, (value) => {
+  if (value.length) {
+    mValue.value = value.map((item) => item.date);
+  } else {
+    mValue.value = [];
+  }
+});
 // 要渲染的日历数据
 let calendarData = reactive<DayInfo[][]>([]);
 // 选中的月份的原始日历数据
@@ -182,13 +187,13 @@ const toTreeCalendarData = (data: DayInfo[]) => {
  * @description 根据value和type设置日历数据
  * @param value
  * value为数字时：
- *    type为month时:
+ *    props.mode为month时:
  *      1-下一月,-1-上一月,
- *    type为week时:
+ *    props.mode为week时:
  *      1-下一周,-1-上一周
  * value为字符串时：
  *    直接返回该字符串时间的日历数据
- * @param {'month' | 'week' } type
+ * @param { CalendarOptions["mode"] } type
  * month-月模式，week-周模式
  * @example
  * -props.defaultTime：默认日期
@@ -200,36 +205,48 @@ const toTreeCalendarData = (data: DayInfo[]) => {
  * changeCalendar(-1)
  *
  * 获取默认日期下一个周的日历数据
- * changeCalendar(1,'week')
+ * props.mode = 'week'
+ * changeCalendar(1)
  *
  * 获取2025-12-20当周(7天)的日历数据
- * changeCalendar('2025-12-20','week')
+ * props.mode = 'week'
+ * changeCalendar('2025-12-20')
  */
-function changeCalendar(value: number | string = 0, type: modeType = "month") {
+function changeCalendar(value: number | string = 0) {
   // 最终展示的日历时间点
   let date = "";
-  // 最终默认时间点加的毫秒数
-  let finallyStep = 0;
-  // 原默认展示的日历时间点
-  const defaultTime = mDefaultTime.value;
   // 转化的时间格式
-  const valueFormat = props.valueFormat;
-  // 一天的毫秒数
-  const dayStep = 60 * 60 * 24 * 1000;
-
+  const { mode, valueFormat, firstDayOfWeek } = props;
   // 获取最终展示的日历时间点
   if (typeof value == "number") {
-    finallyStep = type == "month" ? value * dayStep * 30 : value * dayStep * 7;
+    // 最终默认时间点加的毫秒数
+    let finallyStep = 0;
+    // 原默认展示的日历时间点
+    let defaultTime = new Date(mDefaultTime.value);
+    let year = defaultTime.getFullYear();
+    let month = defaultTime.getMonth() + 1;
+    // 一天的毫秒数
+    const dayStep = 60 * 60 * 24 * 1000;
+    // value大于等于0获取当月天数，value小于0获取上月天数
+    month = value >= 0 ? month : month - 1;
+    // 指定月份有几天
+    const days = new Date(year, month, 0).getDate();
+    finallyStep =
+      mode == "month" ? value * dayStep * days : value * dayStep * 7;
     date = formateDate(
       new Date(defaultTime).getTime() + finallyStep,
       valueFormat
     );
-    mDefaultTime.value = date;
   } else if (typeof value == "string") {
     date = formateDate(value, valueFormat);
   }
+  mDefaultTime.value = date as string;
   // 获取一维日历信息
-  let list = getCalendarData(date, type);
+  let list = getCalendarData(date, {
+    mode,
+    valueFormat,
+    firstDayOfWeek,
+  });
   // 日历信息转为树结构
   let treeList = toTreeCalendarData(list);
   orgData.length = 0;
@@ -248,7 +265,7 @@ const isBanFn = (data: DayInfo): boolean => {
   let start = new Date(props.startTime).getTime();
   let end = new Date(props.endTime).getTime();
   let isHaving = props.banTime.find((item) => new Date(item).getTime() == time);
-  if (time <= start || time >= end || isHaving) {
+  if (time < start || time > end || isHaving) {
     data.disabled = true;
     return true;
   }
@@ -283,8 +300,8 @@ const setCalendarItemClass = (item: DayInfo) => {
   };
 };
 /**
- * @description  选择点击的日期
- * @param data 该单元格的信息
+ * @description  选择点击的日期信息
+ * @param data 点击的单元格的日历信息
  */
 const selectDayFn = (data: DayInfo) => {
   if (!data || data.disabled) return;
@@ -328,6 +345,7 @@ const selectDayFn = (data: DayInfo) => {
     selData.length = 0;
     selData.push(data);
   }
+
   emits("select", selData);
 };
 
@@ -335,18 +353,18 @@ const selectDayFn = (data: DayInfo) => {
  * @description 设置日历组件的整体高度
  */
 const setCalendarHeight = () => {
-  props.height &&
-    calendarRef.value?.style.setProperty("--height", `${props.height}px`);
+  calendarRef.value?.style.setProperty("--height", `${props.height}px`);
 };
 onMounted(() => {
   setCalendarHeight();
 });
-watch(
-  () => props.height,
-  () => {
-    setCalendarHeight();
+watchEffect(() => {
+  if (props.height && props.mode == "month") {
+    calendarRef.value?.style.setProperty("--height", `${props.height}px`);
+  } else if (props.mode == "week") {
+    // calendarRef.value?.style.setProperty("--height", `auto`);
   }
-);
+});
 defineExpose({
   changeCalendar,
 });
