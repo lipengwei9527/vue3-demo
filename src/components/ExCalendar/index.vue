@@ -1,14 +1,14 @@
 <template>
-  <div class="ex-calendar" ref="calendar">
-    <div class="calendar-head" ref="head">
+  <div class="ex-calendar" ref="calendarRef">
+    <div class="calendar-head" ref="headRef">
       <div>选中的时间:{{ modelValue }}</div>
       <div>默认展示的时间段:{{ mDefaultTime }}</div>
     </div>
     <table class="ex-calendar-table">
-      <thead ref="thead">
+      <thead ref="theadRef">
         <th v-for="item in weeks" class="week-item">{{ item }}</th>
       </thead>
-      <tbody ref="tbody">
+      <tbody ref="tbodyRef">
         <tr v-for="trItem in calendarData">
           <td v-for="tdItem in trItem">
             <div
@@ -35,6 +35,8 @@ import {
   watch,
   onMounted,
   watchEffect,
+  computed,
+  ref,
 } from "vue";
 import { useVModel } from "@vueuse/core";
 import { formateDate, getMonthDays } from "@/utils/date";
@@ -57,7 +59,7 @@ const props = defineProps({
    * @description 默认要展示的月份或周
    */
   defaultTime: {
-    type: [String] as PropType<string>,
+    type: [String, Date] as PropType<string | Date>,
     default: () => new Date(),
   },
   /**
@@ -71,16 +73,16 @@ const props = defineProps({
   },
   /**
    * @description 组件整体高度
+   *为月模式时，组件整体高度生效
    */
   height: {
     type: [Number],
   },
   /**
-   * @description 日历单元格高度
+   * @description 为周模式时，单元格高度生效
    */
   cellHeight: {
     type: [Number],
-    default: () => 400,
   },
   /**
    * @description 显示的是一周还是一个月
@@ -141,8 +143,25 @@ mValue.value = mValue.value.map((item) => {
 });
 let mDefaultTime = useVModel(props, "defaultTime", emits);
 mDefaultTime.value = formateDate(mDefaultTime.value, props.valueFormat);
-// watch(mDefaultTime, (value) => {});
-const calendarRef = useTemplateRef("calendar");
+const calendarRef = useTemplateRef("calendarRef");
+const headRef = useTemplateRef("headRef");
+const theadRef = useTemplateRef("theadRef");
+const tbodyRef = useTemplateRef("tbodyRef");
+let cellHeight = ref(0);
+/**
+ * @description 获取一个单元格的高度
+ */
+const getCellHeight = () => {
+  const headHeight = headRef.value?.offsetHeight || 0;
+  const theadHeight = theadRef.value?.offsetHeight || 48;
+  const calendarHeight = props.height || 570;
+  let cHeight = calendarHeight - headHeight - theadHeight;
+
+  // const trNum = (props.cellHeight =
+  cHeight = cHeight / 7;
+  return cHeight;
+};
+
 const weeks = ["一", "二", "三", "四", "五", "六", "日"];
 // 通过点击选中的日期
 const selData = reactive<DayInfo[]>(
@@ -183,6 +202,8 @@ const toTreeCalendarData = (data: DayInfo[]) => {
   });
   return tempData;
 };
+// 一天的毫秒数
+const dayStep = 60 * 60 * 24 * 1000;
 /**
  * @description 根据value和type设置日历数据
  * @param value
@@ -225,12 +246,12 @@ function changeCalendar(value: number | string = 0) {
     let defaultTime = new Date(mDefaultTime.value);
     let year = defaultTime.getFullYear();
     let month = defaultTime.getMonth() + 1;
-    // 一天的毫秒数
-    const dayStep = 60 * 60 * 24 * 1000;
+
     // value大于等于0获取当月天数，value小于0获取上月天数
     month = value >= 0 ? month : month - 1;
     // 指定月份有几天
     const days = new Date(year, month, 0).getDate();
+    // 最终移动的天数的毫秒数
     finallyStep =
       mode == "month" ? value * dayStep * days : value * dayStep * 7;
     date = formateDate(
@@ -240,7 +261,7 @@ function changeCalendar(value: number | string = 0) {
   } else if (typeof value == "string") {
     date = formateDate(value, valueFormat);
   }
-  mDefaultTime.value = date as string;
+  mDefaultTime.value = date;
   // 获取一维日历信息
   let list = getCalendarData(date, {
     mode,
@@ -348,23 +369,28 @@ const selectDayFn = (data: DayInfo) => {
 
   emits("select", selData);
 };
-
-/**
- * @description 设置日历组件的整体高度
- */
-const setCalendarHeight = () => {
-  calendarRef.value?.style.setProperty("--height", `${props.height}px`);
-};
 onMounted(() => {
-  setCalendarHeight();
+  cellHeight.value = getCellHeight();
+  changeHeight();
 });
-watchEffect(() => {
-  if (props.height && props.mode == "month") {
-    calendarRef.value?.style.setProperty("--height", `${props.height}px`);
+const changeHeight = () => {
+  if (props.mode == "month") {
+    let height = props.height || 600;
+    calendarRef.value?.style.setProperty("--height", `${height}px`);
+    tbodyRef.value?.style.setProperty("--cellHeight", `initial`);
+    cellHeight.value = getCellHeight();
   } else if (props.mode == "week") {
-    // calendarRef.value?.style.setProperty("--height", `auto`);
+    let height = props.cellHeight || cellHeight.value;
+    calendarRef.value?.style.setProperty("--height", `initial`);
+    tbodyRef.value?.style.setProperty("--cellHeight", `${height}px`);
   }
-});
+  changeCalendar();
+};
+/**
+ * @description 监听设置的表格整体高度和单元格高度
+ */
+watchEffect(changeHeight);
+
 defineExpose({
   changeCalendar,
 });
@@ -383,7 +409,7 @@ defineExpose({
   border-color: #79bbff;
 }
 .ex-calendar {
-  --height: 600px;
+  --height: initial;
   user-select: none;
   display: grid;
   grid-template-rows: auto 1fr;
@@ -401,13 +427,14 @@ defineExpose({
       }
     }
     tbody {
+      --cellHeight: initial;
+      height: var(--cellHeight);
       tr {
         td {
           @include border();
           .calendar-item {
             --tdHeight: 100px;
             box-sizing: border-box;
-            // height: --tdHeight;
             height: 100%;
             overflow: scroll;
             cursor: pointer;

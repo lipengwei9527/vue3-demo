@@ -1,11 +1,22 @@
 // css变量：--bg
 // less变量：@bg
 // sass变量：$bg
-// inherit : 继承父级属性
-// initial：将元素初始化成css的初始值
-// unset：继承和初始化元素
-// revert：还原到浏览器内置样式
-// all：代指所有css属性
+
+// inherit
+// 继承父级属性
+
+// initial
+// 将元素初始化成css的初始值
+
+// unset
+// 继承和初始化元素
+
+// revert
+// 还原到浏览器内置样式
+
+// all
+// 代指所有css属性
+
 // 样式变量
 @import "./variables";
 // 全局滚动条样式
