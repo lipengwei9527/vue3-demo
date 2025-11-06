@@ -48,10 +48,17 @@ defineProps({
   },
 });
 const emit = defineEmits<{
-  select: [index: string, indexPaths: string[]];
-  open: [index: string, indexPaths: string[]];
-  close: [index: string, indexPaths: string[]];
+  (e: "select", index: string, indexPaths: string[]): void;
+  (e: "open", index: string, indexPaths: string[]): void;
+  (e: "close", index: string, indexPaths: string[]): void;
 }>();
+/**
+ * 选择函数
+ *
+ * @param index 当前选中的索引值
+ * @param indexPaths 索引路径数组
+ * @returns 无返回值
+ */
 const selectFn = (index: string, indexPaths: string[]) => {
   emit("select", index, indexPaths);
 };

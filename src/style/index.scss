@@ -1,31 +1,40 @@
 // css变量：--bg
 // less变量：@bg
 // sass变量：$bg
-// inherit : 继承父级属性
-// initial：将元素初始化成css的初始值
-// unset：继承和初始化元素
-// revert：还原到浏览器内置样式
-// all：代指所有css属性
-// 样式变量
-@use "./theme/custom";
-@use "./theme/element";
-@use "./iconfont";
 
+// inherit
+// 继承父级属性
+
+// initial
+// 将元素初始化成css的初始值
+
+// unset
+// 继承和初始化元素
+
+// revert
+// 还原到浏览器内置样式
+
+// all
+// 代指所有css属性
+
+// 样式变量
+@import "./variables";
 // 全局滚动条样式
-@use "scrollbar.scss";
+@import "scrollbar.scss";
+@import "./iconfont/iconfont.css";
 // 整体布局样式
-@use "./layout";
+@import "./layout/index.scss";
+
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  // box-sizing: border-box;
 }
 
 html,
 body,
 #app {
   width: 100%;
-  min-height: 100vh;
 }
 
 $deviceList: (

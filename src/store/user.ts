@@ -11,3 +11,4 @@ export const useUserStore = defineStore("userIns", {
     },
   },
 });
+export default useUserStore;

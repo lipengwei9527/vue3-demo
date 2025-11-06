@@ -1,70 +1,77 @@
 <template>
-  <div class="context-menu-page">
-    <ExContextMenu
-      :menu="[{ label: '菜单1' }, { label: '菜单2' }]"
-      @select="select"
+  <div class="page">
+    <el-button type="primary" @click="show = !show">
+      {{ disabled ? "禁用" : "启用" }}</el-button
     >
-      <div class="item box1">111</div>
+    <ExContextMenu :disabled="disabled" :list="list[0]" @select="selectFn">
+      <template #default="{ open }">
+        <div @contextmenu="open" class="box box1">
+          <ExContextMenu @select="selectFn" :list="list[1]">
+            <template #default="{ open }">
+              <div @contextmenu="open" class="box box2"></div>
+            </template>
+          </ExContextMenu>
+        </div>
+      </template>
     </ExContextMenu>
-    <ExContextMenu
-      @select="select"
-      :menu="[{ label: '菜单3' }, { label: '菜单4' }]"
-    >
-      <div class="item box2">222</div>
-    </ExContextMenu>
-    <ExContextMenu
-      @select="select"
-      :menu="[{ label: '菜单5' }, { label: '菜单6' }, { label: '菜单7' }]"
-    >
-      <div class="item box3">
-        333
-        <ExContextMenu
-          @select="select"
-          :menu="[{ label: '菜单8' }, { label: '菜单9' }, { label: '菜单10' }]"
-        >
-          <div class="box4">444</div>
-        </ExContextMenu>
-      </div>
+    <ExContextMenu @beforeClose="beforeCloseFn" :list="list[2]">
+      <template #default="{ open }">
+        <div @contextmenu="open" class="box box3"></div>
+      </template>
     </ExContextMenu>
   </div>
 </template>
 
-<script setup name="ContextMenu" lang="ts">
-function select<T>(item: T) {
-  console.log(item);
+<script setup name="ContextMenuPage" lang="ts">
+import { ExContextMenuItem } from "@/types/components";
+import { ref } from "vue";
+const show = ref(false);
+const disabled = ref(false);
+const beforeCloseFn = (item: any, fn: () => void) => {
+  console.log("beforeCloseFn", item, fn);
+  fn();
+};
+const selectFn = (item: any) => {
+  menu.value = item;
+  console.log("选择了菜单", item);
+};
+let list: ExContextMenuItem[][] = [];
+let menu = ref([]);
+for (let key = 0; key < 3; key++) {
+  list[key] = [];
+  for (let i = 0; i < 10; i++) {
+    // list[key][i] = {};
+    list[key][i] = {
+      label: "菜单" + (String(key) + i),
+      value: String(key) + i,
+    };
+    if (i == 4) {
+      list[key][i].disabled = true;
+    }
+    if (i == 5) {
+      list[key][i].bottomBorder = true;
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.context-menu-page {
+.page {
   display: flex;
-  justify-content: space-between;
-  height: 100%;
-
-  .ex-context-menu {
-    flex: 1;
-  }
-
-  .item {
-    height: 100%;
-  }
-
-  .box1 {
-    background-color: red;
-  }
-
-  .box2 {
-    background-color: green;
-  }
-
-  .box3 {
-    background-color: blue;
-  }
-
-  .box4 {
-    width: 50px;
-    height: 50px;
-    background-color: yellow;
+  justify-content: flex-end;
+}
+.box {
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+}
+@for $i from 1 through 3 {
+  .box#{$i} {
+    @if $i == 1 {
+      width: 400px;
+      height: 400px;
+    }
+    background-color: rgb(random(255), random(255), random(255));
   }
 }
 </style>

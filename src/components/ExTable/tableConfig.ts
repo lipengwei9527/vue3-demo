@@ -1,207 +1,71 @@
+import { ref, Ref } from "vue";
 // {
 //   "dyn_id": "981118307352444930",
 //   "dyn_type": 8
 
 // },
-const data = [
-  {
-    dyn_id: "981118307352444930",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "981099233446723617",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980962374298107942",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980962370015723573",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980948226680029184",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980731777499791478",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980699552380092432",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980686658843181057",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980685542413828200",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980680190643404882",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980591551144001541",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980591289127927816",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980591284853932066",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980220203962990627",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "980220199672217632",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979478033604804662",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979478033601658897",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979463916016893989",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979448505697304598",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979268666852900901",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979264853131657234",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979255137683898408",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979235638539714577",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979200784894787617",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979193328822124665",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979106952691843081",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979106948400021509",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "979100523169841158",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978830094859501573",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978814504087322675",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978737323772477506",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978735863223549991",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978735858985205816",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978721711350349860",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978458893704232965",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978364778091118614",
-    dyn_type: 8,
-  },
-  {
-    dyn_id: "978364773766791203",
-    dyn_type: 8,
-  },
-];
-export declare interface TableConfig {
-  showIndex: boolean;
-  showSelection: boolean;
-  currentPage: number;
-  pageSize: number;
-  height?: number;
-  api: string;
-  loading: boolean;
-  showOverflowTooltip: boolean;
-  colSlots: string[];
-  columns: { prop: string; label: string }[];
-  query: object;
-  tableData: any[];
-  total: number;
-  background: boolean;
-  pageSizes: number[];
-  layout: string;
+const data: { name: string; age: number }[] = [];
+for (let index = 0; index < 100; index++) {
+  data.push({ name: "张三" + index, age: index + 18 });
 }
-export const tableConfig: TableConfig = {
+
+import.meta.env;
+export type QueryConfigType = {
+  label: string; //搜索的参数
+  value: any; //搜索输入的值
+  compsName: "ExInput" | "ExSelect"; //搜索的组件名称
+  [key: string]: any;
+};
+export declare interface TableConfig {
+  query: Record<string, any>; //点击搜索按钮返回的参数
+  queryConfig: QueryConfigType[]; //搜索组件配置的参数
+  tableData: any[]; //表格展示的数据
+  useLocal: boolean; //表格中的数据是否使用的本地的数据
+  localData: any[]; //本地的全部表格数据,useLocal为true时,tableData从localData中获取数据
+  showIndex: boolean; // 是否显示列的行号
+  showSelection: boolean; //是否显示复选框
+  currentPage: number; //当前是第几页,从1开始
+  pageSize: number; //表格默认显示几行
+  height?: number; //exTable组件的整体高度
+  tableApi: string; //获取表格数据的api
+  dictApi: string; //字典枚举值api
+  loading: boolean; //是否显示遮罩层
+  showOverflowTooltip: boolean; //是否显示单元格提示信息
+  colSlots: string[]; //表格中的哪些列中的数据使用自定义插槽来显示
+  columns: { prop: string; label: string }[]; // 接口中哪些字段显示和显示的中文名称
+  // 分页配置
+  total: number; //数据总数有多少
+  background: boolean; //是否为分页按钮添加背景
+  pageSizes: number[]; //分页时一页显示的数据量
+  layout: ("prev" | "pager" | "next" | "jumper" | "total")[]; // 分页组件配置
+}
+const tableConfig: TableConfig = {
   // 表格配置
   query: {},
+  queryConfig: [],
   tableData: data,
+  useLocal: false,
+  localData: [],
   showIndex: true,
   showSelection: true,
   currentPage: 1,
   pageSize: 10,
-  height: 200,
-  api: "",
+  height: 600,
+  tableApi: "",
+  dictApi: "",
   loading: false,
   showOverflowTooltip: true,
-  colSlots: ["dyn_id"],
-  columns: [
-    { prop: "dyn_id", label: "a表头" },
-    { prop: "dyn_type", label: "b表头" },
-  ],
+  colSlots: [],
+  columns: [],
   // 分页配置
   total: 1000,
   background: true,
   pageSizes: [10, 20, 30, 40, 50, 100],
-  layout: "total,prev, pager, next,layout,sizes",
+  layout: ["prev", "pager", "next", "jumper", "total"],
 };
-export const setTableConfig = (cfg?: object) => {
-  return {
-    ...tableConfig,
-    ...cfg,
-  };
-};
-export const getTableConfig = () => {
-  return {
-    ...tableConfig,
-  };
+export const createTableConfig = (
+  config: Partial<TableConfig> = {}
+): Ref<TableConfig> => {
+  let tableCfg = JSON.parse(JSON.stringify(tableConfig));
+  return ref(Object.assign(tableCfg, config));
 };

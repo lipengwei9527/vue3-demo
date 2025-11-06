@@ -1,0 +1,135 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 4648959 */
+  src: url('@/style/iconfont/iconfont.woff2?t=1756130899714') format('woff2'),
+       url('@/style/iconfont/iconfont.woff?t=1756130899714') format('woff'),
+       url('@/style/iconfont/iconfont.ttf?t=1756130899714') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tuozhuai:before {
+  content: "\e81e";
+}
+
+.icon-huangpijicongjun:before {
+  content: "\e676";
+}
+
+.icon-xingbaogu:before {
+  content: "\e677";
+}
+
+.icon-niuganjun:before {
+  content: "\e678";
+}
+
+.icon-songrong:before {
+  content: "\e679";
+}
+
+.icon-chashugu:before {
+  content: "\e67a";
+}
+
+.icon-lingzhi:before {
+  content: "\e67b";
+}
+
+.icon-xianggu:before {
+  content: "\e67c";
+}
+
+.icon-shanhujun:before {
+  content: "\e67d";
+}
+
+.icon-right:before {
+  content: "\e601";
+}
+
+.icon-left:before {
+  content: "\e66d";
+}
+
+.icon-top:before {
+  content: "\e611";
+}
+
+.icon-bottom:before {
+  content: "\e600";
+}
+
+.icon-a-068_baojianpin:before {
+  content: "\e762";
+}
+
+.icon-a-068_baoxian:before {
+  content: "\e763";
+}
+
+.icon-a-068_baoxiao:before {
+  content: "\e764";
+}
+
+.icon-a-068_bianji:before {
+  content: "\e765";
+}
+
+.icon-a-068_gongzi:before {
+  content: "\e766";
+}
+
+.icon-a-068_chongzhi:before {
+  content: "\e767";
+}
+
+.icon-a-068_fangdai:before {
+  content: "\e768";
+}
+
+.icon-a-068_dianying:before {
+  content: "\e769";
+}
+
+.icon-a-068_huazhuang:before {
+  content: "\e76a";
+}
+
+.icon-a-068_chuzuche:before {
+  content: "\e76b";
+}
+
+.icon-a-068_chalv:before {
+  content: "\e76c";
+}
+
+.icon-a-068_gongyi:before {
+  content: "\e76d";
+}
+
+.icon-a-068_gaodian:before {
+  content: "\e76e";
+}
+
+.icon-a-068_gongjiao:before {
+  content: "\e76f";
+}
+
+.icon-a-068_gouwu:before {
+  content: "\e770";
+}
+
+.icon-a-068_jizhang:before {
+  content: "\e771";
+}
+
+.icon-a-068_jiaocai:before {
+  content: "\e772";
+}
+

@@ -1,104 +1,183 @@
 <template>
-  <div ref="containerRef" class="ex-context-menu">
-    <slot></slot>
-    <Teleport to="body">
-      <Transition
-        @before-enter="handleBeforeEnter"
-        @enter="handleEnter"
-        @after-enter="handleAfterEnter"
+  <slot :open="openContextMenu"> </slot>
+  <Teleport to="body">
+    <Transition
+      @before-enter="handleBeforeEnter"
+      @enter="handleEnter"
+      @after-enter="handleAfterEnter"
+      name="fade"
+      mode="out-in"
+    >
+      <div
+        v-size-ob="handleSizeChange"
+        v-if="modelShow"
+        class="menu"
+        :style="{
+          width: pos.width,
+        }"
       >
-        <div>
+        <div class="menu-item" v-for="item in list">
           <div
-            v-size-ob="handleSizeChange"
-            class="menu-list"
-            v-if="showMenu"
-            :style="{
-              left: pos.posX + 'px',
-              top: pos.posY + 'px',
-            }"
+            class="item-content"
+            :class="{ ban: item.disabled }"
+            @click="selectFn(item)"
           >
-            <div
-              class="menu-item"
-              @click="handleMenuItem(item)"
-              v-for="item in menu"
-            >
-              {{ item.label }}
-            </div>
+            {{ item.label }}
           </div>
+          <div :class="{ 'item-border': item.bottomBorder }"></div>
         </div>
-      </Transition>
-    </Teleport>
-  </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
-<script setup name="ExContextMenu" lang="ts">
-/**
- * 鼠标左键菜单组件
- * @param menu 参列表
- * @event select(item) 返回menu的item
- */
-import { ref, computed, PropType } from "vue";
-import useContextMenu from "@/hooks/useContextMenu";
+<script name="ExContentMenu" setup lang="ts">
+import { PropType, ref, computed, onBeforeUnmount, onMounted } from "vue";
 import useViewPort from "@/hooks/useViewPort";
-defineProps({
-  menu: {
-    type: Array as PropType<{ label: string }[]>,
-    default: () => [],
+import { DoneFn } from "@/types/elementPlus";
+import { allProps } from "@/utils/guard";
+import { ExContextMenuItem } from "@/types/components";
+
+const props = defineProps({
+  // 是否禁用菜单
+  disabled: {
+    type: Boolean,
+  },
+  // 菜单数据
+  list: {
+    type: Array as PropType<ExContextMenuItem[]>,
+  },
+  // 菜单宽度
+  width: {
+    type: Number,
+    default: 200,
   },
 });
-// 视口的宽和高
-const { vw, vh } = useViewPort();
-const containerRef = ref();
-// x-鼠标点击位置距离视口左边的距离,y-鼠标点击位置距离视口顶部的距离,showMenu-是否显示菜单
-const { x, y, showMenu } = useContextMenu(containerRef);
-const emit = defineEmits(["select"]);
+const emits = defineEmits<{
+  (e: "select", value: ExContextMenuItem): void;
+  (e: "close", value: boolean): void;
+  (e: "beforeClose", item: ExContextMenuItem, value: DoneFn): void;
+}>();
+const modelShow = ref(false);
 
-// 菜单的宽和高
-const w = ref(0);
-const h = ref(0);
-function handleSizeChange(rect: Parameters<Rect>[0]) {
-  const { width, height } = rect;
-  w.value = width;
-  h.value = height;
-}
-// 菜单最终显示位置
-const pos = computed(() => {
-  // posX,posY-菜单最终显示的x,y坐标
-  let posX = x.value;
-  let posY = y.value;
-  // 视口宽度-鼠标位置>菜单宽度:菜单需要显示在鼠标左边
-  if (posX > vw.value - w.value) {
-    posX -= w.value;
+const eventRes = allProps(["onBeforeClose", "onSelect"]);
+// 触发一次beforeClose事件flag置为true，调用一次beforeFn置为false
+let isHidden = ref<boolean | undefined>(false);
+/**
+ * @description beforeClose事件传递的函数
+ * @param hidden
+ */
+const beforeFn = (hidden?: boolean) => {
+  if (props.disabled) return;
+  isHidden.value = hidden;
+  closeFn();
+};
+/**
+ * @description 点击菜单项
+ * @param item 菜单项数据
+ */
+const selectFn = (item: ExContextMenuItem) => {
+  if (item.disabled) return;
+  // 点击左键菜单外的其他部分
+  if (!item) {
+    closeFn();
+    return;
   }
-  // 视口高度-鼠标位置<菜单高度:菜单需要往上移
-  if (vh.value - posY < h.value) {
-    posY = vh.value - h.value;
+  // 是否有关闭前的其他操作
+  if (eventRes.find((item) => item.name == "onBeforeClose")?.result) {
+    isHidden.value = true;
+    emits("beforeClose", item, beforeFn);
+    return;
+  }
+  emits("select", item);
+  closeFn();
+};
+/**
+ * @description 关闭菜单
+ */
+const closeFn = () => {
+  if (isHidden.value || props.disabled) return;
+  removeEventListener("click", closeFn, true);
+  removeEventListener("contextmenu", closeFn, true);
+  modelShow.value = false;
+};
+let mouseX = ref(0);
+let mouseY = ref(0);
+/**
+ * @description 打开菜单
+ * @param
+ */
+const openContextMenu = (e: MouseEvent) => {
+  if (props.disabled) return;
+  e.preventDefault();
+  e.stopPropagation();
+  // 同步监听全局click和contextMenu事件
+  // 除本身外的其他菜单全部关闭
+  addEventListener("click", closeFn);
+  addEventListener("contextmenu", closeFn, true);
+  mouseX.value = e.clientX;
+  mouseY.value = e.clientY;
+  modelShow.value = true;
+};
+
+// 浏览器可视区域的宽和高
+let { vw, vh } = useViewPort();
+/**
+ *@description 确定菜单在可视区域的什么位置渲染
+ */
+const pos = computed(() => {
+  // 菜单左上角所处位置
+  let posX = mouseX.value;
+  let posY = mouseY.value;
+  let width = props.width > w.value ? props.width : w.value;
+  let height = h.value;
+  // 视口宽度-鼠标位置>菜单宽度，菜单位置左移
+  if (vw.value - mouseX.value < width) {
+    posX = mouseX.value - width;
+  }
+  // 视口高度-鼠标高度<菜单高度，菜单上移
+  if (vh.value - mouseY.value < height) {
+    posY = mouseY.value - height;
   }
   return {
-    posX,
-    posY,
+    width: width + "px",
+    height: height + "px",
+    posX: posX + "px",
+    posY: posY + "px",
   };
 });
+// const targetRef = ref();
 
-// 点击菜单item
-function handleMenuItem<T>(item: T) {
-  showMenu.value = false;
-  emit("select", item);
+onMounted(() => {});
+onBeforeUnmount(() => {
+  closeFn();
+});
+// 菜单高度
+let h = ref(0);
+let w = ref(0);
+function handleSizeChange(rect: Rect) {
+  const { offsetWidth, offsetHeight } = rect;
+  w.value = offsetWidth;
+  h.value = offsetHeight;
 }
 // 元素加入到页面之前
 function handleBeforeEnter(el: Element) {
   if (!(el instanceof HTMLElement)) return;
   el.style.height = "0";
+  // el.style.transition = "1s";
 }
 // 元素加入到页面之后
 function handleEnter(el: Element) {
   if (!(el instanceof HTMLElement)) return;
   el.style.height = "auto";
-  const h = el.clientHeight;
+  const height = el.clientHeight;
+  h.value = height;
   el.style.height = "0";
+  el.style.left = pos.value.posX;
+  el.style.top = pos.value.posY;
   requestAnimationFrame(() => {
-    el.style.height = h + "px";
-    el.style.transition = "0.5s";
+    el.style.height = height + "px";
+    el.style.transition = "0.3s";
   });
 }
 // 离开之后
@@ -106,36 +185,40 @@ function handleAfterEnter(el: any) {
   el.style.transition = "none";
 }
 </script>
-
 <style lang="scss" scoped>
-.menu-list {
+// .ex-context-menu {
+//   display: inline-block;
+// }
+$bgColor: #f1f1f1;
+.menu {
   position: fixed;
-  background-color: #eee;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  min-width: 200px;
-  border-radius: 5px;
-  font-size: 12px;
-  color: #1d1d1f;
+  z-index: 100;
+  background-color: #fff;
+  border: 1px solid #c9c6c6;
+  padding: 5px 0;
+  border-radius: 7px;
+  box-shadow: 1px 3px 10px -2px rgb(163, 164, 167);
   overflow: hidden;
-  cursor: pointer;
-  padding: 5px;
+  box-sizing: border-box;
+  .item-content {
+    cursor: pointer;
+    padding: 3px;
+    user-select: none;
+    overflow: hidden;
+    margin: 3px 0;
+    &:hover {
+      background-color: $bgColor;
+      opacity: 0.8;
+    }
+  }
+  .ban {
+    background-color: $bgColor;
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
+  .item-border {
+    margin: 5px 0;
+    border-bottom: 1px solid #74b9ff;
+  }
 }
-
-.menu-item {
-  border-radius: 5px;
-  padding: 3px 5px;
-}
-
-.menu-item:hover {
-  background-color: #a0cfff;
-}
-
-// .v-enter-from {
-//   opacity: 1;
-// }
-
-// .v-enter-to {
-//   transition: 0.5;
-//   opacity: 0;
-// }
 </style>

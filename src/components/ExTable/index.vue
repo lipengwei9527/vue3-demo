@@ -1,23 +1,39 @@
 <template>
   <div class="ex-table" v-loading="model.loading">
     <!-- 搜索 -->
-    <div class="search-comps">
-      <el-input v-model="model.query"></el-input>
-    </div>
-    <div class="search-btn">
-      <el-button type="primary" @click="searchFn">搜索</el-button>
-    </div>
-    <!-- 表格 -->
-    <div
-      class="table-container"
-      ref="tableContainer"
-      v-size-ob="tableSizeChange"
+    <el-form
+      v-size-ob="(rect:Rect) => sizeChange(rect, 'query')"
+      v-if="model.queryConfig.length"
+      :model="model.query"
+      @submit.prevent="submitFn"
     >
-      <el-table :data="model.tableData" ref="table" :height="model.height">
+      <div class="query-comps" ref="queryComps">
+        <template v-for="(item, index) in model.queryConfig">
+          <el-form-item>
+            <component
+              class="query-context"
+              :is="item.compsName"
+              v-model="model.query[item.label]"
+              :config="{ index, ...item }"
+            ></component>
+          </el-form-item>
+        </template>
+      </div>
+      <div class="query-btns">
+        <el-button type="primary" @click="submitFn">搜索</el-button>
+      </div>
+    </el-form>
+    <!-- 表格 -->
+    <div class="table-container" ref="tableContainer">
+      <el-table :data="model.tableData" ref="table" :height="tableHeight">
         <!-- 表格选择列 -->
-        <el-table-column type="selection"></el-table-column>
+        <el-table-column
+          v-if="model.showSelection"
+          type="selection"
+        ></el-table-column>
         <!-- 表格序列 -->
         <el-table-column
+          v-if="model.showIndex"
           type="index"
           label="序号"
           width="60"
@@ -48,10 +64,11 @@
     <!-- 分页 -->
     <div class="pagination-container">
       <el-pagination
-        ref="pagination"
+        ref="paginationRef"
+        v-size-ob="(rect:Rect) => sizeChange(rect, 'pagination')"
         :total="model.total"
         :background="model.background"
-        :layout="model.layout"
+        :layout="model.layout.join(',')"
         :current-page="model.currentPage"
         v-model:page-size="model.pageSize"
         @update:current-page="currentPageChange"
@@ -62,71 +79,178 @@
   </div>
 </template>
 <script name="ExTable" setup lang="ts">
-import { onMounted, PropType, useTemplateRef } from "vue";
-// import { getData } from "@/axios/test";
-import { tableConfig, setTableConfig } from "./tableConfig";
+import { onMounted, PropType, useTemplateRef, watch, ref, computed } from "vue";
+import xhr from "@/axios";
+import {
+  createTableConfig,
+  TableConfig,
+} from "@/components/ExTable/tableConfig";
 import { useVModel } from "@vueuse/core";
-const table = useTemplateRef("table");
-const pagination = useTemplateRef("pagination");
-defineExpose({
-  table,
-  pagination,
-});
-
 const emits = defineEmits(["update:modelValue"]);
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<typeof tableConfig>,
-    default: () => setTableConfig(),
+    type: Object as PropType<TableConfig>,
+    default: () => createTableConfig(),
   },
 });
 const model = useVModel(props, "modelValue", emits);
+const tableRef = useTemplateRef("table");
+const queryCompsRef = useTemplateRef("queryComps");
+const paginationRef = useTemplateRef("paginationRef");
 
-onMounted(() => {});
-const tableSizeChange = (rect: { width: number; height: number }) => {
-  model.value.height = rect.height;
+const tableHeight = computed(() => {
+  let tH = model.value.height;
+  if (tH) return tH - queryHeight.value - paginationHeight.value;
+  return 600;
+});
+const queryHeight = ref(0);
+const paginationHeight = ref(0);
+
+const hList = {
+  query: queryHeight,
+  pagination: paginationHeight,
 };
-const searchFn = () => {
+const sizeChange = (rect: Rect, height: keyof typeof hList) => {
+  hList[height].value = rect.offsetHeight;
+};
+/**
+ * @description 点击搜索按钮
+ */
+const submitFn = () => {
   getTableData(1);
+  console.log("搜素", model.value.query);
 };
+/**
+ *@description 调用接口获取字典数据
+ */
+const getDictApi = async (params?: object) => {
+  return [];
+  return xhr.post(model.value.tableApi, params);
+};
+getDictApi();
+/**
+ *@description 调用接口获取表格数据
+ */
+const getTableApi = async (params?: object) => {
+  return [params];
+  // return xhr.post(model.value.tableApi, params);
+};
+/**
+ * @description 获取表格中的数据
+ * @param currentPage
+ * @param pageSize
+ */
 const getTableData = async (currentPage?: number, pageSize?: number) => {
-  console.log(`output->获取表格数据`);
   if (model.value.loading) return;
   model.value.loading = true;
-  model.value.currentPage = currentPage || model.value.currentPage;
-  model.value.pageSize = pageSize || model.value.pageSize;
+
+  currentPage = currentPage || model.value.currentPage;
+  model.value.currentPage = currentPage;
+  pageSize = pageSize || model.value.pageSize;
+  model.value.pageSize = pageSize;
   try {
-    // await getData({ a: 1 });
+    // 使用本地数据
+    if (model.value.useLocal) {
+      model.value.tableData = model.value.localData.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+      );
+      return;
+    }
+    await getTableApi();
   } catch (error) {
     console.log("请求表格数据失败", error);
   } finally {
     model.value.loading = false;
   }
 };
+
+/**
+ * @description 当前页改变
+ * @param value 当前页的页数
+ */
 const currentPageChange = (value: number) => {
   getTableData(value);
 };
+/**
+ * @description 表格一页显示的数量改变
+ * @param value 当前页一共显示的数据的条数
+ */
 const pageSizeChange = (value: number) => {
   getTableData(1, value);
 };
+/**
+ * @description 表格序列号
+ * @param index
+ */
 const indexMethod = (index: number) => {
   return index + 1 + (model.value.currentPage - 1) * model.value.pageSize;
 };
+/**
+ * @description 搜索栏一行最多有几个组件
+ */
+const setQueryCol = () => {
+  // 搜索栏一行最多有几个组件
+  let maxCol = 3;
+  let col = model.value.queryConfig.length;
+  col = col > maxCol ? maxCol : col;
+  queryCompsRef.value?.style.setProperty("--col", col.toString());
+};
+onMounted(() => {
+  setQueryCol();
+});
+// 根据搜索列表的配置更新搜索的参数
+watch(
+  model.value.queryConfig,
+  (newVal, _oldVal) => {
+    let query: Record<string, any> = {};
+    newVal.forEach((item) => {
+      query[item.label] = item.value;
+    });
+    // 点击搜索抛出的搜索参数数据
+    model.value.query = query;
+    setQueryCol();
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+defineExpose({
+  tableRef,
+  paginationRef,
+});
 </script>
 
 <style lang="scss" scoped>
 .ex-table {
-  height: 100%;
   display: grid;
   grid-template-areas:
-    "search-comps search-btn"
+    "el-form el-form"
     "table-container table-container"
     "pagination-container pagination-container";
   grid-template-columns: 10fr 1fr;
   grid-template-rows: auto 1fr auto;
-  gap: 10px;
-  .search-container {
-    grid-area: search-container;
+  .el-form {
+    grid-area: el-form;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    .query-comps {
+      --col: 5;
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(var(--col), 1fr);
+      gap: 10px;
+      padding-right: 10px;
+      .el-form-item {
+        flex: 1;
+        min-width: 200px;
+        :deep(.el-form-item__content > *) {
+          flex: 1;
+        }
+      }
+    }
   }
   .table-container {
     grid-area: table-container;

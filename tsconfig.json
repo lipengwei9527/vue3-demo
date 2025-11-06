@@ -10,7 +10,9 @@
       ],
     },
     "types": [
-      "vite/client" //使用import.meta.env.SSR时需要引入此类型定义
+      // 引入类型定义
+      "vite/client",
+      "element-plus/global",
     ],
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -28,6 +30,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -35,12 +38,12 @@
     "noFallthroughCasesInSwitch": true,
   },
   "include": [
-    // "src/**/*.ts",
-    // "src/**/*.tsx",
-    // "src/**/*.vue",
-    "src",
-    "types",
-    "env.d.ts"
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "env.d.ts",
+    "components.d.ts"
   ],
   "exclude": [
     // "src/utils/*"

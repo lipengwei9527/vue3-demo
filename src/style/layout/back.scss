@@ -7,20 +7,36 @@
     "nav-bar nav-bar"
     "side-bar main"
     "side-bar footer";
-  grid-template-columns: minmax(180px, var(--side-bar-width)) 1fr;
+  grid-template-columns: minmax(180px, var(--ex-side-bar-width)) 1fr;
   grid-template-rows: auto 1fr auto;
   .nav-bar {
     grid-area: nav-bar;
   }
   .side-bar {
     grid-area: side-bar;
+    border-right: 1px solid var(--ex-menu-border-color);
+    .el-menu {
+      border-right: none;
+    }
   }
   .main {
     grid-area: main;
-    padding: 10px;
-    background-color: var(--ex-main-bg-color);
-    border-radius: 5px;
     overflow: auto;
+    .page {
+      box-sizing: border-box;
+      overflow-y: auto;
+      height: 100%;
+      padding: 20px;
+      border-radius: 5px;
+      background-color: var(--ex-main-bg-color);
+    }
+    // .page::-webkit-scrollbar {
+    //   display: hidden;
+    // }
+
+    // .page::-webkit-scrollbar-thumb {
+    //   visibility: hidden;
+    // }
   }
   .footer {
     grid-area: footer;

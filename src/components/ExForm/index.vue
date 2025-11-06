@@ -1,50 +1,44 @@
 <template>
   <div class="ex-form">
-    <el-form class="form-container" @submit.prevent="submitFn">
-      <template v-for="item in formConfig">
-        <el-form-item
-          :prop="item.id"
-          :rules="item.rules"
-          class="ex-form-item"
-          :class="{ 'full-line': item.fullLine }"
-          :label="`${item.label}:`"
-        >
-          <component
-            class="ex-form-content"
-            :is="item.name"
-            v-model="formData[item.field]"
-            v-bind="{ config: item }"
-            @change="emitChangeFn($event)"
-          />
-        </el-form-item>
-      </template>
+    <!-- :model="formData" -->
+    <el-form disabled class="form-container" ref="formContainer">
+      <!-- @submit.prevent="submitFn" -->
+      <DiyContainer
+        v-model:config="formCfg"
+        @click="clickFn"
+        @select="selectFn"
+      ></DiyContainer>
     </el-form>
-    <div class="ex-form-btn">
+    <!-- <div class="ex-form-btn">
       <el-button @click="submitFn" type="primary">提交</el-button>
-    </div>
+    </div> -->
   </div>
 </template>
 <script name="ExForm" setup lang="ts">
-import { reactive } from "vue";
-import cfg from "./config";
-type DefaultFormData = Record<
-  (typeof cfg.formConfig)[number]["field"], //key
-  (typeof cfg.formConfig)[number]["defaultValue"] //value
->;
-const formConfig = reactive(cfg.formConfig);
-const formData = reactive(
-  cfg.formConfig.reduce((pre, cur) => {
-    pre[cur.field] = cur.defaultValue;
-    return pre;
-  }, {} as DefaultFormData)
-);
-const emitChangeFn = (e: any) => {
-  console.log(`output->change`, e);
+import { PropType } from "vue";
+import type { DiyContainerType, DiyFormItemType } from "@/types/components";
+import { useVModel } from "@vueuse/core";
+
+const props = defineProps({
+  formConfig: Object as PropType<DiyContainerType[]>,
+  default: () => [{ config: [] }],
+});
+const emits = defineEmits<{
+  (e: "update:formConfig"): void;
+  (e: "click", value: DiyContainerType | DiyFormItemType): void;
+  (e: "select", value: DiyContainerType | DiyFormItemType): void;
+}>();
+const formCfg = useVModel(props, "formConfig", emits);
+const clickFn = (item: DiyContainerType | DiyFormItemType) => {
+  emits("click", item);
 };
-const submitFn = () => {
-  console.log(`output->提交`, formData);
+const selectFn = (item: DiyContainerType | DiyFormItemType) => {
+  emits("select", item);
 };
 </script>
 <style lang="scss" scoped>
-@use "./scss/index.scss";
+.ex-form {
+  // height: 100%;
+  overflow: auto;
+}
 </style>

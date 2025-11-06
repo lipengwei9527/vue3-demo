@@ -11,11 +11,11 @@ const noteRoutes: CustomRouteRecordRaw = {
       component: () => import("@/views/NoteManage/TsNotePage/index.vue"),
       children: [
         {
-          name: "note2",
-          path: "/note2",
-          labelName: "笔记2",
+          name: "canvas",
+          path: "/canvas",
+          labelName: "canvas",
           component: () =>
-            import("@/views/NoteManage/TsNotePage/pages/note2.vue"),
+            import("@/views/NoteManage/TsNotePage/pages/canvas.vue"),
         },
       ],
     },
@@ -24,6 +24,12 @@ const noteRoutes: CustomRouteRecordRaw = {
       path: "/CssThemePage",
       labelName: "主题页",
       component: () => import("@/views/NoteManage/CssThemePage/index.vue"),
+    },
+    {
+      name: "UpstashPage",
+      path: "/UpstashPage",
+      labelName: "数据库调用",
+      component: () => import("@/views/NoteManage/UpstashPage/index.vue"),
     },
   ],
 };

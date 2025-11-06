@@ -44,6 +44,4 @@ const selectSideFn = (index: string) => {
   routerManager.navigateTo(index);
 };
 </script>
-
-<script name="" setup lang="ts"></script>
 <style lang="scss" scoped></style>

@@ -1,38 +1,54 @@
-// 滚动条整体样式
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-  padding: 0 10px;
+// // 滚动条整体样式
+$width: 4px;
+$height: $width;
+.cus-scroll::-webkit-scrollbar {
+  width: $width;
+  height: $height;
 }
-
+$radius: 2px;
 // 外层轨道
-::-webkit-scrollbar-track {
-  border-radius: 8px;
-  // opacity: 1;
-  // background-color: transparent;
-}
-
-// 内嵌滑块
-::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  opacity: 0.3;
-  background-color: var(--el-border-color);
-}
-
-// 边角
-::-webkit-scrollbar-corner {
+.cus-scroll::-webkit-scrollbar-track {
+  border-radius: $radius;
+  opacity: 1;
   background-color: transparent;
 }
 
-// 定义右下角拖动快的样式
-::-webkit-resizer {
+// 内嵌滑块
+.cus-scroll::-webkit-scrollbar-thumb {
+  border-radius: $radius;
+  opacity: 0.3;
+  background-color: #636363;
+}
+$btnHeight: 6px; //滚动条上下按钮的高度
+/* 滚动条按钮（上下箭头） */
+// .cus-scroll::-webkit-scrollbar-button {
+//   // display: block;
+//   // height: 8px;
+//   // background-color: #ccc; /* 新增：按钮纯色背景（可见） */
+// }
+// 边角
+.cus-scroll::-webkit-scrollbar-corner {
+  background-color: transparent;
+  display: hidden;
 }
 
-// // 鼠标悬停时显示滚动条，否则隐藏滚动条
-// :not(:hover)::-webkit-scrollbar {
-//   display: hidden;
+// // 定义右下角拖动快的样式
+// .cus-scroll::-webkit-resizer {
 // }
 
-// :not(:hover)::-webkit-scrollbar-thumb {
-//   visibility: hidden;
-// }
+// 鼠标悬停时显示滚动条，否则隐藏滚动条
+.hover-scroll:not(:hover)::-webkit-scrollbar {
+  display: hidden;
+}
+
+.hover-scroll:not(:hover)::-webkit-scrollbar-thumb {
+  visibility: hidden;
+}
+// 隐藏滚动条
+.hidden-scroll::-webkit-scrollbar {
+  display: hidden;
+}
+
+.hidden-scroll::-webkit-scrollbar-thumb {
+  visibility: hidden;
+}

@@ -1,44 +1,52 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="12">
-      <h5 class="mb-2">Default colors</h5>
-      <el-menu
-        default-active="2"
-        class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @select="handleSelect"
-        @close="handleClose"
-      >
-        <el-menu-item index="4">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
-  </el-row>
+  <div class="page">
+    <el-button @click="num++">测试</el-button>
+    <div class="container">
+      <div class="box box1" v-contextMenu="list[0]"></div>
+      <div class="box box2" v-contextMenu="list[1]"></div>
+      <div class="box box3" v-contextMenu="list[2]"></div>
+    </div>
+  </div>
 </template>
-
 <script lang="ts" setup>
-// import {
-//   Document,
-//   Menu as IconMenu,
-//   Location,
-//   Setting,
-// } from "@element-plus/icons-vue";
+import { ref } from "vue";
 
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
+import { ExContextMenuItem } from "@/types/components";
+let num = ref(0);
+let list: ExContextMenuItem[][] = [];
+for (let key = 0; key < 3; key++) {
+  list[key] = [];
+  for (let i = 0; i < 10; i++) {
+    // list[key][i] = {};
+    list[key][i] = {
+      label: "菜单" + (String(key) + i),
+      value: String(key) + i,
+    };
+    if (i == 4) {
+      list[key][i].disabled = true;
+    }
+    if (i == 5) {
+      list[key][i].bottomBorder = true;
+    }
+  }
+}
 </script>
-
-<!-- <template>
-  <div class=""></div>
-</template>
-<script name="" setup lang="ts"></script>
-<style lang="scss" scoped></style> -->
+<style lang="scss" scoped>
+.container {
+  display: flex;
+}
+.box {
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+}
+@for $i from 1 through 3 {
+  .box#{$i} {
+    @if $i == 1 {
+      width: 400px;
+      height: 400px;
+    }
+    background-color: rgb(random(255), random(255), random(255));
+  }
+}
+</style>
