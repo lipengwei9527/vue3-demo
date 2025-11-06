@@ -1,0 +1,2 @@
+import{_ as t}from"./canvas.vue_vue_type_script_name_canvasPage_setup_true_lang.D7O0En-C.js";import{h as e,j as o,k as s,s as a}from"./vendor-vue_runtime-core.BP9VAgNP.js";import"./vendor-vue_reactivity.DyRDJzb_.js";import"./vendor-vue_shared.fkeMOP9W.js";const _={class:"page"},r=e({name:"TsNotePage"}),l=e({...r,setup(c){return(n,m)=>(o(),s("div",_,[a(t)]))}});export{l as default};
+//# sourceMappingURL=TsNotePage.CbvLKZGz.js.map

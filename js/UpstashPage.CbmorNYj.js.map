@@ -1,0 +1,1 @@
+{"version":3,"file":"UpstashPage.CbmorNYj.js","sources":["../../src/views/NoteManage/UpstashPage/index.vue"],"sourcesContent":["<template>\r\n  <div class=\"page\"></div>\r\n</template>\r\n<script name=\"UpstashPage\" setup lang=\"ts\"></script>\r\n<style lang=\"scss\" scoped></style>\r\n"],"names":["_sfc_render","_ctx","_cache"],"mappings":"ihCACE,SAAAA,EAAAC,EAAAC,EAAA"}
