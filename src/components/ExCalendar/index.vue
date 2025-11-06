@@ -35,12 +35,11 @@ import {
   watch,
   onMounted,
   watchEffect,
-  computed,
   ref,
 } from "vue";
 import { useVModel } from "@vueuse/core";
-import { formateDate, getMonthDays } from "@/utils/date";
-import { getCalendarData, CalendarOptions, modeType } from "./library/date";
+import { formateDate } from "@/utils/date";
+import { getCalendarData, CalendarOptions, offsetArr } from "./library/date";
 import { DayInfo } from "@/types/components";
 
 // 父组件中使用插槽即使是注释也会返回一个包含default属性的对象
@@ -56,10 +55,10 @@ const props = defineProps({
     default: () => new Date(),
   },
   /**
-   * @description 默认要展示的月份或周
+   * @description 默认要展示的月份或周的日期，格式要符合时间格式
    */
   defaultTime: {
-    type: [String, Date] as PropType<string | Date>,
+    type: [String, Number, Date] as PropType<string | number | Date>,
     default: () => new Date(),
   },
   /**
@@ -96,7 +95,7 @@ const props = defineProps({
    */
   firstDayOfWeek: {
     type: Number as PropType<CalendarOptions["firstDayOfWeek"]>,
-    default: 1,
+    default: 0,
   },
   /**
    * @description 选择的是时间段还是时间点:true-时间段，false-时间点
@@ -162,7 +161,17 @@ const getCellHeight = () => {
   return cHeight;
 };
 
-const weeks = ["一", "二", "三", "四", "五", "六", "日"];
+const orgWeeks = ["一", "二", "三", "四", "五", "六", "日"];
+let weeks = ["一", "二", "三", "四", "五", "六", "日"];
+watch(
+  () => props.firstDayOfWeek,
+  (value) => {
+    weeks = offsetArr(orgWeeks, value ? value : 0);
+  },
+  {
+    immediate: true,
+  }
+);
 // 通过点击选中的日期
 const selData = reactive<DayInfo[]>(
   mValue.value.map((item) => {
@@ -214,57 +223,39 @@ const dayStep = 60 * 60 * 24 * 1000;
  *      1-下一周,-1-上一周
  * value为字符串时：
  *    直接返回该字符串时间的日历数据
- * @param { CalendarOptions["mode"] } type
- * month-月模式，week-周模式
  * @example
  * -props.defaultTime：默认日期
- *
+ * -props.mode:week-周模式，month-月模式
  * 获取默认日期当月的日历数据
+ * props.mode = 'month'
  * changeCalendar()
  *
  * 获取默认日期上一个月的日历数据
+ * props.mode = 'month'
  * changeCalendar(-1)
  *
  * 获取默认日期下一个周的日历数据
- * props.mode = 'week'
+ * props.mode='week'
  * changeCalendar(1)
- *
- * 获取2025-12-20当周(7天)的日历数据
- * props.mode = 'week'
- * changeCalendar('2025-12-20')
  */
-function changeCalendar(value: number | string = 0) {
-  // 最终展示的日历时间点
-  let date = "";
-  // 转化的时间格式
+function changeCalendar(value: number = 0) {
   const { mode, valueFormat, firstDayOfWeek } = props;
-  // 获取最终展示的日历时间点
-  if (typeof value == "number") {
-    // 最终默认时间点加的毫秒数
-    let finallyStep = 0;
-    // 原默认展示的日历时间点
-    let defaultTime = new Date(mDefaultTime.value);
-    let year = defaultTime.getFullYear();
-    let month = defaultTime.getMonth() + 1;
-
-    // value大于等于0获取当月天数，value小于0获取上月天数
-    month = value >= 0 ? month : month - 1;
-    // 指定月份有几天
-    const days = new Date(year, month, 0).getDate();
-    // 最终移动的天数的毫秒数
-    finallyStep =
-      mode == "month" ? value * dayStep * days : value * dayStep * 7;
-    date = formateDate(
-      new Date(defaultTime).getTime() + finallyStep,
-      valueFormat
-    );
-  } else if (typeof value == "string") {
-    date = formateDate(value, valueFormat);
+  const time = mDefaultTime.value;
+  let date = new Date(time);
+  let month = date.getMonth();
+  let monthDay = date.getDate();
+  if (props.mode == "month") {
+    date.setMonth(month + value);
+    date.setDate(monthDay);
+  } else if (props.mode == "week") {
+    date.setDate(monthDay + value * 7);
   }
-  mDefaultTime.value = date;
+  // 最终展示的日历时间点
+  mDefaultTime.value = formateDate(date, props.valueFormat);
   // 获取一维日历信息
   let list = getCalendarData(date, {
     mode,
+    days: "full",
     valueFormat,
     firstDayOfWeek,
   });
