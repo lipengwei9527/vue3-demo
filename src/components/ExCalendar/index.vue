@@ -211,8 +211,6 @@ const toTreeCalendarData = (data: DayInfo[]) => {
   });
   return tempData;
 };
-// 一天的毫秒数
-const dayStep = 60 * 60 * 24 * 1000;
 /**
  * @description 根据value和type设置日历数据
  * @param value

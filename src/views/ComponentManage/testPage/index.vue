@@ -18,7 +18,6 @@ for (let key = 0; key < 3; key++) {
   list[key] = [];
   for (let i = 0; i < 10; i++) {
     // list[key][i] = {};
-    const a = "10";
     list[key][i] = {
       label: "菜单" + (String(key) + i),
       value: String(key) + i,
