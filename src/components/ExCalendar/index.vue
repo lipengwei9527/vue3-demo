@@ -55,7 +55,8 @@ const props = defineProps({
     default: () => new Date(),
   },
   /**
-   * @description 默认要展示的月份或周的日期，格式要符合时间格式
+   * @description 默认要展示的月份或周的日期，格式要符合时间格式，
+   * 切换月份之后会将日期设置为目标月份的1号
    */
   defaultTime: {
     type: [String, Number, Date] as PropType<string | number | Date>,
@@ -243,8 +244,9 @@ function changeCalendar(value: number = 0) {
   let month = date.getMonth();
   let monthDay = date.getDate();
   if (props.mode == "month") {
+    // 为防止切换月份时，当前月份的几号超过目标月份的最后一天，先将当前月份设置为1号
+    date.setDate(1);
     date.setMonth(month + value);
-    date.setDate(monthDay);
   } else if (props.mode == "week") {
     date.setDate(monthDay + value * 7);
   }
