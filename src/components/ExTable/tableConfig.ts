@@ -1,4 +1,4 @@
-import { ref, Ref } from "vue";
+import { ref } from "vue";
 // {
 //   "dyn_id": "981118307352444930",
 //   "dyn_type": 8
@@ -12,7 +12,7 @@ for (let index = 0; index < 100; index++) {
 import.meta.env;
 export type QueryConfigType = {
   label: string; //搜索的参数
-  value: any; //搜索输入的值
+  defaultValue: any; //搜索输入的值
   compsName: "ExInput" | "ExSelect"; //搜索的组件名称
   [key: string]: any;
 };
@@ -26,7 +26,7 @@ export declare interface TableConfig {
   showSelection: boolean; //是否显示复选框
   currentPage: number; //当前是第几页,从1开始
   pageSize: number; //表格默认显示几行
-  height?: number; //exTable组件的整体高度
+  maxHeight: number; //el-table 指定最大高度。此时若表格所需的高度大于最大高度，则会显示一个滚动条。
   tableApi: string; //获取表格数据的api
   dictApi: string; //字典枚举值api
   loading: boolean; //是否显示遮罩层
@@ -39,33 +39,35 @@ export declare interface TableConfig {
   pageSizes: number[]; //分页时一页显示的数据量
   layout: ("prev" | "pager" | "next" | "jumper" | "total")[]; // 分页组件配置
 }
-const tableConfig: TableConfig = {
-  // 表格配置
-  query: {},
-  queryConfig: [],
-  tableData: data,
-  useLocal: false,
-  localData: [],
-  showIndex: true,
-  showSelection: true,
-  currentPage: 1,
-  pageSize: 10,
-  height: 600,
-  tableApi: "",
-  dictApi: "",
-  loading: false,
-  showOverflowTooltip: true,
-  colSlots: [],
-  columns: [],
-  // 分页配置
-  total: 1000,
-  background: true,
-  pageSizes: [10, 20, 30, 40, 50, 100],
-  layout: ["prev", "pager", "next", "jumper", "total"],
-};
-export const createTableConfig = (
-  config: Partial<TableConfig> = {}
-): Ref<TableConfig> => {
-  let tableCfg = JSON.parse(JSON.stringify(tableConfig));
-  return ref(Object.assign(tableCfg, config));
+
+export const createTableConfig = (config: Partial<TableConfig> = {}) => {
+  const tableConfig: TableConfig = Object.assign(
+    {
+      // 表格配置
+      query: {},
+      queryConfig: [],
+      tableData: data,
+      useLocal: false,
+      localData: [],
+      showIndex: true,
+      showSelection: true,
+      currentPage: 1,
+      pageSize: 10,
+      maxHeight: 550,
+      tableApi: "",
+      dictApi: "",
+      loading: false,
+      showOverflowTooltip: true,
+      colSlots: [],
+      columns: [],
+      // 分页配置
+      total: 1000,
+      background: true,
+      pageSizes: [10, 20, 30, 40, 50, 100],
+      layout: ["prev", "pager", "next", "jumper", "total"],
+    },
+    // 修改的配置
+    config
+  );
+  return ref(tableConfig);
 };
