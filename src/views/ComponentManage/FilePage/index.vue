@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="h3">单文件上传：</div>
-    <input ref="fileInput" type="file" id="fileInput" />
+    <input ref="fileInput" type="file" id="fileInput" @change="changeFn" />
     <el-button @click="singleBtn">上传</el-button>
 
     <div>base64上传：</div>
@@ -16,11 +16,19 @@
 <script name="FilePage" setup lang="ts">
 import { useTemplateRef } from "vue";
 import { uploadFormData, uploadBase64, uploadBinary } from "@/axios/file";
+import { cutFile } from "@/utils/file";
 import FormData from "./components/FormData.vue";
 const fileInput = useTemplateRef("fileInput");
 const base64FileInput = useTemplateRef("base64FileInput");
 const binaryFileInput = useTemplateRef("binaryFileInput");
-
+const changeFn = async (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  console.log(file);
+  if (!file) return;
+  const res = await cutFile(file);
+  console.log(res);
+};
 // const fileInputList = ref<File[]>([]);
 const singleBtn = async () => {
   const file = fileInput.value?.files?.[0];
