@@ -1,6 +1,6 @@
 <template>
   <div class="ex-input">
-    <el-input v-model="model" v-bind="props.config"></el-input>
+    <el-input v-model="model" v-bind="props.config" placeholder=""></el-input>
     <label class="label">{{ props.config.label }}</label>
   </div>
 </template>
@@ -21,15 +21,21 @@ const emits = defineEmits<{
 const model = useVModel(props, "modelValue", emits);
 </script>
 <style lang="scss" scoped>
+$paddingLeft: 5px;
 .label {
   color: #999;
   position: absolute;
   pointer-events: none;
   height: 18px;
   line-height: 18px;
-  left: 0;
+  left: $paddingLeft;
+  top: 50%;
+  translate: $paddingLeft -50%;
+}
+.el-input:has(.el-input__inner:focus) ~ .label,
+.el-input:has(.el-input__inner:not(:placeholder-shown)) ~ .label {
   top: 0;
   background-color: #fff;
-  translate: 0 -50%;
+  translate: $paddingLeft -50%;
 }
 </style>

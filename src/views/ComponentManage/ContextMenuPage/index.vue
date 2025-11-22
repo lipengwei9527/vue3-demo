@@ -19,12 +19,37 @@
         <div @contextmenu="open" class="box box3"></div>
       </template>
     </ExContextMenu>
+
+    <!-- 新左键菜单 -->
+    <div class="container">
+      <div class="box box1" v-contextMenu="newList[0]"></div>
+      <div class="box box2" v-contextMenu="newList[1]"></div>
+      <div class="box box3" v-contextMenu="newList[2]"></div>
+    </div>
   </div>
 </template>
 
 <script setup name="ContextMenuPage" lang="ts">
 import { ExContextMenuItem } from "@/types/components";
 import { ref } from "vue";
+let num = ref(0);
+let newList: ExContextMenuItem[][] = [];
+for (let key = 0; key < 3; key++) {
+  newList[key] = [];
+  for (let i = 0; i < 10; i++) {
+    // newList[key][i] = {};
+    newList[key][i] = {
+      label: "菜单" + (String(key) + i),
+      value: String(key) + i,
+    };
+    if (i == 4) {
+      newList[key][i].disabled = true;
+    }
+    if (i == 5) {
+      newList[key][i].bottomBorder = true;
+    }
+  }
+}
 const show = ref(false);
 const disabled = ref(false);
 const beforeCloseFn = (item: any, fn: () => void) => {
@@ -58,7 +83,8 @@ for (let key = 0; key < 3; key++) {
 <style lang="scss" scoped>
 .page {
   display: flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
+  flex-direction: column;
 }
 .box {
   width: 200px;
@@ -72,6 +98,23 @@ for (let key = 0; key < 3; key++) {
       height: 400px;
     }
     background-color: rgb(random(255), random(255), random(255));
+  }
+}
+.container {
+  display: flex;
+  .box {
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+  }
+  @for $i from 1 through 3 {
+    .box#{$i} {
+      @if $i == 1 {
+        width: 400px;
+        height: 400px;
+      }
+      background-color: rgb(random(255), random(255), random(255));
+    }
   }
 }
 </style>

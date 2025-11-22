@@ -42,35 +42,6 @@ export function debounce<T extends Func>(
     }, interval);
   } as T;
 }
-type FieldType =
-  | "string"
-  | "number"
-  | "boolean"
-  | "symbol"
-  | "undefined"
-  | "null"
-  | "function"
-  | "array"
-  | "object"
-  | "date"
-  | "regexp"
-  | "bigint"
-  | "promise"
-  | "map"
-  | "set"
-  | "bigInt";
-/**
- * @name 变量类型
- * @description: 检测变量的类型
- * @param {any} field  要检测的类型
- * @return {FieldType}
- */
-export function varType(field: unknown): FieldType {
-  return Object.prototype.toString
-    .call(field)
-    .slice(8, -1)
-    .toLowerCase() as FieldType;
-}
 export function setCache(key: string, value: any) {
   window.addEventListener("beforeunload", () => {
     localStorage.setItem(key, JSON.stringify(value));
@@ -144,4 +115,53 @@ export class AutoId {
     let len = this.len - this.cur.toString().length;
     return cur.toString().padStart(len, this.str);
   }
+}
+
+function isBaseType<T>(value: T): boolean {
+  const baseType = [
+    "string",
+    "number",
+    "boolean",
+    "undefined",
+    "null",
+    "symbol",
+    "bigint",
+  ];
+  const result = baseType.find((item) => item === typeof value);
+  if (result || value === null) {
+    return true;
+  }
+  return false;
+}
+export function deepClone<T>(value: T, options: Partial<CloneOptions>) {
+  const {
+    handleCircular = true,
+    skipFunctions = true,
+    shallow = false,
+  } = options;
+  let result;
+
+  // 基础类型直接返回
+  if (isBaseType(value)) return value;
+  // 函数直接返回
+  if (skipFunctions && typeof value == "function") {
+    return value;
+  }
+  if (Object.prototype.toString.call(value) == "[object Object]") {
+  }
+
+  // return result;
+  return result;
+}
+// deepClone(new Date());
+
+export interface CloneOptions {
+  /** 是否处理循环引用，默认为 true */
+  handleCircular: boolean;
+
+  /** 是否跳过函数克隆，默认为 true */
+  skipFunctions: boolean;
+
+  /** 是否为浅克隆模式，默认为 false */
+  shallow: boolean;
 }

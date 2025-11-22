@@ -9,7 +9,8 @@
     "build:nginx": "vue-tsc && vite build --mode nginx",
     "preview": "vite preview",
     "dep": "gh-pages -d dist -r https://github.com/lipengwei9527/vue3-demo.git -b gh-pages",
-    "deploy": "vue-tsc && vite build && gh-pages -d dist -r https://github.com/lipengwei9527/vue3-demo.git -b gh-pages"
+    "deploy": "vue-tsc && vite build && gh-pages -d dist -r https://github.com/lipengwei9527/vue3-demo.git -b gh-pages",
+    "ts": "nodemon --exec ts-node ./src/utils/test.ts"
   },
   "dependencies": {
     "@vueuse/core": "^11.1.0",

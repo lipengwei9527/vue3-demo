@@ -1,97 +1,57 @@
-// 1. 定义支持的类型列表（字符串字面量联合类型）
-type SupportedTypes =
-  | "string" // 字符串（原始类型）
-  | "number" // 数字（原始类型，排除 NaN）
-  | "boolean" // 布尔值（原始类型）
-  | "symbol" // 符号（原始类型）
-  | "undefined" // 未定义
-  | "null" // 空值
-  | "function" // 函数
-  | "array" // 数组
-  | "object" // 纯对象（排除数组、null、内置对象等）
-  | "date" // Date 实例
-  | "regexp" // 正则表达式
-  | "promise" // Promise 实例
-  | "map" // Map 实例
-  | "set" // Set 实例
-  | "string-object" // String 对象（new String()）
-  | "number-object" // Number 对象（new Number()）
-  | "bigInt"; //BigInt
-
-// 2. 类型映射：将字符串字面量映射到对应的 TypeScript 类型
-type TypeMap<T extends SupportedTypes> = T extends "string"
-  ? string
-  : T extends "number"
-  ? number
-  : T extends "boolean"
-  ? boolean
-  : T extends "symbol"
-  ? symbol
-  : T extends "undefined"
-  ? undefined
-  : T extends "null"
-  ? null
-  : T extends "function"
-  ? (...args: any[]) => any
-  : T extends "array"
-  ? any[]
-  : T extends "object"
-  ? object
-  : T extends "date"
-  ? Date
-  : T extends "regexp"
-  ? RegExp
-  : T extends "promise"
-  ? Promise<any>
-  : T extends "map"
-  ? Map<any, any>
-  : T extends "set"
-  ? Set<any>
-  : T extends "string-object"
-  ? String
-  : T extends "number-object"
-  ? Number
-  : T extends "bigInt"
-  ? BigInt
-  : never;
-
-// 3. 通用类型守卫：判断值是否为指定类型
-export function isType<T extends SupportedTypes>(
+// 类型映射，用于类型收窄
+type JsTypeMap = {
+  string: string;
+  number: number;
+  boolean: boolean;
+  bigint: bigint;
+  symbol: symbol;
+  undefined: undefined;
+  null: null;
+  object: object;
+  function: Function;
+  array: any[];
+  date: Date;
+  regexp: RegExp;
+  promise: Promise<any>;
+  map: Map<any, any>;
+  set: Set<any>;
+  error: Error;
+  weakmap: WeakMap<any, any>;
+  weakset: WeakSet<any>;
+  element: Element;
+};
+// 定义所有JS类型字符串的联合类型
+type JSTypeNames = keyof JsTypeMap;
+// 主函数：检查类型并实现类型收窄
+export function isType<T extends JSTypeNames>(
   value: unknown,
-  type: T
-): value is TypeMap<T> {
-  switch (type) {
+  typeStr: T
+): value is JsTypeMap[T] {
+  switch (typeStr) {
     case "string":
       return typeof value === "string";
     case "number":
-      return typeof value === "number" && !isNaN(value);
+      return typeof value === "number" && !isNaN(value as number);
     case "boolean":
       return typeof value === "boolean";
+    case "bigint":
+      return typeof value === "bigint";
     case "symbol":
       return typeof value === "symbol";
     case "undefined":
-      return value === undefined;
+      return typeof value === "undefined";
     case "null":
       return value === null;
+    case "object":
+      return (
+        typeof value === "object" && value !== null && !Array.isArray(value)
+      );
     case "function":
       return typeof value === "function";
     case "array":
       return Array.isArray(value);
-    case "object":
-      return (
-        typeof value === "object" &&
-        value !== null &&
-        !Array.isArray(value) &&
-        !(value instanceof Date) &&
-        !(value instanceof RegExp) &&
-        !(value instanceof Promise) &&
-        !(value instanceof Map) &&
-        !(value instanceof Set) &&
-        !(value instanceof String) &&
-        !(value instanceof Number)
-      );
     case "date":
-      return value instanceof Date && !isNaN(value.getTime());
+      return value instanceof Date;
     case "regexp":
       return value instanceof RegExp;
     case "promise":
@@ -100,12 +60,14 @@ export function isType<T extends SupportedTypes>(
       return value instanceof Map;
     case "set":
       return value instanceof Set;
-    case "string-object":
-      return value instanceof String;
-    case "number-object":
-      return value instanceof Number;
-    case "bigInt":
-      return value instanceof BigInt;
+    case "error":
+      return value instanceof Error;
+    case "weakmap":
+      return value instanceof WeakMap;
+    case "weakset":
+      return value instanceof WeakSet;
+    case "element":
+      return typeof value === "object" && value !== null && "tagName" in value;
     default:
       return false;
   }

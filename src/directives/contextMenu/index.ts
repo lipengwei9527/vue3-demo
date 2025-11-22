@@ -2,7 +2,6 @@ import { createVNode, render, DirectiveBinding } from "vue";
 import menuContextComp from "./index.vue";
 import { ExContextMenuItem } from "@/types/components";
 import { isType } from "@/utils/isType";
-
 type ExContextMenuProps = {
   el: HTMLElement | null;
   list: ExContextMenuItem[];
