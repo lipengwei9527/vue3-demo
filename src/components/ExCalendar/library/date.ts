@@ -80,7 +80,7 @@ function getDayInfoList(start: Date, targetDate: Date, count: number) {
     const month = start.getMonth();
     const targetTime = targetDate.getTime();
     const startTime = start.getTime();
-    let type = "";
+    let type: DayInfo["type"] = "pre";
     if (curMonth != month && targetTime > startTime) {
       type = "pre";
     } else if (curMonth == month) {
@@ -100,15 +100,6 @@ function getDayInfoList(start: Date, targetDate: Date, count: number) {
   return list;
 }
 
-// 初始化日历当天所包含的信息
-export function resetDayInfo(): DayInfo {
-  return {
-    day: 0,
-    date: "",
-    type: "",
-    disabled: false,
-  };
-}
 /**
  * @description 偏移数组
  * @param arr 要偏移的数组

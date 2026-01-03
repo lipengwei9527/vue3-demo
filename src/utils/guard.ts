@@ -12,6 +12,7 @@ export function allProps(eventName: string | string[]) {
   if (!ins) return [];
   const res = eventName.map((item) => {
     // item是以on开头的就直接返回，不是就首字母大写并拼接上on
+    // vue中自定义的事件都是以on开头的
     // item = item.startsWith("on")
     //   ? item
     //   : "on" + item.charAt(0).toUpperCase() + item.slice(1);

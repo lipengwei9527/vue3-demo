@@ -5,11 +5,33 @@ import type { ElSelect, ElForm, ElFormItem, ElInput } from "element-plus";
 export interface DayInfo {
   day: number; //几号,例:1|2|3|10
   date: string; //日期:例:2024/03/04|2024-03-04
-  type: string; //pre-上月,cur-当月,next-下月
+  type: "pre" | "cur" | "next"; //pre-上月,cur-当月,next-下月
   disabled: boolean; // 该日是否禁止选择
 }
 
 /***************************************************************************************************/
+/**
+ * @description 创建自定义表单的全部类型
+ */
+export type ExFormConfigType = InstanceType<typeof ElForm>["$props"] & {
+  id: number;
+  name: string; //表单配置名称
+  type: "DiyForm";
+  mode: FormModeType;
+  containerCfg?: DiyContainerType[];
+};
+/**
+ * @description 容器控件类型
+ */
+export interface DiyContainerType {
+  id: number | string;
+  label: string;
+  type: "DiyContainer";
+  typeName: "容器";
+  // config必须要有，没有数值也要返回一个空数组，否则不能往该容器内拖拽内容
+  // config: DiyContainerType[];
+  config: (DiyContainerType | DiyFormItemType)[];
+}
 
 /**
  * @description 控件类型，除了容器控件之外的表单控件类型
@@ -41,28 +63,7 @@ export type DiyFormItemType = {
   isFullLine?: boolean; //是否占满一行
   compCfg: CompCfgType; //
 } & InstanceType<typeof ElFormItem>["$props"];
-/**
- * @description 容器控件类型
- */
-export interface DiyContainerType {
-  id: number | string;
-  label: string;
-  type: "DiyContainer";
-  typeName: "容器";
-  // config必须要有，没有数值也要返回一个空数组，否则不能往该容器内拖拽内容
-  // config: DiyContainerType[];
-  config: (DiyContainerType | DiyFormItemType)[];
-}
-/**
- * @description 表单配置的全部类型
- */
-export type ExFormConfigType = InstanceType<typeof ElForm>["$props"] & {
-  id: number;
-  name: string; //表单配置名称
-  type: "DiyForm";
-  mode: FormModeType;
-  containerCfg?: DiyContainerType[];
-};
+
 // 创建工具类型：将只读属性转为可选属性
 type ReadonlyToPartial<T> = {
   // 移除 readonly 修饰符，并添加 ? 使其变为可选

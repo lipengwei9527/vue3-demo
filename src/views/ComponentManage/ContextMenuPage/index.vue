@@ -32,7 +32,6 @@
 <script setup name="ContextMenuPage" lang="ts">
 import { ExContextMenuItem } from "@/types/components";
 import { ref } from "vue";
-let num = ref(0);
 let newList: ExContextMenuItem[][] = [];
 for (let key = 0; key < 3; key++) {
   newList[key] = [];

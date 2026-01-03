@@ -117,42 +117,89 @@ export class AutoId {
   }
 }
 
-function isBaseType<T>(value: T): boolean {
-  const baseType = [
-    "string",
-    "number",
-    "boolean",
-    "undefined",
-    "null",
-    "symbol",
-    "bigint",
-  ];
-  const result = baseType.find((item) => item === typeof value);
-  if (result || value === null) {
-    return true;
+/**
+ * @description 分步执行任务
+ * @param {()=>void}tasks 分步执行任务数组
+ * @param {(taskChunk:(isGoRunning:()=>boolean)=>void)=>void}taskChunkCallback  调度器
+ * @returns 
+ * @example 
+    stepTasks(tasks, (taskChunk) => {
+        let count = 0;
+        setTimeout(() => {
+            // taskChunk是tasks中的元素任务
+            // taskChunk的参数是isGoRunning函数,判断是否继续执行下一个任务,true继续,false停止
+            taskChunk(() => count++ < 3);
+        }, 1000);
+    });
+ * 
+ */
+export function stepTasks(
+  tasks: Array<() => void>,
+  taskChunkCallback: (taskChunk: (isGoRunning: () => boolean) => void) => void
+) {
+  let index = 0;
+  if (index >= tasks.length) return;
+  function run() {
+    taskChunkCallback((isGoRunning) => {
+      while (index < tasks.length && isGoRunning()) {
+        tasks[index++]();
+      }
+      if (index < tasks.length) {
+        run();
+      }
+    });
   }
-  return false;
+  run();
 }
-export function deepClone<T>(value: T, options: Partial<CloneOptions>) {
-  const {
-    handleCircular = true,
-    skipFunctions = true,
-    shallow = false,
-  } = options;
-  let result;
 
-  // 基础类型直接返回
-  if (isBaseType(value)) return value;
-  // 函数直接返回
-  if (skipFunctions && typeof value == "function") {
-    return value;
-  }
-  if (Object.prototype.toString.call(value) == "[object Object]") {
-  }
-
-  // return result;
-  return result;
+/**
+ *@description 在浏览器中利用空闲时间分步执行任务
+ * @param tasks 分步执行任务数组
+ */
+export function idleStepTasks(tasks: Array<() => void>) {
+  requestIdleCallback((idle) => {
+    stepTasks(tasks, (taskChunk) => {
+      taskChunk(() => idle.timeRemaining() > 0);
+    });
+  });
 }
+
+// function isBaseType<T>(value: T): boolean {
+//   const baseType = [
+//     "string",
+//     "number",
+//     "boolean",
+//     "undefined",
+//     "null",
+//     "symbol",
+//     "bigint",
+//   ];
+//   const result = baseType.find((item) => item === typeof value);
+//   if (result || value === null) {
+//     return true;
+//   }
+//   return false;
+// }
+// export function deepClone<T>(value: T, options: Partial<CloneOptions>) {
+//   const {
+//     handleCircular = true,
+//     skipFunctions = true,
+//     shallow = false,
+//   } = options;
+//   let result;
+
+//   // 基础类型直接返回
+//   if (isBaseType(value)) return value;
+//   // 函数直接返回
+//   if (skipFunctions && typeof value == "function") {
+//     return value;
+//   }
+//   if (Object.prototype.toString.call(value) == "[object Object]") {
+//   }
+
+//   // return result;
+//   return result;
+// }
 // deepClone(new Date());
 
 export interface CloneOptions {
@@ -164,4 +211,14 @@ export interface CloneOptions {
 
   /** 是否为浅克隆模式，默认为 false */
   shallow: boolean;
+}
+export function Singleton<T extends new (...args: any[]) => any>(
+  constructor: T
+) {
+  let instance: InstanceType<T>;
+  return function (...args: ConstructorParameters<T>): InstanceType<T> {
+    if (instance) return instance;
+    instance = new constructor(...args);
+    return instance;
+  };
 }

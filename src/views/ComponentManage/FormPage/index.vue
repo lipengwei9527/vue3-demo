@@ -10,9 +10,9 @@ import { createTableConfig } from "@/components/ExTable/tableConfig";
 const tabPage = new CreateTabPage("formConfig");
 const tableConfig = createTableConfig({
   queryConfig: [
-    { label: "label1", value: "value1", compsName: "ExInput" },
-    { label: "label2", value: "value2", compsName: "ExInput" },
-    { label: "label3", value: "value3", compsName: "ExInput" },
+    { label: "label1", defaultValue: "value1", compsName: "ExInput" },
+    { label: "label2", defaultValue: "value2", compsName: "ExInput" },
+    { label: "label3", defaultValue: "value3", compsName: "ExInput" },
     // { label: "label4", value: "value4", compsName: "ExInput" },
     // { label: "label5", value: "value5", compsName: "ExInput" },
   ],

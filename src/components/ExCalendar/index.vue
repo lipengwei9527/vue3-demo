@@ -179,7 +179,7 @@ const selData = reactive<DayInfo[]>(
     return {
       day: 0,
       date: item,
-      type: "",
+      type: "pre",
       disabled: false,
     };
   })
